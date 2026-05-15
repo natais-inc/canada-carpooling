@@ -155,7 +155,7 @@
     "preferences": "Préférences",
     "smokingAllowed": "Fumeurs acceptés",
     "musicAllowed": "Musique acceptée",
-    "maxLuggage": "Bagages max : {count} sacs",
+    "maxLuggage": "Bagages maximum",
     "additionalInfo": "Informations complémentaires",
     "descriptionPlaceholder": "Décrivez votre trajet, détails du point de rencontre, espace pour les bagages...",
     "tripDescription": "Description du trajet",
