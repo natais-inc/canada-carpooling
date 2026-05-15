@@ -30,11 +30,38 @@
     "profile": "Profile",
     "login": "Log in",
     "signup": "Sign up",
+    "register": "Sign up",
     "logout": "Log out"
   },
   "home": {
+    "title": "Travel across Canada for less",
+    "subtitle": "Connect with trusted drivers and passengers. Save up to 75% compared to bus or train.",
     "heroTitle": "Travel across Canada for less",
     "heroSubtitle": "Connect with trusted drivers and passengers. Save up to 75% compared to bus or train.",
+    "whyUs": "Why choose Canada Carpooling?",
+    "features": {
+      "verified": {
+        "title": "Verified drivers",
+        "description": "Every driver's license and identity is verified with biometric checks."
+      },
+      "payment": {
+        "title": "Secure payments",
+        "description": "Pay online. Drivers receive payment only after the trip is completed."
+      },
+      "chat": {
+        "title": "Built-in messaging",
+        "description": "Communicate directly with your driver or passenger before the trip."
+      },
+      "reviews": {
+        "title": "Verified reviews",
+        "description": "Check reviews from other users before booking."
+      }
+    },
+    "popularRoutes": "Popular routes",
+    "ctaTitle": "Ready to share the road?",
+    "ctaSubtitle": "Join thousands of Canadians saving on their trips.",
+    "ctaPassenger": "Find a ride",
+    "ctaDriver": "Offer a ride",
     "step1Title": "Search",
     "step1Desc": "Enter your departure city, destination, and travel date.",
     "step2Title": "Book",
@@ -83,7 +110,8 @@
     "cheapest": "Cheapest",
     "earliest": "Earliest departure",
     "bestRated": "Best rated",
-    "verifiedOnly": "Verified drivers only"
+    "verifiedOnly": "Verified drivers only",
+    "searchButton": "Search"
   },
   "booking": {
     "bookRide": "Book this ride",
@@ -262,22 +290,4 @@
     "showDetails": "Show details",
     "essentialOnly": "Essential only",
     "optionalConsents": "Optional consents",
-    "marketingTitle": "Marketing communications",
-    "marketingDesc": "Receive offers, promotions and news by email",
-    "locationTitle": "Geolocation data",
-    "locationDesc": "Allow collection of your location for trip suggestions",
-    "dataRights": "Your data rights",
-    "exportData": "Export my data",
-    "exportDataDesc": "Download a copy of all your personal data (PIPEDA, Principle 9)",
-    "download": "Download",
-    "deleteAccount": "Delete my account",
-    "deleteAccountDesc": "Request deletion of all your personal data. Financial records are retained for 7 years as required by Canadian tax law.",
-    "requestDeletion": "Request deletion",
-    "consentWithdrawn": "Consent withdrawn successfully",
-    "renewalNeeded": "Our privacy policy has been updated. Please review and accept the new version.",
-    "consentMissing": "You must accept the privacy policy to use this service.",
-    "deletionConfirm": "Are you sure you want to delete your account and all your data? This action is irreversible.",
-    "dataExportDownloaded": "Your data has been downloaded successfully.",
-    "consentVersion": "Consent version"
-  }
-}
+    "marketingTitle": "Mar

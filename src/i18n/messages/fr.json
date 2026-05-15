@@ -30,11 +30,38 @@
     "profile": "Profil",
     "login": "Connexion",
     "signup": "Inscription",
+    "register": "Inscription",
     "logout": "Déconnexion"
   },
   "home": {
+    "title": "Voyagez à travers le Canada pour moins cher",
+    "subtitle": "Connectez-vous avec des conducteurs et passagers vérifiés. Économisez jusqu'à 75% vs le bus ou le train.",
     "heroTitle": "Voyagez à travers le Canada pour moins cher",
     "heroSubtitle": "Connectez-vous avec des conducteurs et passagers vérifiés. Économisez jusqu'à 75% vs le bus ou le train.",
+    "whyUs": "Pourquoi choisir Canada Carpooling?",
+    "features": {
+      "verified": {
+        "title": "Conducteurs vérifiés",
+        "description": "Chaque permis de conduire et identité est vérifié par contrôle biométrique."
+      },
+      "payment": {
+        "title": "Paiements sécurisés",
+        "description": "Payez en ligne. Les conducteurs reçoivent le paiement après le trajet."
+      },
+      "chat": {
+        "title": "Messagerie intégrée",
+        "description": "Communiquez directement avec votre conducteur ou passager avant le trajet."
+      },
+      "reviews": {
+        "title": "Avis vérifiés",
+        "description": "Consultez les avis des autres utilisateurs avant de réserver."
+      }
+    },
+    "popularRoutes": "Trajets populaires",
+    "ctaTitle": "Prêt à partager la route?",
+    "ctaSubtitle": "Rejoignez des milliers de Canadiens qui économisent sur leurs trajets.",
+    "ctaPassenger": "Trouver un trajet",
+    "ctaDriver": "Offrir un trajet",
     "step1Title": "Recherchez",
     "step1Desc": "Entrez votre ville de départ, destination et date de voyage.",
     "step2Title": "Réservez",
@@ -83,7 +110,8 @@
     "cheapest": "Moins cher",
     "earliest": "Départ le plus tôt",
     "bestRated": "Mieux noté",
-    "verifiedOnly": "Conducteurs vérifiés uniquement"
+    "verifiedOnly": "Conducteurs vérifiés uniquement",
+    "searchButton": "Rechercher"
   },
   "booking": {
     "bookRide": "Réserver ce trajet",
@@ -263,21 +291,4 @@
     "essentialOnly": "Essentiels uniquement",
     "optionalConsents": "Consentements optionnels",
     "marketingTitle": "Communications marketing",
-    "marketingDesc": "Recevoir des offres, promotions et actualités par courriel",
-    "locationTitle": "Données de géolocalisation",
-    "locationDesc": "Permettre la collecte de votre position pour les suggestions de trajets",
-    "dataRights": "Droits sur vos données",
-    "exportData": "Exporter mes données",
-    "exportDataDesc": "Téléchargez une copie de toutes vos données personnelles (LPRPDE, Principe 9)",
-    "download": "Télécharger",
-    "deleteAccount": "Supprimer mon compte",
-    "deleteAccountDesc": "Demander la suppression de toutes vos données personnelles. Les données financières sont conservées 7 ans selon la loi fiscale canadienne.",
-    "requestDeletion": "Demander la suppression",
-    "consentWithdrawn": "Consentement retiré avec succès",
-    "renewalNeeded": "Notre politique de confidentialité a été mise à jour. Veuillez la consulter et l'accepter.",
-    "consentMissing": "Vous devez accepter la politique de confidentialité pour utiliser ce service.",
-    "deletionConfirm": "Êtes-vous sûr de vouloir supprimer votre compte et toutes vos données ? Cette action est irréversible.",
-    "dataExportDownloaded": "Vos données ont été téléchargées avec succès.",
-    "consentVersion": "Version du consentement"
-  }
-}
+    "marketingDesc": "
