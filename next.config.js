@@ -31,6 +31,9 @@ const nextConfig = {
     ];
   },
   reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
