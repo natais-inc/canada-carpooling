@@ -41,4 +41,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withNextIntl(ne
+module.exports = withNextIntl(nextConfig);
