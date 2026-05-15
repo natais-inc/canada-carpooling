@@ -290,4 +290,22 @@
     "showDetails": "Show details",
     "essentialOnly": "Essential only",
     "optionalConsents": "Optional consents",
-    "marketingTitle": "Mar
+    "marketingTitle": "Marketing communications",
+    "marketingDesc": "Receive offers, promotions and news by email",
+    "locationTitle": "Geolocation data",
+    "locationDesc": "Allow collection of your location for trip suggestions",
+    "dataRights": "Your data rights",
+    "exportData": "Export my data",
+    "exportDataDesc": "Download a copy of all your personal data (PIPEDA, Principle 9)",
+    "download": "Download",
+    "deleteAccount": "Delete my account",
+    "deleteAccountDesc": "Request deletion of all your personal data. Financial records are retained for 7 years as required by Canadian tax law.",
+    "requestDeletion": "Request deletion",
+    "consentWithdrawn": "Consent withdrawn successfully",
+    "renewalNeeded": "Our privacy policy has been updated. Please review and accept the new version.",
+    "consentMissing": "You must accept the privacy policy to use this service.",
+    "deletionConfirm": "Are you sure you want to delete your account and all your data? This action is irreversible.",
+    "dataExportDownloaded": "Your data has been downloaded successfully.",
+    "consentVersion": "Consent version"
+  }
+}

@@ -291,4 +291,21 @@
     "essentialOnly": "Essentiels uniquement",
     "optionalConsents": "Consentements optionnels",
     "marketingTitle": "Communications marketing",
-    "marketingDesc": "
+    "marketingDesc": "Recevoir des offres, promotions et actualités par courriel",
+    "locationTitle": "Données de géolocalisation",
+    "locationDesc": "Permettre la collecte de votre position pour les suggestions de trajets",
+    "dataRights": "Droits sur vos données",
+    "exportData": "Exporter mes données",
+    "exportDataDesc": "Téléchargez une copie de toutes vos données personnelles (LPRPDE, Principe 9)",
+    "download": "Télécharger",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteAccountDesc": "Demander la suppression de toutes vos données personnelles. Les données financières sont conservées 7 ans selon la loi fiscale canadienne.",
+    "requestDeletion": "Demander la suppression",
+    "consentWithdrawn": "Consentement retiré avec succès",
+    "renewalNeeded": "Notre politique de confidentialité a été mise à jour. Veuillez la consulter et l'accepter.",
+    "consentMissing": "Vous devez accepter la politique de confidentialité pour utiliser ce service.",
+    "deletionConfirm": "Êtes-vous sûr de vouloir supprimer votre compte et toutes vos données ? Cette action est irréversible.",
+    "dataExportDownloaded": "Vos données ont été téléchargées avec succès.",
+    "consentVersion": "Version du consentement"
+  }
+}
