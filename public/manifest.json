@@ -1,0 +1,85 @@
+{
+  "name": "Canada Carpooling",
+  "short_name": "Carpooling",
+  "description": "Partagez la route, partagez les économies — Share the road, share the savings",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "lang": "fr-CA",
+  "dir": "ltr",
+  "categories": ["travel", "transportation"],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "Accueil — Page d'accueil Canada Carpooling"
+    },
+    {
+      "src": "/screenshots/search.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "Recherche — Trouvez votre trajet"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Trouver un trajet",
+      "short_name": "Rechercher",
+      "url": "/trips/search",
+      "icons": [{ "src": "/icons/search-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Offrir un trajet",
+      "short_name": "Publier",
+      "url": "/trips/create",
+      "icons": [{ "src": "/icons/plus-96.png", "sizes": "96x96" }]
+    }
+  ]
+}

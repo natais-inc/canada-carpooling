@@ -1,0 +1,375 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")  // Neon: unpooled connection for migrations
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// VerificationStatus is now a String field on User: "unverified" | "pending" | "verified" | "rejected"
+
+enum TripStatus {
+  ACTIVE
+  FULL
+  COMPLETED
+  CANCELLED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  CANCELLED_BY_PASSENGER
+  CANCELLED_BY_DRIVER
+  COMPLETED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  HELD
+  RELEASED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+model User {
+  id                String             @id @default(cuid())
+  email             String             @unique
+  emailVerified     DateTime?
+  passwordHash      String?
+  firstName         String
+  lastName          String
+  phone             String?
+  phoneVerified     Boolean            @default(false)
+  profileImage      String?
+  bio               String?
+  preferredLanguage String             @default("fr")
+  role              UserRole           @default(USER)
+  
+  // Verification
+  idVerified              Boolean            @default(false)
+  licenseVerified         Boolean            @default(false)
+  selfieVerified          Boolean            @default(false)
+  verificationStatus      String             @default("unverified") // unverified, pending, verified, rejected
+  veriffSessionId         String?
+  verifiedAt              DateTime?
+  idDocumentUrl           String?
+  licenseDocumentUrl      String?
+  selfieUrl               String?
+  
+  // Stripe
+  stripeCustomerId    String?
+  stripeAccountId     String?
+  
+  // Stats
+  averageRating       Float              @default(0)
+  totalTripsAsDriver  Int                @default(0)
+  totalTripsAsPassenger Int              @default(0)
+  responseRate        Float              @default(100)
+  cancellationRate    Float              @default(0)
+  
+  // PIPEDA/LPRPDE Consent Tracking
+  consentAt             DateTime?          // When consent was given
+  consentVersion        String?            // Version of privacy policy accepted (e.g. "2026-05-01")
+  consentIp             String?            // IP address at time of consent
+  privacyPolicyAccepted Boolean            @default(false)
+  termsAccepted         Boolean            @default(false)
+  marketingConsent      Boolean            @default(false)
+  locationConsent       Boolean            @default(false)
+  consentWithdrawnAt    DateTime?          // If consent was withdrawn
+  dataExportRequestedAt DateTime?          // Right of access request
+  dataDeletionRequestedAt DateTime?        // Right to erasure request
+
+  // Flags
+  isBanned            Boolean            @default(false)
+  banReason           String?
+  isActive            Boolean            @default(true)
+  
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  // Relations
+  accounts            Account[]
+  sessions            Session[]
+  tripsAsDriver       Trip[]
+  bookings            Booking[]
+  reviewsGiven        Review[]           @relation("ReviewAuthor")
+  reviewsReceived     Review[]           @relation("ReviewTarget")
+  messagesSent        Message[]          @relation("MessageSender")
+  messagesReceived    Message[]          @relation("MessageReceiver")
+  notifications       Notification[]
+  vehicles            Vehicle[]
+  reports             Report[]           @relation("Reporter")
+  reportsAgainst      Report[]           @relation("Reported")
+
+  @@index([email])
+  @@index([stripeCustomerId])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Vehicle {
+  id          String   @id @default(cuid())
+  userId      String
+  make        String
+  model       String
+  year        Int
+  color       String
+  licensePlate String
+  seats       Int      @default(4)
+  imageUrl    String?
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trips       Trip[]
+
+  createdAt   DateTime @default(now())
+}
+
+model Trip {
+  id              String     @id @default(cuid())
+  driverId        String
+  vehicleId       String?
+  
+  // Route
+  originCity      String
+  originAddress   String?
+  originLat       Float?
+  originLng       Float?
+  destinationCity String
+  destinationAddress String?
+  destinationLat  Float?
+  destinationLng  Float?
+  
+  // Stops (optional intermediate stops)
+  stops           TripStop[]
+  
+  // Schedule
+  departureDate   DateTime
+  departureTime   String
+  estimatedDuration Int?     // in minutes
+  
+  // Pricing
+  pricePerSeat    Float
+  availableSeats  Int
+  totalSeats      Int
+  
+  // Preferences
+  allowPets       Boolean    @default(false)
+  allowSmoking    Boolean    @default(false)
+  allowMusic      Boolean    @default(true)
+  luggageSize     String     @default("medium") // small, medium, large
+  notes           String?
+  
+  // Status
+  status          TripStatus @default(ACTIVE)
+  isRecurring     Boolean    @default(false)
+  recurringDays   String?    // JSON array of days
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  // Relations
+  driver          User       @relation(fields: [driverId], references: [id])
+  vehicle         Vehicle?   @relation(fields: [vehicleId], references: [id])
+  bookings        Booking[]
+
+  @@index([originCity, destinationCity, departureDate])
+  @@index([driverId])
+  @@index([status])
+}
+
+model TripStop {
+  id        String @id @default(cuid())
+  tripId    String
+  city      String
+  address   String?
+  lat       Float?
+  lng       Float?
+  order     Int
+  priceFromOrigin Float?
+
+  trip      Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  tripId          String
+  passengerId     String
+  
+  seatsBooked     Int           @default(1)
+  totalPrice      Float         // Trip price (100% to driver)
+  serviceFee      Float         // 1 CAD per seat (flat fee)
+  serviceFeeTax   Float         @default(0) // Tax on service fee (GST/PST/HST/QST)
+  serviceFeeTotal Float         @default(0) // serviceFee + serviceFeeTax
+  driverPayout    Float         // = totalPrice (driver gets 100%)
+  provinceCode    String?       // Province code for tax calculation (e.g. "QC", "ON")
+  taxName         String?       // Tax label (e.g. "TPS + TVQ", "HST")
+  
+  status          BookingStatus @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  // Stripe
+  stripePaymentIntentId String?
+  stripeTransferId      String?
+  
+  // Pickup/Dropoff
+  pickupLocation  String?
+  dropoffLocation String?
+  
+  // Cancellation
+  cancelledAt     DateTime?
+  cancelReason    String?
+  refundAmount    Float?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  trip            Trip          @relation(fields: [tripId], references: [id])
+  passenger       User          @relation(fields: [passengerId], references: [id])
+  review          Review?
+
+  @@index([tripId])
+  @@index([passengerId])
+  @@index([status])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  authorId    String
+  targetId    String
+  
+  rating      Int      // 1-5
+  comment     String?
+  
+  // Specific ratings
+  punctuality Int?     // 1-5
+  safety      Int?     // 1-5
+  communication Int?   // 1-5
+  comfort     Int?     // 1-5
+  
+  isVisible   Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  author      User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  target      User     @relation("ReviewTarget", fields: [targetId], references: [id])
+
+  @@index([targetId])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  senderId    String
+  receiverId  String
+  tripId      String?
+  
+  content     String
+  isRead      Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+
+  sender      User     @relation("MessageSender", fields: [senderId], references: [id])
+  receiver    User     @relation("MessageReceiver", fields: [receiverId], references: [id])
+
+  @@index([senderId, receiverId])
+  @@index([receiverId, isRead])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // booking_request, booking_confirmed, message, review, trip_reminder
+  title     String
+  message   String
+  data      String?  // JSON metadata
+  isRead    Boolean  @default(false)
+  
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  reporterId  String
+  reportedId  String
+  reason      String
+  description String?
+  status      String   @default("pending") // pending, reviewed, resolved
+  
+  createdAt   DateTime @default(now())
+
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id])
+  reported    User     @relation("Reported", fields: [reportedId], references: [id])
+}
+
+// ─── PIPEDA/LPRPDE Consent Audit Log ───
+model ConsentLog {
+  id            String   @id @default(cuid())
+  userId        String
+  action        String   // "grant", "withdraw", "update", "data_export_request", "data_deletion_request"
+  consentType   String   // "privacy_policy", "terms", "marketing", "location", "cookies"
+  version       String?  // Policy version at time of action
+  ipAddress     String?
+  userAgent     String?
+  details       String?  // JSON metadata
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([action, consentType])
+}
+
+// ─── Data Processing Activity Log (PIPEDA accountability) ───
+model DataProcessingLog {
+  id            String   @id @default(cuid())
+  userId        String?
+  activity      String   // "collection", "use", "disclosure", "retention", "deletion"
+  dataCategory  String   // "personal_info", "financial", "location", "identity_docs", "communications"
+  purpose       String   // Why the data was processed
+  legalBasis    String   // "consent", "contract", "legal_obligation"
+  details       String?  // JSON metadata
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([activity])
+}
