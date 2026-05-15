@@ -6,4 +6,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const resolvedLocale = locales.includes(locale as any) ? locale : defaultLocale;
   return {
     locale: resolvedLocale,
-    message
+    messages: (await import(`./messages/${resolvedLocale}.json`)).default,
+  };
+});

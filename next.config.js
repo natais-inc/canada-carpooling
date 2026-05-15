@@ -9,9 +9,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
     ],
   },
-  // Disable x-powered-by header (information leakage)
   poweredByHeader: false,
-  // Production security headers (complement middleware CSP)
   async headers() {
     return [
       {
@@ -25,7 +23,6 @@ const nextConfig = {
         ],
       },
       {
-        // Prevent search engines from indexing API routes
         source: '/api/(.*)',
         headers: [
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
@@ -33,11 +30,11 @@ const nextConfig = {
       },
     ];
   },
-  // Strict mode for React (catches bugs)
   reactStrictMode: true,
-  // Limit server actions body size
-  serverActions: {
-    bodySizeLimit: '2mb',
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 };
 
