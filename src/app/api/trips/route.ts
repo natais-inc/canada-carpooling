@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
       take: 50,
     });
 
-    const formatted = trips.map(t => ({
+    const formatted = trips.map((t: any) => ({
       ...t,
       driver: {
         ...t.driver,

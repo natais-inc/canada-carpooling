@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     // === Use a Prisma interactive transaction to prevent race conditions ===
     // Without this, two concurrent requests could both pass the seat check
     // and create bookings, resulting in overbooking.
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       // 1. Get trip with driver info (read inside transaction for consistency)
       const trip = await tx.trip.findUnique({
         where: { id: tripId },

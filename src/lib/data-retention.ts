@@ -92,7 +92,7 @@ async function purgeDeletedAccounts(): Promise<number> {
 
   for (const account of accountsToDelete) {
     try {
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: any) => {
         // Anonymize user record (keep for aggregate analytics)
         const anonymized = anonymizeUser(account as unknown as Record<string, unknown>);
         await tx.user.update({

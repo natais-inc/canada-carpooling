@@ -122,7 +122,7 @@ export async function GET(req: NextRequest) {
       bookings,
       reviewsGiven,
       reviewsReceived,
-      messages: messages.map(m => ({
+      messages: messages.map((m: any) => ({
         ...m,
         direction: m.senderId === session.user.id ? 'sent' : 'received',
       })),
