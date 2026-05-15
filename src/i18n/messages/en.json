@@ -238,7 +238,12 @@
     "help": "Help Center",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
-    "copyright": "© 2026 Canada Carpooling. All rights reserved."
+    "copyright": "© 2026 Canada Carpooling. All rights reserved.",
+    "description": "Share the road across Canada. The affordable, trusted carpooling platform.",
+    "company": "Company",
+    "legal": "Legal",
+    "cookies": "Cookie Policy",
+    "secure": "Secure payments with Stripe"
   },
   "verification": {
     "title": "Identity Verification",
