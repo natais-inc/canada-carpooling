@@ -246,11 +246,11 @@ export default function PaymentCheckout({
         </div>
         <div className="flex justify-between text-sm text-gray-500">
           <span>{t('serviceFeeLabel')}</span>
-          <span>1,00 $ + {t('taxes')}</span>
+          <span>1,99 $ ({t('taxesIncluded')})</span>
         </div>
         <div className="flex justify-between font-semibold text-base border-t pt-3">
           <span>{t('totalToPay')}</span>
-          <span className="text-brand-600">{formatPrice(tripPrice)} + 1 $ + {t('taxes')}</span>
+          <span className="text-brand-600">{formatPrice(tripPrice)} + 1,99 $</span>
         </div>
       </div>
 
@@ -322,3 +322,4 @@ export default function PaymentCheckout({
     </div>
   );
 }
+    

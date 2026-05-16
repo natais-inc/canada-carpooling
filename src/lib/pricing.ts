@@ -2,9 +2,11 @@
  * Canada Carpooling — Hybrid Pricing Model
  *
  * Trip price: Paid DIRECTLY from passenger to driver (cash, Interac e-Transfer, etc.)
- * Platform fee: $1 CAD + applicable taxes, charged via Stripe to BOTH parties:
- *   - Passenger: $1 + taxes at booking time (Stripe PaymentIntent)
- *   - Driver: $1 + taxes auto-deducted after trip completion (Stripe charge on Connect account)
+ * Platform fee: 1,99$ CAD TTC (taxes incluses) — charged to passenger only via Stripe.
+ *   - Total always = 1.99$ (199 cents)
+ *   - Pre-tax base = 1.99 / (1 + taxRate), back-calculated per province
+ *   - Tax portion = 1.99 - preTaxBase
+ *   - NO driver fee — drivers pay nothing.
  *
  * Tax rates by province (2026):
  *   - AB, NT, NU, YT: 5% GST only
@@ -18,7 +20,8 @@
 
 // ─── Constants ───
 
-export const PLATFORM_FEE_BASE = 1.00; // $1 CAD
+export const PLATFORM_FEE_TTC = 1.99; // $1.99 CAD taxes included
+export const PLATFORM_FEE_TTC_CENTS = 199; // Always 199 cents charged to Stripe
 
 // Province tax configuration
 export const PROVINCE_TAX: Record<string, { rate: number; name: string; type: 'HST' | 'GST' | 'GST+PST' | 'GST+QST' | 'GST+RST' }> = {
@@ -44,17 +47,18 @@ const DEFAULT_TAX_NAME = 'GST';
 // ─── Platform Fee Calculation ───
 
 export interface PlatformFeeBreakdown {
-  baseFee: number;        // $1.00
+  baseFee: number;        // Pre-tax amount (back-calculated from 1.99$)
   taxRate: number;        // e.g. 0.13 for Ontario
   taxName: string;        // e.g. "HST"
-  taxAmount: number;      // e.g. $0.13
-  totalFee: number;       // e.g. $1.13
-  totalFeeCents: number;  // e.g. 113 (for Stripe)
+  taxAmount: number;      // Tax portion within the 1.99$
+  totalFee: number;       // Always 1.99$
+  totalFeeCents: number;  // Always 199 (for Stripe)
 }
 
 /**
- * Calculate the platform fee ($1 + taxes) for a given province.
- * Used for both passenger (at booking) and driver (after trip).
+ * Calculate the platform fee breakdown for a given province.
+ * Total is ALWAYS 1.99$ TTC — taxes are INCLUDED, not added on top.
+ * Pre-tax base and tax amount are back-calculated for accounting purposes.
  */
 export function calculatePlatformFee(provinceCode?: string): PlatformFeeBreakdown {
   const province = provinceCode?.toUpperCase();
@@ -62,16 +66,17 @@ export function calculatePlatformFee(provinceCode?: string): PlatformFeeBreakdow
     ? PROVINCE_TAX[province]
     : { rate: DEFAULT_TAX_RATE, name: DEFAULT_TAX_NAME };
 
-  const taxAmount = roundCents(PLATFORM_FEE_BASE * taxConfig.rate);
-  const totalFee = roundCents(PLATFORM_FEE_BASE + taxAmount);
+  // Back-calculate: totalTTC = base * (1 + rate) → base = totalTTC / (1 + rate)
+  const baseFee = roundCents(PLATFORM_FEE_TTC / (1 + taxConfig.rate));
+  const taxAmount = roundCents(PLATFORM_FEE_TTC - baseFee);
 
   return {
-    baseFee: PLATFORM_FEE_BASE,
+    baseFee,
     taxRate: taxConfig.rate,
     taxName: taxConfig.name,
     taxAmount,
-    totalFee,
-    totalFeeCents: Math.round(totalFee * 100),
+    totalFee: PLATFORM_FEE_TTC,
+    totalFeeCents: PLATFORM_FEE_TTC_CENTS,
   };
 }
 
@@ -81,15 +86,15 @@ export interface BookingPriceBreakdown {
   tripPrice: number;          // Price × seats — paid directly to driver
   seats: number;
   pricePerSeat: number;
-  platformFee: PlatformFeeBreakdown;  // $1 + taxes — paid via Stripe
-  totalPassengerPays: number;         // tripPrice (direct) + platformFee (Stripe)
+  platformFee: PlatformFeeBreakdown;  // 1.99$ TTC — paid via Stripe
+  totalPassengerPays: number;         // tripPrice (direct) + 1.99$ (Stripe)
   driverReceives: number;             // tripPrice (direct from passenger)
 }
 
 /**
  * Calculate the full price breakdown for a passenger booking.
  * Trip price = direct payment to driver.
- * Platform fee = $1 + taxes via Stripe.
+ * Platform fee = 1.99$ TTC via Stripe (passenger only, no driver fee).
  */
 export function calculateBookingPrice(
   pricePerSeat: number,
@@ -101,23 +106,4 @@ export function calculateBookingPrice(
 
   return {
     tripPrice,
-    seats,
-    pricePerSeat,
-    platformFee,
-    totalPassengerPays: roundCents(tripPrice + platformFee.totalFee),
-    driverReceives: tripPrice,
-  };
-}
-
-// ─── Helpers ───
-
-function roundCents(n: number): number {
-  return Math.round(n * 100) / 100;
-}
-
-/**
- * Format price in CAD
- */
-export function formatCAD(amount: number): string {
-  return `${amount.toFixed(2)} $`;
-}
+    

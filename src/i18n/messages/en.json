@@ -46,7 +46,7 @@
       },
       "payment": {
         "title": "Hybrid payment",
-        "description": "Trip price paid directly to the driver. Only $1 + tax service fee via Stripe for passengers and drivers."
+        "description": "Trip price paid directly to the driver. Only $1.99 (taxes included) service fee per booking for passengers."
       },
       "chat": {
         "title": "Built-in messaging",
@@ -71,9 +71,9 @@
     "benefit1Title": "Verified drivers",
     "benefit1Desc": "Every driver's license and identity is verified with biometric checks.",
     "benefit2Title": "Hybrid payment",
-    "benefit2Desc": "Trip price paid directly to the driver. Only $1 + tax service fee via Stripe for both passengers and drivers.",
+    "benefit2Desc": "Trip price paid directly to the driver. Only $1.99 (taxes included) service fee per booking for passengers. Drivers pay nothing.",
     "benefit3Title": "Fair prices",
-    "benefit3Desc": "Only $1 + tax per trip — the lowest prices in Canada.",
+    "benefit3Desc": "Only $1.99 (taxes included) per booking — the lowest fees in Canada. Free for drivers.",
     "benefit4Title": "24/7 Support",
     "benefit4Desc": "Our team is here to help you every day, any time."
   },
@@ -133,9 +133,9 @@
     "serviceFeeLabel": "Service fee",
     "taxes": "Taxes",
     "hybridPaymentTitle": "Hybrid payment",
-    "hybridPaymentDesc": "The trip price is paid directly to the driver (cash, Interac e-Transfer, etc.). A service fee of $1.00 + taxes is charged via Stripe.",
+    "hybridPaymentDesc": "The trip price is paid directly to the driver (cash, Interac e-Transfer, etc.). A service fee of $1.99 (taxes included) is charged via Stripe for passengers only.",
     "platformFeeNotice": "Platform fee",
-    "platformFeeNoticeDesc": "A $1 + tax service fee is charged at booking for passengers and after each completed trip for drivers.",
+    "platformFeeNoticeDesc": "A $1.99 (taxes included) service fee is charged at booking for passengers only. Drivers pay no fees.",
     "freeCancellationWithRefund": "Free cancellation more than 24h before departure — service fee refunded in full",
     "lateCancellationNoRefund": "Cancellation within 24h — service fee is non-refundable",
     "noShowPolicy": "No-show: service fee is non-refundable",
@@ -164,7 +164,7 @@
     "bookRide": "Book this ride",
     "confirmed": "Booking confirmed!",
     "seatPrice": "Seat price",
-    "serviceFee": "Service fee ($1.00 × {seats} seat(s))",
+    "serviceFee": "Service fee",
     "total": "Total",
     "cancellationPolicy": "Cancellation policy",
     "freeCancellation": "Free cancellation more than 24h before departure — service fee refunded",
@@ -175,14 +175,15 @@
     "driverReceives": "Driver receives",
     "serviceFeeLabel": "Service fee",
     "taxes": "Taxes",
+    "taxesIncluded": "taxes included",
     "hybridPaymentTitle": "Hybrid payment",
-    "hybridPaymentDesc": "The trip price is paid directly to the driver. Only the $1 + tax service fee is charged online via Stripe.",
+    "hybridPaymentDesc": "The trip price is paid directly to the driver (cash, Interac). Only the $1.99 service fee (taxes included) is charged online.",
     "platformFeeNotice": "Platform fee",
-    "platformFeeNoticeDesc": "A $1 + tax service fee applies to passengers at booking and to drivers after each completed trip.",
+    "platformFeeNoticeDesc": "A $1.99 service fee (taxes included) is charged to passengers at booking via Stripe.",
     "freeCancellationWithRefund": "Free cancellation more than 24h before departure — service fee refunded in full",
     "lateCancellationNoRefund": "Cancellation within 24h — service fee is non-refundable",
     "platformFeeTitle": "Service fee",
-    "platformFeeDesc": "$1.00 + applicable provincial taxes per trip",
+    "platformFeeDesc": "$1.99 per booking (taxes included)",
     "totalServiceFee": "Total service fee",
     "payServiceFee": "Pay service fee",
     "stripeSecure": "Secure payment by Stripe"
@@ -269,28 +270,19 @@
     "pay": "Pay now",
     "summary": "Payment summary",
     "subtotal": "Subtotal",
-    "serviceFee": "Service fee ($1.00 × {seats} seat(s))",
+    "serviceFee": "Service fee",
     "total": "Total",
     "redirecting": "Redirecting to payment...",
     "serviceTax": "Tax ({taxName})",
     "driverPayout": "Driver payout",
-    "serviceFeeInfo": "Service fee of $1.00 + taxes per trip charged via Stripe for passengers and drivers.",
-    "directPaymentInfo": "The trip price is paid directly to the driver (cash, Interac e-Transfer, etc.). Only the $1 + tax service fee is processed online."
+    "serviceFeeInfo": "Service fee of $1.99 (taxes included) charged to passengers at booking.",
+    "directPaymentInfo": "The trip price is paid directly to the driver (cash, Interac e-Transfer, etc.). Only the $1.99 service fee is processed online."
   },
   "stripe": {
-    "connectTitle": "Set up Stripe Connect",
-    "connectDesc": "Connect your Stripe account so the $1 + tax platform fee can be charged after each completed trip.",
-    "connectButton": "Set up Stripe Connect",
-    "connectPending": "Complete your Stripe Connect setup",
-    "connectActive": "Stripe Connect active",
-    "connectDashboard": "View Stripe dashboard",
     "earnings": "Your earnings",
-    "platformFee": "Platform fee ($1 + tax per completed trip)",
-    "processingFee": "Stripe processing fee (~2.9% + $0.30)",
     "youReceive": "You receive 100% of the trip price directly from passengers",
-    "payoutSchedule": "The trip price is paid directly by passengers (cash, Interac, etc.).",
-    "freeRegistration": "Free registration and trip publishing",
-    "feeExplanation": "Both passengers and drivers pay a $1.00 + tax service fee per trip. You keep 100% of the trip price — paid directly by the passenger."
+    "freeRegistration": "Free registration — no fees for drivers",
+    "feeExplanation": "Passengers pay you the trip price directly. Only a $1.99 service fee (taxes included) is charged to the passenger at booking."
   },
   "footer": {
     "about": "About us",
@@ -333,17 +325,8 @@
     "insuranceVerification": "Insurance verification",
     "pending": "Pending",
     "completeVerification": "Complete verification",
-    "stripeConnectTitle": "Stripe Connect",
-    "stripeConnectDesc": "Connect your Stripe account so the $1 + tax platform fee can be charged after each trip.",
-    "stripeActive": "Stripe active",
-    "stripePending": "Stripe pending",
-    "setupStripe": "Set up Stripe",
-    "completeStripeSetup": "Complete Stripe setup",
-    "viewStripeDashboard": "View Stripe dashboard",
-    "hybridPaymentTitle": "Hybrid payment",
-    "hybridPaymentDesc": "The trip price is paid directly to the driver. Only the $1 + tax service fee is processed via Stripe.",
-    "driverFeeNotice": "Driver service fee",
-    "driverFeeNoticeDesc": "$1 + tax is charged automatically via Stripe Connect after each completed trip."
+    "noDriverFeeTitle": "No fees for drivers",
+    "noDriverFeeDesc": "You keep 100% of the trip price. Only the passenger pays a $1.99 service fee (taxes included) at booking."
   },
   "consent": {
     "title": "Consent & Privacy",
@@ -425,15 +408,15 @@
     },
     "payments": {
       "q1": "How does payment work?",
-      "a1": "Payment is hybrid. The trip price is paid directly to the driver (cash, Interac e-Transfer, or any agreed method). A $1.00 + tax service fee is charged via Stripe: for passengers at booking, and for drivers automatically after each completed trip.",
+      "a1": "Payment is hybrid. The trip price is paid directly to the driver (cash, Interac e-Transfer, or any agreed method). A $1.99 (taxes included) service fee is charged via Stripe at booking for passengers only. Drivers pay no fees.",
       "q2": "What fees does Canada Carpooling charge?",
-      "a2": "A $1.00 + provincial tax service fee per trip, for both passengers AND drivers. That's it. Registration is free. This is the lowest fee structure in Canada — competitors charge 15-20% commission.",
+      "a2": "A $1.99 (taxes included) service fee per booking, for passengers only. That's it. Registration is free and drivers pay nothing. This is the lowest fee structure in Canada — competitors charge 15-20% commission.",
       "q3": "How do refunds work?",
       "a3": "Cancellation more than 24 hours before departure: service fee refunded in full. Cancellation within 24 hours: service fee is non-refundable. If the driver cancels, the service fee is always refunded automatically. Refunds are processed within 5-10 business days.",
       "q4": "How do drivers get paid?",
-      "a4": "Passengers pay the driver directly on the day of the trip (cash, Interac, etc.). The driver receives 100% of the trip price with no middleman. A $1 + tax service fee is charged separately via Stripe Connect after the trip.",
+      "a4": "Passengers pay the driver directly on the day of the trip (cash, Interac, etc.). The driver receives 100% of the trip price with no middleman and no commission.",
       "q5": "How much do drivers pay?",
-      "a5": "Drivers pay $1.00 + provincial tax per completed trip. This fee is charged automatically via Stripe Connect after each trip. Registration and trip publishing are free. Drivers keep 100% of the trip price."
+      "a5": "Nothing! Drivers pay no fees at all. Registration, trip publishing, and trip completion are completely free. Drivers keep 100% of the trip price. Only passengers pay a $1.99 (taxes included) service fee per booking."
     },
     "trips": {
       "q1": "How do I book a ride?",
@@ -479,7 +462,7 @@
       "q2": "Is Canada Carpooling legal in Canada?",
       "a2": "Yes. Carpooling — sharing costs of a trip you're already taking — is legal across Canada. Drivers cannot profit; they can only share the cost of gas, tolls, and wear. We enforce this by recommending fair prices.",
       "q3": "How is Canada Carpooling different from competitors?",
-      "a3": "A service fee of only $1 + tax per trip for both passengers AND drivers (competitors charge 15-20% commission). Drivers keep 100% of the trip price — paid directly with no middleman. Bilingual support, Canadian-first design, SOS button, and full PIPEDA compliance."
+      "a3": "A service fee of only $1.99 (taxes included) per booking for passengers only — drivers pay nothing (competitors charge 15-20% commission). Drivers keep 100% of the trip price — paid directly with no middleman. Bilingual support, Canadian-first design, SOS button, and full PIPEDA compliance."
     }
   },
   "chatbot": {
@@ -497,10 +480,10 @@
       "safety": "Your safety is our #1 priority. All drivers are verified with government ID, driver's license, and biometric selfie. Trips are GPS-tracked in real-time, and our in-app SOS button connects you directly to emergency services.",
       "insurance": "Trips are covered by the driver's personal auto insurance (mandatory in Canada). We recommend drivers confirm their policy covers carpooling passengers. Canada Carpooling does not currently provide supplemental insurance.",
       "emergency": "If you feel unsafe, tap the SOS button in the app immediately. It contacts emergency services and shares your live GPS location. You can also share trip details with a trusted contact before departure.",
-      "payment": "Payment is hybrid. The trip price is paid directly to the driver (cash, Interac, etc.). A $1.00 + tax service fee is charged via Stripe: for passengers at booking, and for drivers automatically after each completed trip. Your card info is secured by Stripe — never stored on our servers.",
+      "payment": "Payment is hybrid. The trip price is paid directly to the driver (cash, Interac, etc.). A $1.99 (taxes included) service fee is charged via Stripe for passengers at booking only. Drivers pay no fees. Your card info is secured by Stripe — never stored on our servers.",
       "refund": "Cancellation more than 24h before departure: service fee refunded in full. Within 24h: service fee is non-refundable. Driver cancels: service fee always refunded automatically. Refunds take 5-10 business days.",
-      "driverEarnings": "Drivers receive 100% of the trip price directly from passengers (cash, Interac, etc.) — zero commission. A $1 + tax service fee per completed trip is charged separately via Stripe Connect.",
-      "driverFree": "Registration and trip publishing are free. Drivers pay a $1 + tax service fee per completed trip, charged automatically via Stripe Connect. Drivers keep 100% of the trip price — the lowest fee structure in Canada.",
+      "driverEarnings": "Drivers receive 100% of the trip price directly from passengers (cash, Interac, etc.) — zero commission, zero fees. It's completely free for drivers.",
+      "driverFree": "Registration, trip publishing, and trip completion are entirely free for drivers. No fees, no commission. Drivers keep 100% of the trip price — the lowest fee structure in Canada.",
       "howToBook": "1. Search your route and date. 2. Browse available rides and check driver profiles. 3. Book and pay securely online. 4. You'll receive confirmation with pickup details. You can message the driver before the trip!",
       "offerTrip": "Create an account and verify your identity + license. Then publish your trip: enter departure, destination, date, time, available seats, and price per seat. Passengers will find and book your trip!",
       "noShow": "If the driver doesn't show up, your service fee is refunded automatically. Report the incident in the app — repeated no-shows lead to account suspension. If a passenger no-shows, the trip price agreed with the driver is non-refundable.",
@@ -514,4 +497,4 @@
       "discrimination": "We have a zero-tolerance policy. Report any discrimination or harassment through the app immediately. We investigate within 24 hours and permanently ban offenders. Your dignity is non-negotiable."
     }
   }
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            

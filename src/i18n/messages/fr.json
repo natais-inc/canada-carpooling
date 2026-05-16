@@ -46,7 +46,7 @@
       },
       "payment": {
         "title": "Paiement hybride",
-        "description": "Payez le conducteur directement (comptant, Interac). Frais de service de seulement 1 $ + taxes par réservation."
+        "description": "Payez le conducteur directement (comptant, Interac). Frais de service de seulement 1,99 $ (taxes incluses) par réservation."
       },
       "chat": {
         "title": "Messagerie intégrée",
@@ -71,9 +71,9 @@
     "benefit1Title": "Conducteurs vérifiés",
     "benefit1Desc": "Chaque permis de conduire et identité est vérifié par contrôle biométrique.",
     "benefit2Title": "Paiement hybride",
-    "benefit2Desc": "Payez le conducteur directement (comptant, Interac). Frais de service de seulement 1 $ + taxes.",
+    "benefit2Desc": "Payez le conducteur directement (comptant, Interac). Frais de service de seulement 1,99 $ (taxes incluses).",
     "benefit3Title": "Prix imbattables",
-    "benefit3Desc": "Seulement 1 $ + taxes par trajet — les frais les plus bas au Canada. Inscription gratuite.",
+    "benefit3Desc": "Seulement 1,99 $ (taxes incluses) par réservation — les frais les plus bas au Canada. Inscription gratuite.",
     "benefit4Title": "Support 24/7",
     "benefit4Desc": "Notre équipe est là pour vous aider chaque jour, à tout moment."
   },
@@ -133,9 +133,9 @@
     "serviceFeeLabel": "Frais de service",
     "taxes": "taxes",
     "hybridPaymentTitle": "Paiement hybride",
-    "hybridPaymentDesc": "Le prix du trajet est payé directement au conducteur (comptant, Interac). Seuls les frais de service de 1 $ + taxes sont traités via Stripe.",
+    "hybridPaymentDesc": "Le prix du trajet est payé directement au conducteur (comptant, Interac). Seuls les frais de service de 1,99 $ (taxes incluses) sont traités via Stripe.",
     "platformFeeNotice": "Frais de plateforme",
-    "platformFeeNoticeDesc": "Frais de service de 1,00 $ + taxes applicables prélevés lors de la réservation.",
+    "platformFeeNoticeDesc": "Frais de service de 1,99 $ (taxes incluses) prélevés lors de la réservation.",
     "freeCancellationWithRefund": "Annulation gratuite jusqu'à 24h avant le départ — frais de service remboursés",
     "lateCancellationNoRefund": "Annulation dans les 24h — frais de service non remboursables",
     "noShowPolicy": "Absence sans préavis — frais non remboursables, évaluation négative possible",
@@ -173,10 +173,11 @@
     "bookingSummary": "Résumé de la réservation",
     "serviceFeeLabel": "Frais de service",
     "taxes": "taxes",
+    "taxesIncluded": "taxes incluses",
     "hybridPaymentTitle": "Paiement hybride",
-    "hybridPaymentDesc": "Le prix du trajet est payé directement au conducteur (comptant, Interac). Seuls les frais de service de 1 $ + taxes sont traités par carte.",
+    "hybridPaymentDesc": "Le prix du trajet est payé directement au conducteur (comptant, Interac). Seuls les frais de service de 1,99 $ TTC sont traités par carte.",
     "platformFeeNotice": "Frais de plateforme",
-    "platformFeeNoticeDesc": "Frais de service de 1,00 $ + taxes applicables prélevés lors de la réservation via Stripe.",
+    "platformFeeNoticeDesc": "Frais de service de 1,99 $ (taxes incluses) prélevés lors de la réservation via Stripe.",
     "totalToPay": "Total à payer au conducteur",
     "confirmBooking": "Confirmer la réservation",
     "processing": "Traitement en cours...",
@@ -190,8 +191,8 @@
     "freeCancellationWithRefund": "Annulation gratuite jusqu'à 24h avant le départ — frais de service remboursés",
     "lateCancellationNoRefund": "Annulation dans les 24h — frais de service non remboursables",
     "platformFeeTitle": "Frais de plateforme",
-    "platformFeeDesc": "Un frais de service de 1,00 $ + taxes est prélevé par carte pour soutenir la plateforme.",
-    "serviceFee": "Frais de service (1,00 $ × {seats} place(s))",
+    "platformFeeDesc": "Un frais de service de 1,99 $ (taxes incluses) est prélevé par carte pour soutenir la plateforme.",
+    "serviceFee": "Frais de service",
     "totalServiceFee": "Total frais de service",
     "payServiceFee": "Payer les frais de service",
     "stripeSecure": "Paiement sécurisé par Stripe"
@@ -268,27 +269,20 @@
   "payment": {
     "title": "Paiement",
     "directPayment": "Paiement direct au conducteur",
-    "directPaymentInfo": "Le prix du trajet est payé directement au conducteur (comptant, Interac). Les frais de service de 1 $ + taxes sont prélevés par carte.",
+    "directPaymentInfo": "Le prix du trajet est payé directement au conducteur (comptant, Interac). Les frais de service de 1,99 $ (taxes incluses) sont prélevés par carte.",
     "acceptedMethods": "Méthodes de paiement pour le trajet",
     "cash": "Argent comptant",
     "eTransfer": "Virement Interac",
     "otherMethods": "Autre méthode convenue avec le conducteur",
-    "serviceFeeInfo": "Frais de service : 1,00 $ + taxes par réservation",
+    "serviceFeeInfo": "Frais de service : 1,99 $ (taxes incluses) par réservation",
     "summary": "Résumé",
     "total": "Total à payer au conducteur"
   },
   "stripe": {
-    "connectTitle": "Paiements conducteur",
-    "connectDesc": "Connectez votre compte bancaire via Stripe pour que les frais de service soient prélevés automatiquement après chaque trajet.",
-    "connectButton": "Configurer Stripe",
-    "connectPending": "Complétez votre configuration Stripe",
-    "connectActive": "Paiements actifs",
-    "connectDashboard": "Voir le tableau de bord Stripe",
     "earnings": "Vos revenus",
     "youReceive": "Vous recevez 100% du prix du trajet — paiement direct du passager",
-    "platformFee": "Frais de plateforme (1 $ + taxes par trajet complété)",
-    "freeRegistration": "Inscription gratuite",
-    "feeExplanation": "Les passagers vous paient directement le prix du trajet. Des frais de service de 1,00 $ + taxes sont prélevés automatiquement après chaque trajet complété via Stripe Connect."
+    "freeRegistration": "Inscription gratuite — aucun frais pour les conducteurs",
+    "feeExplanation": "Les passagers vous paient directement le prix du trajet. Seul un frais de service de 1,99 $ TTC est facturé au passager lors de la réservation."
   },
   "footer": {
     "about": "À propos",
@@ -331,17 +325,8 @@
     "insuranceVerification": "Assurance vérifiée",
     "pending": "En attente",
     "completeVerification": "Compléter la vérification",
-    "stripeConnectTitle": "Configuration Stripe Connect",
-    "stripeConnectDesc": "Connectez votre compte bancaire pour que les frais de service soient prélevés automatiquement après chaque trajet.",
-    "stripeActive": "Stripe actif",
-    "stripePending": "Stripe en attente",
-    "setupStripe": "Configurer Stripe",
-    "completeStripeSetup": "Compléter la configuration Stripe",
-    "viewStripeDashboard": "Voir le tableau de bord Stripe",
-    "hybridPaymentTitle": "Paiement hybride",
-    "hybridPaymentDesc": "Les passagers vous paient directement le prix du trajet. Des frais de service de 1 $ + taxes sont prélevés automatiquement après chaque trajet complété.",
-    "driverFeeNotice": "Frais conducteur",
-    "driverFeeNoticeDesc": "Des frais de service de 1,00 $ + taxes provinciales sont prélevés automatiquement après chaque trajet complété via Stripe Connect."
+    "noDriverFeeTitle": "Aucun frais pour les conducteurs",
+    "noDriverFeeDesc": "Vous conservez 100% du prix du trajet. Seul le passager paie un frais de service de 1,99 $ TTC lors de la réservation."
   },
   "consent": {
     "title": "Consentement et confidentialité",
@@ -423,15 +408,15 @@
     },
     "payments": {
       "q1": "Comment fonctionne le paiement?",
-      "a1": "Le paiement est hybride. Le prix du trajet est payé directement au conducteur (comptant, virement Interac ou autre méthode convenue). Des frais de service de 1,00 $ + taxes sont prélevés par carte via Stripe : pour les passagers au moment de la réservation, et pour les conducteurs automatiquement après chaque trajet complété.",
+      "a1": "Le paiement est hybride. Le prix du trajet est payé directement au conducteur (comptant, virement Interac ou autre méthode convenue). Des frais de service de 1,99 $ (taxes incluses) sont prélevés par carte via Stripe au moment de la réservation pour les passagers uniquement. Les conducteurs ne paient aucun frais.",
       "q2": "Quels frais facture Canada Carpooling?",
-      "a2": "Des frais de service de 1,00 $ + taxes provinciales par trajet, pour les passagers ET les conducteurs. C'est tout. L'inscription est gratuite. C'est la structure de frais la plus basse au Canada — les concurrents prennent 15-20% de commission.",
+      "a2": "Des frais de service de 1,99 $ (taxes incluses) par réservation, pour les passagers uniquement. C'est tout. L'inscription est gratuite et les conducteurs ne paient rien. C'est la structure de frais la plus basse au Canada — les concurrents prennent 15-20% de commission.",
       "q3": "Comment fonctionnent les remboursements?",
       "a3": "Annulation plus de 24 heures avant le départ : les frais de service sont remboursés intégralement. Annulation dans les 24 heures : les frais de service ne sont pas remboursables. Si le conducteur annule, les frais de service sont toujours remboursés automatiquement. Les remboursements sont traités sous 5 à 10 jours ouvrables.",
       "q4": "Comment les conducteurs sont-ils payés?",
-      "a4": "Les passagers paient le conducteur directement le jour du trajet (comptant, Interac, etc.). Le conducteur reçoit 100% du prix du trajet sans intermédiaire. Des frais de service de 1 $ + taxes sont prélevés séparément via Stripe Connect après le trajet.",
+      "a4": "Les passagers paient le conducteur directement le jour du trajet (comptant, Interac, etc.). Le conducteur reçoit 100% du prix du trajet sans intermédiaire et sans aucune commission.",
       "q5": "Combien coûtent les frais pour les conducteurs?",
-      "a5": "Les conducteurs paient 1,00 $ + taxes provinciales par trajet complété. Ces frais sont prélevés automatiquement via Stripe Connect après chaque trajet. L'inscription et la publication de trajets sont gratuites. Les conducteurs gardent 100% du prix du trajet."
+      "a5": "Rien! Les conducteurs ne paient aucun frais. L'inscription, la publication de trajets et la complétion des trajets sont entièrement gratuites. Les conducteurs gardent 100% du prix du trajet. Seuls les passagers paient des frais de service de 1,99 $ (taxes incluses) par réservation."
     },
     "trips": {
       "q1": "Comment réserver un trajet?",
@@ -477,7 +462,7 @@
       "q2": "Le covoiturage est-il légal au Canada?",
       "a2": "Oui. Le covoiturage — partager les frais d'un trajet que vous faites déjà — est légal partout au Canada. Les conducteurs ne peuvent pas faire de profit; ils peuvent seulement partager les coûts d'essence, péages et usure. Nous appliquons cela en recommandant des prix justes.",
       "q3": "En quoi Canada Carpooling est différent des concurrents?",
-      "a3": "Des frais de service de seulement 1 $ + taxes par trajet pour les passagers ET les conducteurs (les concurrents prennent 15-20% de commission). Les conducteurs gardent 100% du prix du trajet — le prix est payé directement sans intermédiaire. Support bilingue, design pensé pour le Canada, bouton SOS et conformité LPRPDE."
+      "a3": "Des frais de service de seulement 1,99 $ (taxes incluses) par réservation pour les passagers uniquement — les conducteurs ne paient rien (les concurrents prennent 15-20% de commission). Les conducteurs gardent 100% du prix du trajet — le prix est payé directement sans intermédiaire. Support bilingue, design pensé pour le Canada, bouton SOS et conformité LPRPDE."
     }
   },
   "chatbot": {
@@ -495,10 +480,10 @@
       "safety": "Votre sécurité est notre priorité #1. Tous les conducteurs sont vérifiés par pièce d'identité gouvernementale, permis de conduire et selfie biométrique. Les trajets sont suivis par GPS en temps réel et notre bouton SOS dans l'application vous connecte directement aux services d'urgence.",
       "insurance": "Les trajets sont couverts par l'assurance automobile personnelle du conducteur (obligatoire au Canada). Nous recommandons aux conducteurs de confirmer que leur police couvre les passagers en covoiturage. Canada Carpooling ne fournit pas d'assurance supplémentaire pour le moment.",
       "emergency": "Si vous vous sentez en danger, appuyez immédiatement sur le bouton SOS dans l'application. Il contacte les services d'urgence et partage votre position GPS en direct. Vous pouvez aussi partager les détails du trajet avec un contact de confiance avant le départ.",
-      "payment": "Le paiement est hybride. Le prix du trajet est payé directement au conducteur (comptant, Interac, etc.). Des frais de service de 1,00 $ + taxes sont prélevés via Stripe : pour les passagers à la réservation, et pour les conducteurs automatiquement après chaque trajet complété. Vos informations de carte sont sécurisées par Stripe — jamais stockées sur nos serveurs.",
+      "payment": "Le paiement est hybride. Le prix du trajet est payé directement au conducteur (comptant, Interac, etc.). Des frais de service de 1,99 $ (taxes incluses) sont prélevés via Stripe pour les passagers à la réservation uniquement. Les conducteurs ne paient aucun frais. Vos informations de carte sont sécurisées par Stripe — jamais stockées sur nos serveurs.",
       "refund": "Annulation plus de 24h avant le départ : frais de service remboursés intégralement. Annulation dans les 24h : frais de service non remboursables. Le conducteur annule : frais de service toujours remboursés automatiquement. Les remboursements prennent 5-10 jours ouvrables.",
-      "driverEarnings": "Les conducteurs reçoivent 100% du prix du trajet directement des passagers (comptant, Interac, etc.) — aucune commission. Des frais de service de 1 $ + taxes par trajet complété sont prélevés séparément via Stripe Connect.",
-      "driverFree": "L'inscription et la publication de trajets sont gratuites. Les conducteurs paient des frais de service de 1 $ + taxes par trajet complété, prélevés automatiquement via Stripe Connect. Les conducteurs gardent 100% du prix du trajet — c'est la structure de frais la plus basse au Canada.",
+      "driverEarnings": "Les conducteurs reçoivent 100% du prix du trajet directement des passagers (comptant, Interac, etc.) — aucune commission, aucun frais. C'est gratuit pour les conducteurs.",
+      "driverFree": "L'inscription, la publication et la complétion de trajets sont entièrement gratuites pour les conducteurs. Aucun frais, aucune commission. Les conducteurs gardent 100% du prix du trajet — c'est la structure de frais la plus basse au Canada.",
       "howToBook": "1. Recherchez votre itinéraire et date. 2. Parcourez les trajets disponibles et consultez les profils. 3. Réservez et payez en toute sécurité en ligne. 4. Vous recevrez une confirmation avec les détails du point de rencontre. Vous pouvez contacter le conducteur avant le trajet!",
       "offerTrip": "Créez un compte et vérifiez votre identité + permis. Puis publiez votre trajet : entrez départ, destination, date, heure, places disponibles et prix par place. Les passagers trouveront et réserveront votre trajet!",
       "noShow": "Si le conducteur ne se présente pas, vos frais de service sont remboursés automatiquement. Signalez l'incident dans l'application — les absences répétées mènent à la suspension du compte. Si un passager est absent, le prix du trajet convenu avec le conducteur n'est pas remboursable.",
@@ -512,4 +497,4 @@
       "discrimination": "Nous avons une politique de tolérance zéro. Signalez toute discrimination ou harcèlement via l'application immédiatement. Nous enquêtons dans les 24 heures et bannissons définitivement les contrevenants. Votre dignité n'est pas négociable."
     }
   }
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

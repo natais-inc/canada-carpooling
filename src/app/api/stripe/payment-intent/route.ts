@@ -6,8 +6,9 @@ import { getOrCreateCustomer, createPlatformFeePaymentIntent } from '@/lib/strip
 import { calculatePlatformFee } from '@/lib/pricing';
 
 /**
- * POST /api/stripe/payment-intent — Create a PaymentIntent for the passenger's $1 + taxes platform fee.
+ * POST /api/stripe/payment-intent — Create a PaymentIntent for the passenger's 1.99$ TTC platform fee.
  * Called during the booking flow before confirmation.
+ * Amount is always 199 cents CAD (taxes included).
  */
 export async function POST(req: NextRequest) {
   try {
@@ -103,6 +104,4 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: unknown) {
     console.error('Create payment intent error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
+    return NextResponse.json({ error: 

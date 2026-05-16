@@ -1,6 +1,6 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { MapPin, Clock, Users, Calendar, PawPrint, Cigarette, Music, Luggage, MessageSquare, Shield, AlertTriangle } from 'lucide-react';
+import { MapPin, Clock, Users, Calendar, PawPrint, Cigarette, Music, Luggage, MessageSquare, Shield, AlertTriangle, Banknote, HandCoins, CreditCard } from 'lucide-react';
 import Card, { CardBody } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
@@ -199,18 +199,38 @@ export default function TripDetailPage() {
                 </select>
               </div>
 
-              {/* Total */}
-              <div className="flex justify-between text-sm border-t pt-3">
-                <span className="text-gray-600">1 × {formatPrice(trip.price)}</span>
-                <span className="font-semibold">{formatPrice(trip.price)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">{t('serviceFee')}</span>
-                <span className="font-semibold">{formatPrice(trip.price * 0.15)}</span>
+              {/* Price breakdown — trip price + platform fee */}
+              <div className="space-y-2 border-t pt-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">1 x {formatPrice(trip.price)}</span>
+                  <span className="font-semibold">{formatPrice(trip.price)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>{t('serviceFeeLabel')}</span>
+                  <span>1,99 $ ({t('taxesIncluded')})</span>
+                </div>
               </div>
               <div className="flex justify-between font-bold border-t pt-3">
                 <span>{t('total')}</span>
-                <span className="text-brand-600">{formatPrice(trip.price * 1.15)}</span>
+                <span className="text-brand-600">{formatPrice(trip.price)} + 1,99 $</span>
+              </div>
+
+              {/* Hybrid payment notice */}
+              <div className="flex items-start gap-2 p-2.5 bg-blue-50 rounded-lg text-xs text-blue-700">
+                <HandCoins className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-medium">{t('hybridPaymentTitle')}</span>
+                  <p className="mt-0.5">{t('hybridPaymentDesc')}</p>
+                </div>
+              </div>
+
+              {/* Platform fee notice */}
+              <div className="flex items-start gap-2 p-2.5 bg-indigo-50 rounded-lg text-xs text-indigo-700">
+                <CreditCard className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-medium">{t('platformFeeNotice')}</span>
+                  <p className="mt-0.5">{t('platformFeeNoticeDesc')}</p>
+                </div>
               </div>
 
               <Button size="lg" className="w-full">{t('bookNow')}</Button>
@@ -220,11 +240,11 @@ export default function TripDetailPage() {
               </Button>
 
               {/* Cancellation policy */}
-              <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
-                <p className="font-medium text-gray-700 mb-1">{t('cancellationPolicy')}</p>
-                <p>• {t('cancellationFree')}</p>
-                <p>• {t('cancellation50')}</p>
-                <p>• {t('cancellation100')}</p>
+              <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg space-y-1">
+                <p className="font-medium text-gray-700">{t('cancellationPolicy')}</p>
+                <p>• {t('freeCancellationWithRefund')}</p>
+                <p>• {t('lateCancellationNoRefund')}</p>
+                <p>• {t('noShowPolicy')}</p>
               </div>
             </CardBody>
           </Card>
