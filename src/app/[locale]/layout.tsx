@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CookieConsent from '@/components/consent/CookieConsent';
+import ChatbotWidget from '@/components/ChatbotWidget';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import type { Metadata } from 'next';
 
@@ -87,6 +88,7 @@ export default async function LocaleLayout({
           </ErrorBoundary>
           <Footer />
           <CookieConsent />
+          <ChatbotWidget />
         </NextIntlClientProvider>
       </body>
     </html>
