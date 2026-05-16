@@ -56,16 +56,20 @@ model User {
   preferredLanguage String             @default("fr")
   role              UserRole           @default(USER)
   
-  // Verification
+  // Verification — Passengers: ID + selfie | Drivers: license + vehicle papers + insurance
   idVerified              Boolean            @default(false)
   licenseVerified         Boolean            @default(false)
   selfieVerified          Boolean            @default(false)
+  vehicleRegistrationVerified Boolean        @default(false)
+  insuranceVerified       Boolean            @default(false)
   verificationStatus      String             @default("unverified") // unverified, pending, verified, rejected
   veriffSessionId         String?
   verifiedAt              DateTime?
   idDocumentUrl           String?
   licenseDocumentUrl      String?
   selfieUrl               String?
+  vehicleRegistrationUrl  String?
+  insuranceDocumentUrl    String?
   
   // Stripe
   stripeCustomerId    String?
@@ -232,18 +236,20 @@ model Booking {
   passengerId     String
   
   seatsBooked     Int           @default(1)
-  totalPrice      Float         // Trip price (100% to driver)
-  serviceFee      Float         // 1 CAD per seat (flat fee)
-  serviceFeeTax   Float         @default(0) // Tax on service fee (GST/PST/HST/QST)
-  serviceFeeTotal Float         @default(0) // serviceFee + serviceFeeTax
-  driverPayout    Float         // = totalPrice (driver gets 100%)
-  provinceCode    String?       // Province code for tax calculation (e.g. "QC", "ON")
-  taxName         String?       // Tax label (e.g. "TPS + TVQ", "HST")
-  
+  totalPrice      Float         // Trip price paid directly to driver
+
+  // Platform fee ($1 + provincial taxes, charged via Stripe)
+  serviceFee      Float         @default(0)
+  serviceFeeTax   Float         @default(0)
+  serviceFeeTotal Float         @default(0)
+  driverPayout    Float         @default(0)
+  provinceCode    String?
+  taxName         String?
+
   status          BookingStatus @default(PENDING)
   paymentStatus   PaymentStatus @default(PENDING)
-  
-  // Stripe
+
+  // Stripe payment tracking (for $1+taxes platform fee)
   stripePaymentIntentId String?
   stripeTransferId      String?
   
@@ -373,3 +379,4 @@ model DataProcessingLog {
   @@index([userId])
   @@index([activity])
 }
+   

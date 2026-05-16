@@ -29,6 +29,7 @@ export default function Footer() {
               <li><Link href={`/${locale}/about`} className="hover:text-white transition-colors">{t('about')}</Link></li>
               <li><Link href={`/${locale}/safety`} className="hover:text-white transition-colors">{t('safety')}</Link></li>
               <li><Link href={`/${locale}/help`} className="hover:text-white transition-colors">{t('help')}</Link></li>
+              <li><Link href={`/${locale}/faq`} className="hover:text-white transition-colors">{t('faq')}</Link></li>
             </ul>
           </div>
 

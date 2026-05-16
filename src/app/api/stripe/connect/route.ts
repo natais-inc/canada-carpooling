@@ -2,15 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { requireValidConsent } from '@/lib/consent-middleware';
-import {
-  createConnectAccount,
-  createAccountLink,
-  createLoginLink,
-  getAccountStatus,
-} from '@/lib/stripe';
+import { createConnectAccount, createAccountLink, createLoginLink, getAccountStatus } from '@/lib/stripe';
 
-// POST /api/stripe/connect — Start Stripe Connect onboarding
+/**
+ * POST /api/stripe/connect — Start Stripe Connect onboarding for a driver.
+ * This allows the platform to charge the driver $1 + taxes after each trip.
+ */
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,58 +15,66 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // PIPEDA consent check
-    const consentCheck = await requireValidConsent(session.user.id);
-    if (consentCheck) return consentCheck;
-
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
+      select: {
+        id: true,
+        email: true,
+        stripeAccountId: true,
+        licenseVerified: true,
+        vehicleRegistrationVerified: true,
+        insuranceVerified: true,
+      },
     });
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const locale = user.preferredLanguage || 'fr';
+    // Driver must have completed verification first
+    if (!user.licenseVerified) {
+      return NextResponse.json(
+        { error: 'License verification required before Stripe setup' },
+        { status: 400 }
+      );
+    }
 
-    // If user already has a Stripe account, create a new link
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+
+    // If already has Connect account, check status or create login link
     if (user.stripeAccountId) {
       const status = await getAccountStatus(user.stripeAccountId);
 
-      // If onboarding is complete, return dashboard link
-      if (status.chargesEnabled && status.payoutsEnabled) {
+      if (status?.detailsSubmitted) {
+        // Account fully onboarded — return dashboard link
         const loginLink = await createLoginLink(user.stripeAccountId);
         return NextResponse.json({
-          type: 'dashboard',
-          url: loginLink.url,
-          status,
+          status: 'active',
+          dashboardUrl: loginLink?.url,
+          chargesEnabled: status.chargesEnabled,
         });
       }
 
-      // Otherwise, create a new onboarding link
+      // Incomplete onboarding — generate new link
       const accountLink = await createAccountLink(
         user.stripeAccountId,
-        `${baseUrl}/${locale}/profile?stripe=refresh`,
-        `${baseUrl}/${locale}/profile?stripe=complete`
+        `${baseUrl}/profile?stripe=refresh`,
+        `${baseUrl}/profile?stripe=complete`
       );
 
       return NextResponse.json({
-        type: 'onboarding',
-        url: accountLink.url,
-        status,
+        status: 'pending',
+        onboardingUrl: accountLink?.url,
       });
     }
 
-    // Create new Stripe Connect account
-    const account = await createConnectAccount(
-      user.email!,
-      user.id,
-      user.firstName || '',
-      user.lastName || ''
-    );
+    // Create new Connect account
+    const account = await createConnectAccount(user.email, user.id);
+    if (!account) {
+      return NextResponse.json({ error: 'Stripe unavailable' }, { status: 503 });
+    }
 
-    // Save Stripe account ID to user
+    // Save account ID
     await prisma.user.update({
       where: { id: user.id },
       data: { stripeAccountId: account.id },
@@ -78,14 +83,13 @@ export async function POST(req: NextRequest) {
     // Create onboarding link
     const accountLink = await createAccountLink(
       account.id,
-      `${baseUrl}/${locale}/profile?stripe=refresh`,
-      `${baseUrl}/${locale}/profile?stripe=complete`
+      `${baseUrl}/profile?stripe=refresh`,
+      `${baseUrl}/profile?stripe=complete`
     );
 
     return NextResponse.json({
-      type: 'onboarding',
-      url: accountLink.url,
-      accountId: account.id,
+      status: 'created',
+      onboardingUrl: accountLink?.url,
     });
   } catch (error: unknown) {
     console.error('Stripe Connect error:', error);
@@ -93,8 +97,10 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/stripe/connect — Check Stripe Connect status
-export async function GET(req: NextRequest) {
+/**
+ * GET /api/stripe/connect — Check driver's Stripe Connect status.
+ */
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -107,21 +113,22 @@ export async function GET(req: NextRequest) {
     });
 
     if (!user?.stripeAccountId) {
-      return NextResponse.json({
-        connected: false,
-        chargesEnabled: false,
-        payoutsEnabled: false,
-      });
+      return NextResponse.json({ status: 'not_connected', chargesEnabled: false });
     }
 
     const status = await getAccountStatus(user.stripeAccountId);
+    if (!status) {
+      return NextResponse.json({ status: 'error', chargesEnabled: false });
+    }
 
     return NextResponse.json({
-      connected: true,
-      ...status,
+      status: status.detailsSubmitted ? 'active' : 'pending',
+      chargesEnabled: status.chargesEnabled,
+      payoutsEnabled: status.payoutsEnabled,
+      detailsSubmitted: status.detailsSubmitted,
     });
   } catch (error: unknown) {
-    console.error('Stripe status error:', error);
+    console.error('Stripe Connect status error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -18,6 +18,7 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
   pages: {
     signIn: '/auth/login',
+    signUp: '/auth/signup',
   },
   providers: [
     GoogleProvider({
@@ -116,7 +117,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id;
+        (session.user as any).id = token.id;
       }
       return session;
     },

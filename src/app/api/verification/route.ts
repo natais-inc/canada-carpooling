@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/verification — Check verification status
+// GET /api/verification — Check verification status (all fields including driver-specific)
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -72,7 +72,10 @@ export async function GET(req: NextRequest) {
         idVerified: true,
         licenseVerified: true,
         selfieVerified: true,
+        vehicleRegistrationVerified: true,
+        insuranceVerified: true,
         verificationStatus: true,
+        role: true,
       },
     });
 
@@ -80,7 +83,10 @@ export async function GET(req: NextRequest) {
       idVerified: user?.idVerified || false,
       licenseVerified: user?.licenseVerified || false,
       selfieVerified: user?.selfieVerified || false,
+      vehicleRegistrationVerified: user?.vehicleRegistrationVerified || false,
+      insuranceVerified: user?.insuranceVerified || false,
       status: user?.verificationStatus || 'none',
+      role: user?.role || 'USER',
     });
   } catch (error: unknown) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

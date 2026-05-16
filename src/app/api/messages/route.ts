@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
     const conversationMap = new Map();
     for (const msg of [...sent, ...received]) {
       const otherId = msg.senderId === session.user.id ? msg.receiverId : msg.senderId;
-      const other = msg.senderId === session.user.id ? (msg as any).receiver : (msg as any).sender;
+      const other = msg.senderId === session.user.id ? (msg as any).receiver : msg.sender;
       if (!conversationMap.has(otherId) || new Date(msg.createdAt) > new Date(conversationMap.get(otherId).lastMessage.createdAt)) {
         conversationMap.set(otherId, { user: other, lastMessage: msg });
       }

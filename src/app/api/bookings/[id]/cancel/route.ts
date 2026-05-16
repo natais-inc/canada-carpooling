@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { processCancellationRefund } from '@/lib/stripe';
+import { refundPlatformFee } from '@/lib/stripe';
 
-// POST /api/bookings/[id]/cancel — Cancel a booking with refund policy
+// POST /api/bookings/[id]/cancel — Cancel a booking (hybrid model)
+// Refund $1+taxes platform fee via Stripe if free cancellation (>24h before departure)
 export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -46,44 +47,48 @@ export async function POST(
       return NextResponse.json({ error: 'Cannot cancel completed booking' }, { status: 400 });
     }
 
-    // Process refund if payment was made
-    let refundResult = null;
-    if (booking.stripePaymentIntentId && booking.paymentStatus === 'PAID') {
-      const totalAmountCents = Math.round((booking.totalPrice + booking.serviceFee) * 100);
+    // Cancellation policy — refund $1+taxes platform fee if > 24h before departure
+    const hoursUntilDeparture = (booking.trip.departureDate.getTime() - Date.now()) / (1000 * 60 * 60);
+    let cancellationType: 'FREE' | 'LATE' | 'VERY_LATE';
+    if (hoursUntilDeparture > 24) {
+      cancellationType = 'FREE';
+    } else if (hoursUntilDeparture > 0) {
+      cancellationType = 'LATE';
+    } else {
+      cancellationType = 'VERY_LATE';
+    }
 
-      if (isDriver) {
-        // Driver cancels → full refund to passenger always
-        refundResult = await processCancellationRefund(
-          booking.stripePaymentIntentId,
-          totalAmountCents,
-          new Date(Date.now() + 48 * 60 * 60 * 1000) // force >24h logic → full refund
-        );
-      } else {
-        // Passenger cancels → apply cancellation policy based on departure time
-        refundResult = await processCancellationRefund(
-          booking.stripePaymentIntentId,
-          totalAmountCents,
-          booking.trip.departureDate
-        );
+    // Refund the $1+taxes Stripe platform fee for free cancellations
+    let refunded = false;
+    if (cancellationType === 'FREE' && booking.stripePaymentIntentId && booking.paymentStatus === 'PAID') {
+      const refund = await refundPlatformFee(booking.stripePaymentIntentId, 'requested_by_customer');
+      if (refund) {
+        refunded = true;
+        // Webhook will update paymentStatus to REFUNDED, but set it here too for immediate response
+        await prisma.booking.update({
+          where: { id: booking.id },
+          data: { paymentStatus: 'REFUNDED' },
+        });
+      }
+    }
+
+    // Also refund if driver cancels (regardless of timing — not the passenger's fault)
+    if (isDriver && booking.stripePaymentIntentId && booking.paymentStatus === 'PAID') {
+      const refund = await refundPlatformFee(booking.stripePaymentIntentId, 'requested_by_customer');
+      if (refund) {
+        refunded = true;
+        await prisma.booking.update({
+          where: { id: booking.id },
+          data: { paymentStatus: 'REFUNDED' },
+        });
       }
     }
 
     // Update booking status
-    const hoursUntilDeparture = (booking.trip.departureDate.getTime() - Date.now()) / (1000 * 60 * 60);
-    let refundType: string;
-    if (isDriver || hoursUntilDeparture > 24) {
-      refundType = 'FULL';
-    } else if (hoursUntilDeparture > 0) {
-      refundType = 'PARTIAL';
-    } else {
-      refundType = 'NONE';
-    }
-
     await prisma.booking.update({
       where: { id: booking.id },
       data: {
         status: isPassenger ? 'CANCELLED_BY_PASSENGER' : 'CANCELLED_BY_DRIVER',
-        paymentStatus: refundResult ? (refundType === 'FULL' ? 'REFUNDED' : 'PARTIALLY_REFUNDED') : booking.paymentStatus,
         cancelledAt: new Date(),
       },
     });
@@ -124,19 +129,20 @@ export async function POST(
         data: JSON.stringify({
           bookingId: booking.id,
           tripId: booking.tripId,
-          refundType,
+          cancellationType,
         }),
       },
     });
 
     return NextResponse.json({
       success: true,
-      refundType,
-      message: refundType === 'FULL'
-        ? 'Remboursement complet effectué'
-        : refundType === 'PARTIAL'
-        ? 'Remboursement partiel (50%) effectué'
-        : 'Aucun remboursement — annulation tardive',
+      cancellationType,
+      refunded,
+      message: cancellationType === 'FREE'
+        ? 'Réservation annulée (annulation gratuite, +24h avant départ). Frais de service remboursé.'
+        : cancellationType === 'LATE'
+        ? 'Réservation annulée (moins de 24h avant départ — annulation tardive notée). Frais de service non remboursable.'
+        : 'Réservation annulée (après départ — annulation très tardive notée). Frais de service non remboursable.',
     });
   } catch (error: unknown) {
     console.error('Cancel booking error:', error);

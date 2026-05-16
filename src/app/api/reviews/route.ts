@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Use a transaction to atomically create review + update average rating
-    const review = await prisma.$transaction(async (tx: any) => {
+    const review = await prisma.$transaction(async (tx) => {
       const newReview = await tx.review.create({
         data: {
           bookingId: data.bookingId,
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
         select: { rating: true },
       });
       const avgRating = allReviews.length > 0
-        ? allReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / allReviews.length
+        ? allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length
         : 0;
 
       await tx.user.update({
@@ -154,7 +154,7 @@ export async function GET(req: NextRequest) {
     // Aggregate stats
     const stats = {
       count: reviews.length,
-      average: reviews.length > 0 ? reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length : 0,
+      average: reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0,
       breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } as Record<number, number>,
       categories: {
         punctuality: 0,

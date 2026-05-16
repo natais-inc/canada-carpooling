@@ -1,44 +1,139 @@
+/**
+ * Stripe integration — Platform Fee Collection Only
+ *
+ * Stripe is used EXCLUSIVELY for collecting the $1 + taxes platform fee:
+ *   - Passengers: PaymentIntent at booking time
+ *   - Drivers: Charge via Stripe Connect after trip completion
+ *
+ * Trip prices are paid directly passenger → driver (cash, Interac, etc.)
+ */
+
 import Stripe from 'stripe';
-import { type BookingPriceBreakdown, calculateStripeAmounts } from './pricing';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-04-10',
-});
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.warn('STRIPE_SECRET_KEY not set — Stripe features disabled');
+}
 
-// ─── Stripe Connect: Driver Onboarding ───
+export const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-04-10' as any })
+  : null;
 
+// ─── Customer Management (Passengers) ───
+
+/**
+ * Get or create a Stripe Customer for a passenger (used for $1 fee collection).
+ */
+export async function getOrCreateCustomer(
+  userId: string,
+  email: string,
+  name: string,
+  existingCustomerId?: string | null
+): Promise<string | null> {
+  if (!stripe) return null;
+
+  if (existingCustomerId) {
+    try {
+      await stripe.customers.retrieve(existingCustomerId);
+      return existingCustomerId;
+    } catch {
+      // Customer deleted or invalid — create new
+    }
+  }
+
+  const customer = await stripe.customers.create({
+    email,
+    name,
+    metadata: { userId, platform: 'canada-carpooling' },
+  });
+
+  return customer.id;
+}
+
+// ─── Passenger Fee: PaymentIntent ($1 + taxes at booking) ───
+
+/**
+ * Create a PaymentIntent for the passenger's $1 + taxes platform fee.
+ * Called at booking time.
+ */
+export async function createPlatformFeePaymentIntent(
+  amountCents: number,
+  customerId: string,
+  metadata: {
+    bookingId: string;
+    tripId: string;
+    passengerId: string;
+    feeType: 'passenger_platform_fee';
+    provinceCode?: string;
+  }
+): Promise<Stripe.PaymentIntent | null> {
+  if (!stripe) return null;
+
+  return stripe.paymentIntents.create({
+    amount: amountCents,
+    currency: 'cad',
+    customer: customerId,
+    metadata: {
+      ...metadata,
+      platform: 'canada-carpooling',
+    },
+    description: 'Canada Carpooling — Frais de service passager / Passenger service fee',
+    automatic_payment_methods: { enabled: true },
+  });
+}
+
+/**
+ * Confirm a PaymentIntent (server-side confirmation for saved payment methods).
+ */
+export async function confirmPaymentIntent(
+  paymentIntentId: string
+): Promise<Stripe.PaymentIntent | null> {
+  if (!stripe) return null;
+  return stripe.paymentIntents.confirm(paymentIntentId);
+}
+
+// ─── Driver Fee: Stripe Connect ($1 + taxes after trip) ───
+
+/**
+ * Create a Stripe Connect Express account for a driver.
+ * Used to collect the $1 platform fee after each trip.
+ */
 export async function createConnectAccount(
   email: string,
-  userId: string,
-  firstName: string,
-  lastName: string
-) {
+  userId: string
+): Promise<Stripe.Account | null> {
+  if (!stripe) return null;
+
   return stripe.accounts.create({
     type: 'express',
     country: 'CA',
     email,
     capabilities: {
-      card_payments: { requested: true },
       transfers: { requested: true },
-    },
-    business_type: 'individual',
-    individual: {
-      first_name: firstName,
-      last_name: lastName,
-      email,
+      card_payments: { requested: true },
     },
     metadata: {
       userId,
       platform: 'canada-carpooling',
+      purpose: 'driver_fee_collection',
+    },
+    business_type: 'individual',
+    business_profile: {
+      mcc: '4121', // Taxicabs and Limousines
+      product_description: 'Carpooling platform fee collection',
     },
   });
 }
 
+/**
+ * Create an Account Link for Stripe Connect onboarding.
+ */
 export async function createAccountLink(
   accountId: string,
   refreshUrl: string,
   returnUrl: string
-) {
+): Promise<Stripe.AccountLink | null> {
+  if (!stripe) return null;
+
   return stripe.accountLinks.create({
     account: accountId,
     refresh_url: refreshUrl,
@@ -47,100 +142,95 @@ export async function createAccountLink(
   });
 }
 
-export async function createLoginLink(accountId: string) {
+/**
+ * Create a login link for a driver to access their Stripe Express dashboard.
+ */
+export async function createLoginLink(
+  accountId: string
+): Promise<Stripe.LoginLink | null> {
+  if (!stripe) return null;
   return stripe.accounts.createLoginLink(accountId);
 }
 
-export async function getAccountStatus(accountId: string) {
+/**
+ * Check the status of a Stripe Connect account.
+ */
+export async function getAccountStatus(
+  accountId: string
+): Promise<{ chargesEnabled: boolean; payoutsEnabled: boolean; detailsSubmitted: boolean } | null> {
+  if (!stripe) return null;
+
   const account = await stripe.accounts.retrieve(accountId);
   return {
-    id: account.id,
     chargesEnabled: account.charges_enabled,
     payoutsEnabled: account.payouts_enabled,
     detailsSubmitted: account.details_submitted,
-    requirements: account.requirements,
   };
 }
 
-// ─── Payments ───
-
 /**
- * Create a PaymentIntent using the new flat-fee pricing model.
- * - Total charged = trip price + service fee (1 CAD/seat + taxes)
- * - application_fee_amount = service fee (platform keeps this)
- * - Driver receives: total - application_fee via Stripe Connect transfer
+ * Charge a driver the $1 + taxes platform fee after trip completion.
+ * Creates a charge on the driver's Connect account (direct charge model).
  */
-export async function createPaymentIntent(
-  priceBreakdown: BookingPriceBreakdown,
-  driverStripeConnectId: string,
-  metadata: Record<string, string>
-) {
-  const { totalAmountCents, applicationFeeCents } = calculateStripeAmounts(priceBreakdown);
+export async function chargeDriverPlatformFee(
+  amountCents: number,
+  driverStripeAccountId: string,
+  metadata: {
+    tripId: string;
+    driverId: string;
+    feeType: 'driver_platform_fee';
+    provinceCode?: string;
+  }
+): Promise<Stripe.PaymentIntent | null> {
+  if (!stripe) return null;
 
+  // Use destination charge: we charge the driver's payment method
+  // via the platform, keeping 100% as platform fee
   return stripe.paymentIntents.create({
-    amount: totalAmountCents,
+    amount: amountCents,
     currency: 'cad',
-    application_fee_amount: applicationFeeCents,
-    transfer_data: {
-      destination: driverStripeConnectId,
-    },
     metadata: {
       ...metadata,
-      serviceFeeBase: String(priceBreakdown.serviceFeeBase),
-      serviceFeeTax: String(priceBreakdown.serviceFeeTax),
-      provinceCode: priceBreakdown.provinceCode,
-      taxName: priceBreakdown.taxBreakdown.taxName,
+      platform: 'canada-carpooling',
     },
+    description: 'Canada Carpooling — Frais de service conducteur / Driver service fee',
+    // For driver fee collection, we use the Connect account's default payment method
+    transfer_data: {
+      destination: driverStripeAccountId,
+    },
+    // The platform keeps 100% of the fee
+    application_fee_amount: amountCents,
   });
-}
-
-export async function confirmPaymentIntent(paymentIntentId: string) {
-  return stripe.paymentIntents.retrieve(paymentIntentId);
 }
 
 // ─── Refunds ───
 
-export async function refundPayment(paymentIntentId: string, amount?: number) {
+/**
+ * Refund a passenger's platform fee (e.g., free cancellation > 24h before departure).
+ */
+export async function refundPlatformFee(
+  paymentIntentId: string,
+  reason?: 'requested_by_customer' | 'duplicate' | 'fraudulent'
+): Promise<Stripe.Refund | null> {
+  if (!stripe) return null;
+
   return stripe.refunds.create({
     payment_intent: paymentIntentId,
-    amount: amount ? Math.round(amount * 100) : undefined, // full refund if no amount
+    reason: reason || 'requested_by_customer',
   });
 }
 
-// Cancellation refund logic:
-// >24h before departure: full refund
-// <24h before departure: 50% refund
-// no-show: no refund
-export async function processCancellationRefund(
-  paymentIntentId: string,
-  totalAmountCents: number,
-  departureTime: Date
-) {
-  const hoursUntilDeparture = (departureTime.getTime() - Date.now()) / (1000 * 60 * 60);
+// ─── Webhook ───
 
-  if (hoursUntilDeparture > 24) {
-    // Full refund
-    return stripe.refunds.create({
-      payment_intent: paymentIntentId,
-    });
-  } else if (hoursUntilDeparture > 0) {
-    // 50% refund
-    return stripe.refunds.create({
-      payment_intent: paymentIntentId,
-      amount: Math.round(totalAmountCents / 2),
-    });
-  }
-
-  // No-show or past departure: no refund
-  return null;
-}
-
-// ─── Webhook Verification ───
-
+/**
+ * Construct and verify a Stripe webhook event.
+ */
 export function constructWebhookEvent(
   body: string | Buffer,
   signature: string,
-  endpointSecret: string
-) {
-  return stripe.webhooks.constructEvent(body, signature, endpointSecret);
+  webhookSecret: string
+): Stripe.Event | null {
+  if (!stripe) return null;
+
+  return stripe.webhooks.constructEvent(body, signature, webhookSecret);
 }

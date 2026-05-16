@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { calculateBookingPrice, extractProvinceCode } from '@/lib/pricing';
-import { createPaymentIntent } from '@/lib/stripe';
+import { calculateBookingPrice } from '@/lib/pricing';
 import { requireValidConsent } from '@/lib/consent-middleware';
 import { z } from 'zod';
 
@@ -12,9 +11,10 @@ const bookingSchema = z.object({
   seats: z.number().min(1).max(8),
   pickupStopId: z.string().optional(),
   dropoffStopId: z.string().optional(),
+  provinceCode: z.string().length(2).optional(),
 });
 
-// POST /api/bookings — Create booking
+// POST /api/bookings — Create booking (hybrid model: trip price direct, $1+taxes via Stripe)
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -27,13 +27,11 @@ export async function POST(req: NextRequest) {
     if (consentCheck) return consentCheck;
 
     const body = await req.json();
-    const { tripId, seats, pickupStopId, dropoffStopId } = bookingSchema.parse(body);
+    const { tripId, seats, pickupStopId, dropoffStopId, provinceCode } = bookingSchema.parse(body);
 
     // === Use a Prisma interactive transaction to prevent race conditions ===
-    // Without this, two concurrent requests could both pass the seat check
-    // and create bookings, resulting in overbooking.
-    const result = await prisma.$transaction(async (tx: any) => {
-      // 1. Get trip with driver info (read inside transaction for consistency)
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. Get trip with driver info
       const trip = await tx.trip.findUnique({
         where: { id: tripId },
         include: { driver: true },
@@ -44,14 +42,13 @@ export async function POST(req: NextRequest) {
       if (trip.availableSeats < seats) throw { code: 'BAD_REQUEST', message: 'Not enough seats' };
       if (trip.driverId === session.user.id) throw { code: 'BAD_REQUEST', message: 'Cannot book own trip' };
 
-      // 2. Check existing booking (inside transaction)
+      // 2. Check existing booking
       const existing = await tx.booking.findFirst({
         where: { tripId, passengerId: session.user.id, status: { in: ['PENDING', 'CONFIRMED'] } },
       });
       if (existing) throw { code: 'BAD_REQUEST', message: 'Already booked' };
 
-      // 3. Atomically decrement seats with a conditional guard
-      //    updateMany with a WHERE on availableSeats ensures no overbooking
+      // 3. Atomically decrement seats
       const updated = await tx.trip.updateMany({
         where: { id: tripId, availableSeats: { gte: seats } },
         data: { availableSeats: { decrement: seats } },
@@ -60,75 +57,50 @@ export async function POST(req: NextRequest) {
         throw { code: 'BAD_REQUEST', message: 'Not enough seats (concurrent booking)' };
       }
 
-      // 4. Calculate pricing
-      const provinceCode = extractProvinceCode(trip.originCity);
+      // 4. Calculate pricing: trip price (direct) + $1+taxes platform fee (Stripe)
       const priceBreakdown = calculateBookingPrice(trip.pricePerSeat, seats, provinceCode);
 
-      // 5. Create Stripe PaymentIntent if driver has Stripe Connect
-      //    Done inside the transaction so we can roll back on failure
-      let stripePaymentIntentId: string | undefined;
-      if (trip.driver.stripeAccountId) {
-        try {
-          const paymentIntent = await createPaymentIntent(
-            priceBreakdown,
-            trip.driver.stripeAccountId,
-            { tripId, passengerId: session.user.id, seats: String(seats) }
-          );
-          stripePaymentIntentId = paymentIntent.id;
-        } catch (stripeError) {
-          // Transaction will roll back the seat decrement automatically
-          console.error('Stripe PaymentIntent creation failed:', stripeError);
-          throw { code: 'PAYMENT_ERROR', message: 'Payment setup failed. Please try again.' };
-        }
-      }
-
-      // 6. Create booking record
+      // 5. Create booking record — PENDING driver approval
+      //    Trip price: paid directly passenger → driver (cash, Interac, etc.)
+      //    Platform fee ($1+taxes): will be charged via Stripe PaymentIntent
       const booking = await tx.booking.create({
         data: {
           tripId,
           passengerId: session.user.id,
           seatsBooked: seats,
           totalPrice: priceBreakdown.tripPrice,
-          serviceFee: priceBreakdown.serviceFeeBase,
-          serviceFeeTax: priceBreakdown.serviceFeeTax,
-          serviceFeeTotal: priceBreakdown.serviceFeeTotal,
-          driverPayout: priceBreakdown.driverPayout,
-          provinceCode,
-          taxName: priceBreakdown.taxBreakdown.taxName,
+          serviceFee: priceBreakdown.platformFee.baseFee,
+          serviceFeeTax: priceBreakdown.platformFee.taxAmount,
+          serviceFeeTotal: priceBreakdown.platformFee.totalFee,
+          provinceCode: provinceCode || null,
+          taxName: priceBreakdown.platformFee.taxName,
           status: 'PENDING',
           paymentStatus: 'PENDING',
-          stripePaymentIntentId,
           pickupLocation: pickupStopId,
           dropoffLocation: dropoffStopId,
         },
       });
 
-      return { booking, priceBreakdown, stripePaymentIntentId };
+      return { booking, priceBreakdown };
     }, {
-      // Serializable isolation prevents phantom reads (strongest guarantee)
       isolationLevel: 'Serializable',
-      timeout: 15000, // 15s timeout for the whole transaction
+      timeout: 15000,
     });
 
     return NextResponse.json({
       booking: result.booking,
       priceBreakdown: result.priceBreakdown,
-      clientSecret: result.stripePaymentIntentId ? `${result.stripePaymentIntentId}_secret` : null,
     }, { status: 201 });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
-    // Handle structured errors from the transaction
     const txError = error as any;
     if (txError?.code === 'NOT_FOUND') {
       return NextResponse.json({ error: txError.message }, { status: 404 });
     }
     if (txError?.code === 'BAD_REQUEST') {
       return NextResponse.json({ error: txError.message }, { status: 400 });
-    }
-    if (txError?.code === 'PAYMENT_ERROR') {
-      return NextResponse.json({ error: txError.message }, { status: 502 });
     }
     console.error('Create booking error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

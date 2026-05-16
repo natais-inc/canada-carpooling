@@ -1,177 +1,103 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { constructWebhookEvent } from '@/lib/stripe';
-import { headers } from 'next/headers';
 
-// Disable body parsing — Stripe needs raw body for signature verification
-export const runtime = 'nodejs';
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+/**
+ * POST /api/webhooks/stripe — Handle Stripe webhook events.
+ * Processes payment confirmations for platform fees ($1 + taxes).
+ */
 export async function POST(req: NextRequest) {
-  const body = await req.text();
-  const headersList = headers();
-  const signature = headersList.get('stripe-signature');
-
-  if (!signature) {
-    return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 });
-  }
-
-  let event;
-  try {
-    event = constructWebhookEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-  } catch (err: any) {
-    console.error('Webhook signature verification failed:', err.message);
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET not configured');
+    return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
   }
 
   try {
+    const body = await req.text();
+    const signature = req.headers.get('stripe-signature');
+
+    if (!signature) {
+      return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
+    }
+
+    const event = constructWebhookEvent(body, signature, webhookSecret);
+    if (!event) {
+      return NextResponse.json({ error: 'Invalid event' }, { status: 400 });
+    }
+
     switch (event.type) {
-      // ─── Payment Events ───
       case 'payment_intent.succeeded': {
-        const paymentIntent = event.data.object;
-        const booking = await prisma.booking.findFirst({
-          where: { stripePaymentIntentId: paymentIntent.id },
-        });
+        const paymentIntent = event.data.object as any;
+        const { bookingId, feeType, tripId, driverId } = paymentIntent.metadata || {};
 
-        if (booking) {
+        if (feeType === 'passenger_platform_fee' && bookingId) {
+          // Passenger fee paid — update booking payment status
           await prisma.booking.update({
-            where: { id: booking.id },
-            data: {
-              status: 'CONFIRMED',
-              paymentStatus: 'PAID',
-            },
+            where: { id: bookingId },
+            data: { paymentStatus: 'PAID' },
           });
+          console.log(`Passenger fee paid for booking ${bookingId}`);
+        }
 
-          // Notify driver
-          await prisma.notification.create({
-            data: {
-              userId: (await prisma.trip.findUnique({
-                where: { id: booking.tripId },
-                select: { driverId: true },
-              }))!.driverId,
-              type: 'BOOKING',
-              title: 'Nouvelle réservation confirmée',
-              message: `Un passager a réservé ${booking.seatsBooked} place(s) pour votre trajet.`,
-              data: JSON.stringify({ bookingId: booking.id, tripId: booking.tripId }),
-            },
-          });
-
-          // Notify passenger
-          await prisma.notification.create({
-            data: {
-              userId: booking.passengerId,
-              type: 'BOOKING',
-              title: 'Paiement confirmé',
-              message: 'Votre paiement a été accepté. Votre réservation est confirmée!',
-              data: JSON.stringify({ bookingId: booking.id, tripId: booking.tripId }),
-            },
-          });
+        if (feeType === 'driver_platform_fee' && tripId) {
+          // Driver fee collected — log it
+          console.log(`Driver fee collected for trip ${tripId}, driver ${driverId}`);
         }
         break;
       }
 
       case 'payment_intent.payment_failed': {
-        const paymentIntent = event.data.object;
-        const booking = await prisma.booking.findFirst({
-          where: { stripePaymentIntentId: paymentIntent.id },
-        });
+        const paymentIntent = event.data.object as any;
+        const { bookingId, feeType } = paymentIntent.metadata || {};
 
-        if (booking) {
-          // Restore seats
-          await prisma.trip.update({
-            where: { id: booking.tripId },
-            data: { availableSeats: { increment: booking.seatsBooked } },
-          });
-
+        if (feeType === 'passenger_platform_fee' && bookingId) {
           await prisma.booking.update({
-            where: { id: booking.id },
-            data: {
-              status: 'CANCELLED',
-              paymentStatus: 'FAILED',
-            },
+            where: { id: bookingId },
+            data: { paymentStatus: 'FAILED' },
           });
-
-          // Notify passenger
-          await prisma.notification.create({
-            data: {
-              userId: booking.passengerId,
-              type: 'SYSTEM',
-              title: 'Paiement échoué',
-              message: 'Votre paiement a échoué. Veuillez réessayer ou utiliser un autre moyen de paiement.',
-              data: JSON.stringify({ bookingId: booking.id }),
-            },
-          });
+          console.log(`Passenger fee failed for booking ${bookingId}`);
         }
         break;
       }
 
-      // ─── Refund Events ───
-      case 'charge.refunded': {
-        const charge = event.data.object;
-        const paymentIntentId = charge.payment_intent as string;
-
-        const booking = await prisma.booking.findFirst({
-          where: { stripePaymentIntentId: paymentIntentId },
-        });
-
-        if (booking) {
-          const isFullRefund = charge.amount_refunded === charge.amount;
-          await prisma.booking.update({
-            where: { id: booking.id },
-            data: {
-              paymentStatus: isFullRefund ? 'REFUNDED' : 'PARTIALLY_REFUNDED',
-            },
-          });
-
-          // Notify passenger about refund
-          await prisma.notification.create({
-            data: {
-              userId: booking.passengerId,
-              type: 'SYSTEM',
-              title: isFullRefund ? 'Remboursement complet' : 'Remboursement partiel',
-              message: isFullRefund
-                ? 'Vous avez été remboursé intégralement.'
-                : 'Un remboursement partiel (50%) a été effectué suite à votre annulation.',
-              data: JSON.stringify({ bookingId: booking.id }),
-            },
-          });
-        }
-        break;
-      }
-
-      // ─── Connect Account Events ───
       case 'account.updated': {
-        const account = event.data.object;
-        const user = await prisma.user.findFirst({
-          where: { stripeAccountId: account.id },
-        });
+        // Driver Stripe Connect account updated
+        const account = event.data.object as any;
+        if (account.metadata?.userId) {
+          // Update driver's Stripe status if charges are now enabled
+          console.log(`Stripe Connect account updated for user ${account.metadata.userId}: charges=${account.charges_enabled}`);
+        }
+        break;
+      }
 
-        if (user && account.charges_enabled && account.payouts_enabled) {
-          // Mark user as payment-ready (could add a field for this)
-          await prisma.notification.create({
-            data: {
-              userId: user.id,
-              type: 'SYSTEM',
-              title: 'Compte paiement activé',
-              message: 'Votre compte de paiement est maintenant actif. Vous pouvez recevoir des paiements pour vos trajets!',
-              data: JSON.stringify({ stripeAccountId: account.id }),
-            },
+      case 'charge.refunded': {
+        const charge = event.data.object as any;
+        const paymentIntentId = charge.payment_intent;
+        if (paymentIntentId) {
+          const booking = await prisma.booking.findFirst({
+            where: { stripePaymentIntentId: paymentIntentId },
           });
+          if (booking) {
+            await prisma.booking.update({
+              where: { id: booking.id },
+              data: { paymentStatus: 'REFUNDED' },
+            });
+            console.log(`Refund processed for booking ${booking.id}`);
+          }
         }
         break;
       }
 
       default:
-        // Unhandled event type — log and ignore
-        console.log(`Unhandled webhook event: ${event.type}`);
+        // Unhandled event type — acknowledge receipt
+        break;
     }
 
     return NextResponse.json({ received: true });
   } catch (error: unknown) {
-    console.error('Webhook handler error:', error);
-    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
+    console.error('Stripe webhook error:', error);
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 }

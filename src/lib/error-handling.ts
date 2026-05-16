@@ -10,6 +10,7 @@
 
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
+import { Prisma } from '@prisma/client';
 
 // ==========================================
 // APPLICATION ERROR CODES
@@ -159,13 +160,12 @@ export function handleApiError(error: unknown, context?: string): NextResponse {
   }
 
   // 3. Prisma errors
-  if ((error as any)?.constructor?.name === 'PrismaClientKnownRequestError') {
-    const prismaError = error as any;
-    console.error(`${logContext} Prisma error:`, prismaError.code, prismaError.message);
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    console.error(`${logContext} Prisma error:`, error.code, error.message);
 
-    switch (prismaError.code) {
+    switch (error.code) {
       case 'P2002': // Unique constraint violation
-        const field = (prismaError.meta?.target as string[])?.join(', ') || 'field';
+        const field = (error.meta?.target as string[])?.join(', ') || 'field';
         return NextResponse.json(
           { error: ErrorCode.EMAIL_ALREADY_EXISTS, message: `A record with this ${field} already exists` },
           { status: 409 }
@@ -183,8 +183,8 @@ export function handleApiError(error: unknown, context?: string): NextResponse {
     }
   }
 
-  if ((error as any)?.constructor?.name === 'PrismaClientValidationError') {
-    console.error(`${logContext} Prisma validation:`, (error as any).message);
+  if (error instanceof Prisma.PrismaClientValidationError) {
+    console.error(`${logContext} Prisma validation:`, error.message);
     return NextResponse.json(
       { error: ErrorCode.VALIDATION_ERROR, message: 'Invalid data format' },
       { status: 400 }
