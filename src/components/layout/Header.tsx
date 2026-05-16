@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, User, MessageSquare, Car, Globe, LogOut } from 'lucide-react';
+import { Menu, X, User, MessageSquare, Car, Globe, LogOut, HelpCircle } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 
@@ -44,6 +44,9 @@ export default function Header() {
             </Link>
             <Link href={`/${locale}/trips/create`} className="text-gray-600 hover:text-brand-600 font-medium transition-colors">
               {t('offerRide')}
+            </Link>
+            <Link href={`/${locale}/faq`} className="text-gray-600 hover:text-brand-600 font-medium transition-colors">
+              {t('faq')}
             </Link>
           </nav>
 
@@ -93,6 +96,9 @@ export default function Header() {
               </Link>
               <Link href={`/${locale}/trips/create`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
                 {t('offerRide')}
+              </Link>
+              <Link href={`/${locale}/faq`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
+                {t('faq')}
               </Link>
               <button onClick={switchLocale} className="flex items-center gap-1 text-gray-600 py-2">
                 <Globe className="h-4 w-4" /> {locale === 'fr' ? 'English' : 'Français'}
