@@ -322,4 +322,3 @@ export default function PaymentCheckout({
     </div>
   );
 }
-    

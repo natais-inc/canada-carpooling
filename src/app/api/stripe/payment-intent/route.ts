@@ -104,4 +104,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: unknown) {
     console.error('Create payment intent error:', error);
-    return NextResponse.json({ error: 
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

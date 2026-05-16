@@ -106,4 +106,23 @@ export function calculateBookingPrice(
 
   return {
     tripPrice,
-    
+    seats,
+    pricePerSeat,
+    platformFee,
+    totalPassengerPays: roundCents(tripPrice + platformFee.totalFee),
+    driverReceives: tripPrice,
+  };
+}
+
+// ─── Helpers ───
+
+function roundCents(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
+/**
+ * Format price in CAD
+ */
+export function formatCAD(amount: number): string {
+  return `${amount.toFixed(2)} $`;
+}
