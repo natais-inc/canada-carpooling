@@ -40,7 +40,6 @@ export default function FAQPage() {
 
   const categories = ['all', 'safety', 'payments', 'trips', 'cancellations', 'account', 'support', 'general'];
 
-  // Build FAQ items from translations
   const faqItems: { category: string; question: string; answer: string }[] = [];
   const faqCategories = ['safety', 'payments', 'trips', 'cancellations', 'account', 'support', 'general'];
 
@@ -73,7 +72,6 @@ export default function FAQPage() {
         <p className="text-gray-600 max-w-2xl mx-auto">{t('subtitle')}</p>
       </div>
 
-      {/* Search */}
       <div className="relative mb-8">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
         <input
@@ -85,7 +83,6 @@ export default function FAQPage() {
         />
       </div>
 
-      {/* Category tabs */}
       <div className="flex flex-wrap gap-2 mb-8">
         {categories.map(cat => {
           const Icon = cat === 'all' ? HelpCircle : categoryIcons[cat] || HelpCircle;
@@ -106,7 +103,6 @@ export default function FAQPage() {
         })}
       </div>
 
-      {/* FAQ items */}
       <div className="space-y-3">
         {filtered.length > 0 ? (
           filtered.map((item, i) => (
@@ -120,7 +116,6 @@ export default function FAQPage() {
         )}
       </div>
 
-      {/* Contact CTA */}
       <div className="mt-12 bg-brand-50 rounded-2xl p-8 text-center">
         <h2 className="text-xl font-bold text-gray-900 mb-2">{t('stillNeedHelp')}</h2>
         <p className="text-gray-600 mb-4">{t('stillNeedHelpDesc')}</p>
