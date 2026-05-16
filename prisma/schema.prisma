@@ -379,4 +379,3 @@ model DataProcessingLog {
   @@index([userId])
   @@index([activity])
 }
-   
