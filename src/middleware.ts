@@ -30,7 +30,13 @@ export default async function middleware(request: NextRequest) {
 
     // Determine rate limit type
     let limitType: 'auth' | 'api' | 'search' | 'booking' | 'message' | 'webhook' = 'api';
-    if (pathname.startsWith('/api/auth/')) limitType = 'auth';
+    if (pathname.startsWith('/api/auth/')) {
+      // Only strict-limit the sensitive auth attempt endpoints (login/register/password).
+      // The frequently-polled read endpoints (session, providers, csrf, _log) are hit on
+      // every page load, so they must use the normal API budget or they lock users out.
+      const isSensitiveAuth = /^\/api\/auth\/(callback|register|signin|reset|forgot)/.test(pathname);
+      limitType = isSensitiveAuth ? 'auth' : 'api';
+    }
     else if (pathname.startsWith('/api/trips') && request.method === 'GET') limitType = 'search';
     else if (pathname.startsWith('/api/bookings') && request.method === 'POST') limitType = 'booking';
     else if (pathname.startsWith('/api/messages')) limitType = 'message';
