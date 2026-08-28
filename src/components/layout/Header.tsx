@@ -48,6 +48,9 @@ export default function Header() {
             <Link href={`/${locale}/faq`} className="text-gray-600 hover:text-brand-600 font-medium transition-colors">
               {t('faq')}
             </Link>
+            <Link href={`/${locale}/employers`} className="text-gray-600 hover:text-brand-600 font-medium transition-colors">
+              {t('employers')}
+            </Link>
           </nav>
 
           {/* Right side */}
@@ -99,6 +102,9 @@ export default function Header() {
               </Link>
               <Link href={`/${locale}/faq`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
                 {t('faq')}
+              </Link>
+              <Link href={`/${locale}/employers`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
+                {t('employers')}
               </Link>
               <button onClick={switchLocale} className="flex items-center gap-1 text-gray-600 py-2">
                 <Globe className="h-4 w-4" /> {locale === 'fr' ? 'English' : 'Français'}

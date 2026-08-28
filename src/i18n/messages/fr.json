@@ -32,7 +32,8 @@
     "signup": "Inscription",
     "register": "Inscription",
     "logout": "Déconnexion",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "employers": "Employeurs"
   },
   "home": {
     "title": "Voyagez à travers le Canada pour moins cher",
@@ -298,7 +299,8 @@
     "description": "La plateforme de covoiturage la plus abordable au Canada. Partagez la route, partagez les économies.",
     "company": "Entreprise",
     "legal": "Légal",
-    "secure": "Paiements sécurisés par Stripe"
+    "secure": "Paiements sécurisés par Stripe",
+    "employers": "Employeurs"
   },
   "verification": {
     "title": "Vérification d'identité",
@@ -497,5 +499,33 @@
       "reviews": "Après chaque trajet, les deux parties peuvent laisser des évaluations (ponctualité, sécurité, communication, confort) et un avis écrit. Les avis sont publics et aident tout le monde à prendre des décisions éclairées.",
       "discrimination": "Nous avons une politique de tolérance zéro. Signalez toute discrimination ou harcèlement via l'application immédiatement. Nous enquêtons dans les 24 heures et bannissons définitivement les contrevenants. Votre dignité n'est pas négociable."
     }
+  },
+  "employers": {
+    "badge": "Programme employeurs — Région de Durham",
+    "title": "Le covoiturage domicile-travail, clé en main pour votre organisation",
+    "subtitle": "Nous jumelons vos employés par quart de travail et par quartier, et nous vous donnons les chiffres — kilomètres évités, CO2 réduit, stationnement libéré — prêts pour vos rapports.",
+    "benefit1Title": "Moins de pression sur le stationnement",
+    "benefit1Text": "Chaque covoiturage libère des places. Réduisez la demande de stationnement sans construire une seule case de plus.",
+    "benefit2Title": "Des données ESG prêtes à auditer",
+    "benefit2Text": "Tableau de bord RH avec kilomètres évités et tonnes de CO2 réduites, utilisable directement dans vos rapports de durabilité.",
+    "benefit3Title": "Conçu pour les quarts de travail",
+    "benefit3Text": "Jumelage par horaire et par quartier : les équipes de jour, de soir et de nuit trouvent des collègues qui font la même route au même moment.",
+    "pilotTitle": "Pilote gratuit de 60 jours",
+    "pilotText": "Nous lançons le programme sur un de vos sites, sans frais et sans engagement. Vous jugez sur les résultats.",
+    "pilotPoint1": "Jusqu'à 200 employés sur un site, accompagnement au lancement inclus",
+    "pilotPoint2": "Jumelage par quart de travail et par quartier de résidence",
+    "pilotPoint3": "Rapport d'impact à la fin du pilote : adoption, km évités, CO2 réduit",
+    "pilotPoint4": "Aucune carte de crédit — la conversion se décide après les résultats",
+    "formTitle": "Demander une démo",
+    "formName": "Votre nom",
+    "formOrganization": "Organisation",
+    "formEmail": "Courriel professionnel",
+    "formPhone": "Téléphone",
+    "formEmployees": "Nombre d'employés",
+    "formMessage": "Message (optionnel)",
+    "formSubmit": "Demander une démo gratuite",
+    "successTitle": "Demande reçue !",
+    "successText": "Merci — nous vous répondrons sous un jour ouvrable pour planifier la démo.",
+    "errorText": "Une erreur est survenue. Réessayez dans un instant."
   }
 }

@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://canada-carpooling.vercel.app';
   const locales = ['fr', 'en'];
-  const pages = ['', '/trips/search', '/trips/create', '/faq'];
+  const pages = ['', '/trips/search', '/trips/create', '/faq', '/employers'];
 
   const entries: MetadataRoute.Sitemap = [];
 
