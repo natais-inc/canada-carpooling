@@ -3,7 +3,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, User, MessageSquare, Car, Globe, LogOut, HelpCircle } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
+import { Menu, X, User, MessageSquare, Car, Globe, LogOut, HelpCircle, Shield } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 
@@ -13,9 +14,10 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // TODO: Replace with real session
-  const session = null as any;
+
+  const { data: session } = useSession();
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
+  const displayName = (session?.user as any)?.name || session?.user?.email || '';
 
   const switchLocale = () => {
     const newLocale = locale === 'fr' ? 'en' : 'fr';
@@ -65,12 +67,20 @@ export default function Header() {
 
             {session ? (
               <div className="flex items-center gap-3">
+                {isAdmin && (
+                  <Link href={`/${locale}/admin`} className="flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-700">
+                    <Shield className="h-4 w-4" /> Admin
+                  </Link>
+                )}
                 <Link href={`/${locale}/messages`} className="text-gray-600 hover:text-brand-600">
                   <MessageSquare className="h-5 w-5" />
                 </Link>
                 <Link href={`/${locale}/profile`}>
-                  <Avatar name={session.user.name || ''} src={session.user.image} size="sm" />
+                  <Avatar name={displayName} src={(session.user as any)?.image} size="sm" />
                 </Link>
+                <button onClick={() => signOut({ callbackUrl: `/${locale}` })} className="text-gray-600 hover:text-brand-600" title={t('logout')}>
+                  <LogOut className="h-5 w-5" />
+                </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -109,14 +119,30 @@ export default function Header() {
               <button onClick={switchLocale} className="flex items-center gap-1 text-gray-600 py-2">
                 <Globe className="h-4 w-4" /> {locale === 'fr' ? 'English' : 'Français'}
               </button>
-              <div className="flex gap-2 pt-2">
-                <Link href={`/${locale}/auth/login`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">{t('login')}</Button>
-                </Link>
-                <Link href={`/${locale}/auth/register`} className="flex-1">
-                  <Button size="sm" className="w-full">{t('register')}</Button>
-                </Link>
-              </div>
+              {session ? (
+                <>
+                  {isAdmin && (
+                    <Link href={`/${locale}/admin`} className="flex items-center gap-1 text-brand-600 font-medium py-2">
+                      <Shield className="h-4 w-4" /> Admin
+                    </Link>
+                  )}
+                  <Link href={`/${locale}/profile`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
+                    {t('profile')}
+                  </Link>
+                  <button onClick={() => signOut({ callbackUrl: `/${locale}` })} className="flex items-center gap-1 text-gray-600 py-2">
+                    <LogOut className="h-4 w-4" /> {t('logout')}
+                  </button>
+                </>
+              ) : (
+                <div className="flex gap-2 pt-2">
+                  <Link href={`/${locale}/auth/login`} className="flex-1">
+                    <Button variant="outline" size="sm" className="w-full">{t('login')}</Button>
+                  </Link>
+                  <Link href={`/${locale}/auth/register`} className="flex-1">
+                    <Button size="sm" className="w-full">{t('register')}</Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}
