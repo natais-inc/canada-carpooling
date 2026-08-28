@@ -33,7 +33,7 @@ export default function Header() {
               <Car className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900">
-              Canada <span className="text-brand-600">Carpooling</span>
+              Carpool<span className="text-brand-600">Work</span>
             </span>
           </Link>
 

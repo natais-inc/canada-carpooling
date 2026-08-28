@@ -20,16 +20,16 @@ export async function generateMetadata({
   const isEn = locale === 'en';
   return {
     title: isEn
-      ? 'Canada Carpooling | Intercity Ridesharing in Canada'
-      : 'Canada Carpooling | Covoiturage intercité au Canada',
+      ? 'CarpoolWork | Intercity Ridesharing in Canada'
+      : 'CarpoolWork | Covoiturage intercité au Canada',
     description: isEn
       ? 'Find or offer rides between Canadian cities. Save up to 75% vs bus or train. Verified drivers, only $1.99 service fee.'
       : 'Trouvez ou offrez un trajet entre villes canadiennes. Économisez jusqu\'à 75% vs bus ou train. Conducteurs vérifiés, seulement 1,99$ de frais.',
     alternates: {
-      canonical: `https://canada-carpooling.vercel.app/${locale}`,
+      canonical: `https://carpoolwork.ca/${locale}`,
       languages: {
-        'fr-CA': 'https://canada-carpooling.vercel.app/fr',
-        'en-CA': 'https://canada-carpooling.vercel.app/en',
+        'fr-CA': 'https://carpoolwork.ca/fr',
+        'en-CA': 'https://carpoolwork.ca/en',
       },
     },
     openGraph: {
@@ -53,8 +53,8 @@ export default async function LocaleLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'Canada Carpooling',
-    url: `https://canada-carpooling.vercel.app/${locale}`,
+    name: 'CarpoolWork',
+    url: `https://carpoolwork.ca/${locale}`,
     description: locale === 'en'
       ? 'Intercity carpooling platform connecting drivers and passengers across Canada'
       : 'Plateforme de covoiturage intercité connectant conducteurs et passagers à travers le Canada',

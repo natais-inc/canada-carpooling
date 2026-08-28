@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Canada Carpooling",
+    "appName": "CarpoolWork",
     "tagline": "Partagez la route, partagez les économies",
     "search": "Rechercher",
     "book": "Réserver",
@@ -40,7 +40,7 @@
     "subtitle": "Connectez-vous avec des conducteurs et passagers vérifiés. Économisez jusqu'à 75% vs le bus ou le train.",
     "heroTitle": "Voyagez à travers le Canada pour moins cher",
     "heroSubtitle": "Connectez-vous avec des conducteurs et passagers vérifiés. Économisez jusqu'à 75% vs le bus ou le train.",
-    "whyUs": "Pourquoi choisir Canada Carpooling?",
+    "whyUs": "Pourquoi choisir CarpoolWork?",
     "features": {
       "verified": {
         "title": "Conducteurs vérifiés",
@@ -295,7 +295,7 @@
     "terms": "Conditions d'utilisation",
     "privacy": "Politique de confidentialité",
     "cookies": "Politique de cookies",
-    "copyright": "© 2026 Canada Carpooling. Tous droits réservés.",
+    "copyright": "© 2026 CarpoolWork. Tous droits réservés.",
     "description": "La plateforme de covoiturage la plus abordable au Canada. Partagez la route, partagez les économies.",
     "company": "Entreprise",
     "legal": "Légal",
@@ -381,7 +381,7 @@
   },
   "faq": {
     "title": "Questions fréquemment posées",
-    "subtitle": "Trouvez les réponses aux questions les plus courantes sur Canada Carpooling.",
+    "subtitle": "Trouvez les réponses aux questions les plus courantes sur CarpoolWork.",
     "searchPlaceholder": "Rechercher une question...",
     "noResults": "Aucun résultat trouvé pour votre recherche.",
     "stillNeedHelp": "Vous avez encore besoin d'aide?",
@@ -405,14 +405,14 @@
       "q3": "Que faire si je me sens en danger pendant un trajet?",
       "a3": "Utilisez le bouton SOS dans l'application à tout moment. Il alertera notre équipe de sécurité et partagera votre position GPS avec les services d'urgence locaux. Vous pouvez aussi partager les détails de votre trajet en direct avec un contact de confiance avant le départ.",
       "q4": "Y a-t-il une couverture d'assurance pendant les trajets?",
-      "a4": "Tous les trajets sont couverts par l'assurance automobile personnelle du conducteur, qui au Canada doit inclure une couverture responsabilité pour les passagers. Nous recommandons aux conducteurs de confirmer que leur police couvre le covoiturage. Canada Carpooling ne fournit pas d'assurance supplémentaire pour le moment.",
+      "a4": "Tous les trajets sont couverts par l'assurance automobile personnelle du conducteur, qui au Canada doit inclure une couverture responsabilité pour les passagers. Nous recommandons aux conducteurs de confirmer que leur police couvre le covoiturage. CarpoolWork ne fournit pas d'assurance supplémentaire pour le moment.",
       "q5": "Que faire si mon conducteur est discriminatoire ou harcelant?",
       "a5": "Nous avons une politique de tolérance zéro envers la discrimination et le harcèlement. Signalez tout incident via l'application immédiatement. Nous enquêtons sur tous les signalements dans les 24 heures et bannissons définitivement les utilisateurs fautifs."
     },
     "payments": {
       "q1": "Comment fonctionne le paiement?",
       "a1": "Le paiement est hybride. Le prix du trajet est payé directement au conducteur (comptant, virement Interac ou autre méthode convenue). Des frais de service de 1,99 $ (taxes incluses) sont prélevés par carte via Stripe au moment de la réservation pour les passagers uniquement. Les conducteurs ne paient aucun frais.",
-      "q2": "Quels frais facture Canada Carpooling?",
+      "q2": "Quels frais facture CarpoolWork?",
       "a2": "Des frais de service de 1,99 $ (taxes incluses) par réservation, pour les passagers uniquement. C'est tout. L'inscription est gratuite et les conducteurs ne paient rien. C'est la structure de frais la plus basse au Canada — les concurrents prennent 15-20% de commission.",
       "q3": "Comment fonctionnent les remboursements?",
       "a3": "Annulation plus de 24 heures avant le départ : les frais de service sont remboursés intégralement. Annulation dans les 24 heures : les frais de service ne sont pas remboursables. Si le conducteur annule, les frais de service sont toujours remboursés automatiquement. Les remboursements sont traités sous 5 à 10 jours ouvrables.",
@@ -431,7 +431,7 @@
       "q4": "Puis-je envoyer un message au conducteur avant de réserver?",
       "a4": "Oui! Notre système de messagerie intégré vous permet de contacter le conducteur avant la réservation pour poser des questions sur le point de rencontre, l'espace pour les bagages ou toute autre question.",
       "q5": "Quelles villes sont couvertes?",
-      "a5": "Canada Carpooling opère partout au Canada. Les routes populaires incluent Toronto–Montréal, Vancouver–Victoria, Calgary–Edmonton, Ottawa–Montréal et bien d'autres. S'il n'y a pas de trajet sur votre route, offrez-en un!"
+      "a5": "CarpoolWork opère partout au Canada. Les routes populaires incluent Toronto–Montréal, Vancouver–Victoria, Calgary–Edmonton, Ottawa–Montréal et bien d'autres. S'il n'y a pas de trajet sur votre route, offrez-en un!"
     },
     "cancellations": {
       "q1": "Quelle est la politique d'annulation?",
@@ -464,14 +464,14 @@
       "a1": "Après chaque trajet, conducteur et passager peuvent laisser des avis. Les avis incluent des évaluations pour la ponctualité, la sécurité, la communication et le confort. Les avis sont publics et aident la communauté à faire des choix éclairés.",
       "q2": "Le covoiturage est-il légal au Canada?",
       "a2": "Oui. Le covoiturage — partager les frais d'un trajet que vous faites déjà — est légal partout au Canada. Les conducteurs ne peuvent pas faire de profit; ils peuvent seulement partager les coûts d'essence, péages et usure. Nous appliquons cela en recommandant des prix justes.",
-      "q3": "En quoi Canada Carpooling est différent des concurrents?",
+      "q3": "En quoi CarpoolWork est différent des concurrents?",
       "a3": "Des frais de service de seulement 1,99 $ (taxes incluses) par réservation pour les passagers uniquement — les conducteurs ne paient rien (les concurrents prennent 15-20% de commission). Les conducteurs gardent 100% du prix du trajet — le prix est payé directement sans intermédiaire. Support bilingue, design pensé pour le Canada, bouton SOS et conformité LPRPDE."
     }
   },
   "chatbot": {
-    "title": "Aide Canada Carpooling",
+    "title": "Aide CarpoolWork",
     "subtitle": "Réponse instantanée",
-    "welcome": "Bonjour! Je suis l'assistant Canada Carpooling. Comment puis-je vous aider? Vous pouvez me poser des questions sur la sécurité, les paiements, les trajets, les annulations ou votre compte.",
+    "welcome": "Bonjour! Je suis l'assistant CarpoolWork. Comment puis-je vous aider? Vous pouvez me poser des questions sur la sécurité, les paiements, les trajets, les annulations ou votre compte.",
     "inputPlaceholder": "Tapez votre question...",
     "quickQuestions": "Questions populaires :",
     "quick1": "C'est sécuritaire?",
@@ -481,7 +481,7 @@
     "defaultAnswer": "Je n'ai pas de réponse spécifique à cette question. Pour une aide personnalisée, envoyez un courriel à support@canadacarpooling.ca ou consultez notre page FAQ. Notre équipe répond dans les 24 heures!",
     "kb": {
       "safety": "Votre sécurité est notre priorité #1. Tous les conducteurs sont vérifiés par pièce d'identité gouvernementale, permis de conduire et selfie biométrique. Les trajets sont suivis par GPS en temps réel et notre bouton SOS dans l'application vous connecte directement aux services d'urgence.",
-      "insurance": "Les trajets sont couverts par l'assurance automobile personnelle du conducteur (obligatoire au Canada). Nous recommandons aux conducteurs de confirmer que leur police couvre les passagers en covoiturage. Canada Carpooling ne fournit pas d'assurance supplémentaire pour le moment.",
+      "insurance": "Les trajets sont couverts par l'assurance automobile personnelle du conducteur (obligatoire au Canada). Nous recommandons aux conducteurs de confirmer que leur police couvre les passagers en covoiturage. CarpoolWork ne fournit pas d'assurance supplémentaire pour le moment.",
       "emergency": "Si vous vous sentez en danger, appuyez immédiatement sur le bouton SOS dans l'application. Il contacte les services d'urgence et partage votre position GPS en direct. Vous pouvez aussi partager les détails du trajet avec un contact de confiance avant le départ.",
       "payment": "Le paiement est hybride. Le prix du trajet est payé directement au conducteur (comptant, Interac, etc.). Des frais de service de 1,99 $ (taxes incluses) sont prélevés via Stripe pour les passagers à la réservation uniquement. Les conducteurs ne paient aucun frais. Vos informations de carte sont sécurisées par Stripe — jamais stockées sur nos serveurs.",
       "refund": "Annulation plus de 24h avant le départ : frais de service remboursés intégralement. Annulation dans les 24h : frais de service non remboursables. Le conducteur annule : frais de service toujours remboursés automatiquement. Les remboursements prennent 5-10 jours ouvrables.",
