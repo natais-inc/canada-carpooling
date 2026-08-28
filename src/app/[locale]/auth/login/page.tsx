@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, Car } from 'lucide-react';
@@ -21,14 +22,22 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    // TODO: NextAuth signIn
-    setTimeout(() => {
-      router.push(`/${locale}`);
-    }, 1000);
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+    setLoading(false);
+    if (res?.error) {
+      setError(t('invalidCredentials'));
+      return;
+    }
+    router.push(`/${locale}`);
+    router.refresh();
   };
 
   const handleGoogle = () => {
-    // TODO: NextAuth signIn('google')
+    signIn('google', { callbackUrl: `/${locale}` });
   };
 
   return (

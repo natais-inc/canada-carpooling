@@ -98,6 +98,16 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+        // Load the role from the database at sign-in so the session carries it
+        try {
+          const dbUser = await db.user.findUnique({
+            where: { id: user.id as string },
+            select: { role: true },
+          });
+          token.role = dbUser?.role ?? 'USER';
+        } catch {
+          token.role = 'USER';
+        }
         // Carry over headers captured during authorize for fingerprinting
         if ((user as any)._userAgent) token._userAgent = (user as any)._userAgent;
         if ((user as any)._acceptLanguage) token._acceptLanguage = (user as any)._acceptLanguage;
@@ -118,6 +128,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
+        (session.user as any).role = token.role ?? 'USER';
       }
       return session;
     },

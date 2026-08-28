@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, User, Phone, Car, Shield } from 'lucide-react';
@@ -33,16 +34,39 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     try {
+      const parts = form.name.trim().split(/\s+/);
+      const firstName = parts[0] || form.name.trim();
+      const lastName = parts.slice(1).join(' ') || firstName;
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, password: form.password }),
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+          preferredLanguage: locale === 'en' ? 'en' : 'fr',
+          privacyPolicyAccepted: true,
+          termsAccepted: true,
+        }),
       });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || 'Registration failed');
       }
-      router.push(`/${locale}/auth/login?registered=true`);
+      // Auto sign-in after successful registration
+      const signInRes = await signIn('credentials', {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      });
+      if (signInRes?.error) {
+        router.push(`/${locale}/auth/login?registered=true`);
+        return;
+      }
+      router.push(`/${locale}`);
+      router.refresh();
     } catch (err: any) {
       setError(err.message);
     } finally {
