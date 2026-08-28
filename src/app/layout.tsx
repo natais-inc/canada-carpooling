@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://canada-carpooling.vercel.app'),
+  metadataBase: new URL('https://carpoolwork.ca'),
   title: {
-    default: 'Canada Carpooling | Covoiturage intercité au Canada',
-    template: '%s | Canada Carpooling',
+    default: 'CarpoolWork | Covoiturage intercité au Canada',
+    template: '%s | CarpoolWork',
   },
   description: 'Covoiturage intercité au Canada. Trouvez ou offrez un trajet entre villes canadiennes. Économisez jusqu\'à 75% vs bus ou train. Seulement 1,99$ de frais de service.',
   keywords: [
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     'intercity rideshare', 'covoiturage intercité',
     'trajet partagé Canada', 'partage de trajet',
   ],
-  authors: [{ name: 'Canada Carpooling' }],
-  creator: 'Canada Carpooling',
-  publisher: 'Canada Carpooling',
+  authors: [{ name: 'CarpoolWork' }],
+  creator: 'CarpoolWork',
+  publisher: 'CarpoolWork',
   robots: {
     index: true,
     follow: true,
@@ -33,30 +33,30 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_CA',
     alternateLocale: 'en_CA',
-    url: 'https://canada-carpooling.vercel.app',
-    siteName: 'Canada Carpooling',
-    title: 'Canada Carpooling | Covoiturage intercité au Canada',
+    url: 'https://carpoolwork.ca',
+    siteName: 'CarpoolWork',
+    title: 'CarpoolWork | Covoiturage intercité au Canada',
     description: 'Trouvez ou offrez un trajet entre villes canadiennes. Économisez jusqu\'à 75%. Conducteurs vérifiés, seulement 1,99$ de frais.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Canada Carpooling - Covoiturage intercité',
+        alt: 'CarpoolWork - Covoiturage intercité',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Canada Carpooling | Covoiturage intercité au Canada',
+    title: 'CarpoolWork | Covoiturage intercité au Canada',
     description: 'Trouvez ou offrez un trajet entre villes canadiennes. Économisez jusqu\'à 75%.',
     images: ['/og-image.png'],
   },
   alternates: {
-    canonical: 'https://canada-carpooling.vercel.app',
+    canonical: 'https://carpoolwork.ca',
     languages: {
-      'fr-CA': 'https://canada-carpooling.vercel.app/fr',
-      'en-CA': 'https://canada-carpooling.vercel.app/en',
+      'fr-CA': 'https://carpoolwork.ca/fr',
+      'en-CA': 'https://carpoolwork.ca/en',
     },
   },
   verification: {
