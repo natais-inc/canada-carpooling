@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Canada Carpooling',
-    short_name: 'Carpooling',
+    name: 'CarpoolWork',
+    short_name: 'CarpoolWork',
     description: 'Covoiturage intercité au Canada / Intercity carpooling in Canada',
     start_url: '/fr',
     display: 'standalone',
