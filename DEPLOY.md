@@ -94,3 +94,5 @@ npx prisma studio
 | Neon | 0.5 GB storage, 1 compute | 19 $/mois |
 | Stripe | 0 $/mois fixe | 2.9% + 0.30 $ par transaction |
 | **Total** | **0 $/mois** | **~39 $/mois + frais Stripe** |
+
+<!-- Redeploy trigger: Git integration reconnected under natais-inc (2026-08-28) -->
