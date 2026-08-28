@@ -32,7 +32,8 @@
     "signup": "Sign up",
     "register": "Sign up",
     "logout": "Log out",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "employers": "Employers"
   },
   "home": {
     "title": "Travel across Canada for less",
@@ -298,7 +299,8 @@
     "description": "Canada's most affordable carpooling platform. Share the road, share the savings.",
     "company": "Company",
     "legal": "Legal",
-    "secure": "Secure payments by Stripe"
+    "secure": "Secure payments by Stripe",
+    "employers": "Employers"
   },
   "verification": {
     "title": "Identity Verification",
@@ -497,5 +499,33 @@
       "reviews": "After each trip, both parties can leave ratings (punctuality, safety, communication, comfort) and a written review. Reviews are public and help everyone make informed decisions.",
       "discrimination": "We have a zero-tolerance policy. Report any discrimination or harassment through the app immediately. We investigate within 24 hours and permanently ban offenders. Your dignity is non-negotiable."
     }
+  },
+  "employers": {
+    "badge": "Employer program — Durham Region",
+    "title": "Turnkey commute carpooling for your organization",
+    "subtitle": "We match your employees by shift and neighbourhood, and give you the numbers — kilometres avoided, CO2 reduced, parking freed — ready for your reports.",
+    "benefit1Title": "Less parking pressure",
+    "benefit1Text": "Every carpool frees up spots. Cut parking demand without building a single new space.",
+    "benefit2Title": "Audit-ready ESG data",
+    "benefit2Text": "An HR dashboard with kilometres avoided and tonnes of CO2 reduced, usable directly in your sustainability reporting.",
+    "benefit3Title": "Built for shift work",
+    "benefit3Text": "Matching by schedule and neighbourhood: day, evening and night teams find colleagues driving the same route at the same time.",
+    "pilotTitle": "Free 60-day pilot",
+    "pilotText": "We launch the program at one of your sites, free and with no commitment. You judge on results.",
+    "pilotPoint1": "Up to 200 employees at one site, launch support included",
+    "pilotPoint2": "Matching by shift and home neighbourhood",
+    "pilotPoint3": "Impact report at the end of the pilot: adoption, km avoided, CO2 reduced",
+    "pilotPoint4": "No credit card — conversion is decided after the results",
+    "formTitle": "Request a demo",
+    "formName": "Your name",
+    "formOrganization": "Organization",
+    "formEmail": "Work email",
+    "formPhone": "Phone",
+    "formEmployees": "Number of employees",
+    "formMessage": "Message (optional)",
+    "formSubmit": "Request a free demo",
+    "successTitle": "Request received!",
+    "successText": "Thank you — we'll get back to you within one business day to schedule the demo.",
+    "errorText": "Something went wrong. Please try again in a moment."
   }
 }
