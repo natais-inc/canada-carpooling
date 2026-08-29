@@ -554,6 +554,19 @@
     "role_EMPLOYER_ADMIN": "Administrateur",
     "status_ACTIVE": "Actif",
     "status_INVITED": "Invité",
-    "status_REMOVED": "Retiré"
+    "status_REMOVED": "Retiré",
+    "colActions": "Actions",
+    "inviteEmailLabel": "Courriel de l'employé",
+    "inviteDeptLabel": "Service (optionnel)",
+    "inviteDeptPlaceholder": "Ex. : Opérations",
+    "inviteButton": "Inviter",
+    "inviteHint": "L'employé doit déjà avoir un compte CarpoolWork. Il est ajouté avec le statut « Invité » ; activez-le pour le compter dans l'impact.",
+    "actionActivate": "Activer",
+    "actionRemove": "Retirer",
+    "msg_added": "Employé ajouté (statut : invité).",
+    "msg_no_account": "Aucun compte CarpoolWork avec ce courriel. L'employé doit d'abord s'inscrire.",
+    "msg_already_member": "Cet employé fait déjà partie de l'entreprise.",
+    "msg_email_required": "Veuillez saisir un courriel.",
+    "msg_error": "Une erreur est survenue. Réessayez."
   }
 }
