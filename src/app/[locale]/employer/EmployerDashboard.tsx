@@ -10,6 +10,7 @@ function useNumber(locale: string) {
   const loc = locale === 'en' ? 'en-CA' : 'fr-CA';
   return {
     int: (n: number) => new Intl.NumberFormat(loc, { maximumFractionDigits: 0 }).format(Math.round(n)),
+    dec1: (n: number) => new Intl.NumberFormat(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n),
     money: (n: number) =>
       new Intl.NumberFormat(loc, { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(n),
     date: (iso: string) => {
@@ -98,7 +99,7 @@ export default function EmployerDashboard({
         <span>{t('impactDisclaimer', { count: counts.active })}</span>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        <Metric icon={Car} value={fmt.int(projection.carsRemoved)} label={t('carsRemoved')} />
+        <Metric icon={Car} value={fmt.dec1(projection.carsRemoved)} label={t('carsRemoved')} />
         <Metric icon={Leaf} value={`${fmt.int(projection.co2KgYear)} kg`} label={t('co2Avoided')} hint={t('perYear')} />
         <Metric icon={TreePine} value={fmt.int(projection.trees)} label={t('treesEquivalent')} />
         <Metric icon={Fuel} value={`${fmt.int(projection.litresYear)} L`} label={t('fuelSaved')} hint={t('perYear')} />
