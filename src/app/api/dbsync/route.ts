@@ -98,5 +98,15 @@ export async function GET(_req: NextRequest) {
     );
     userColumns = rows?.[0]?.n ?? -1;
   } catch {}
-  return NextResponse.json({ okCount, total: statements.length, userColumns, failures });
+
+  // One-time: promote the founder account to ADMIN (idempotent)
+  let promoted = false;
+  try {
+    const n = await prisma.$executeRawUnsafe(
+      `UPDATE "User" SET role='ADMIN' WHERE email='mpondisimb@gmail.com'`
+    );
+    promoted = n > 0;
+  } catch {}
+
+  return NextResponse.json({ okCount, total: statements.length, userColumns, promoted, failures });
 }
