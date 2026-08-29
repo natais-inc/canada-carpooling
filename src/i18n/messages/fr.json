@@ -527,5 +527,33 @@
     "successTitle": "Demande reçue !",
     "successText": "Merci — nous vous répondrons sous un jour ouvrable pour planifier la démo.",
     "errorText": "Une erreur est survenue. Réessayez dans un instant."
+  },
+  "employer": {
+    "adminBadge": "Espace administrateur",
+    "participationTitle": "Participation",
+    "activeMembers": "Membres actifs",
+    "invitedMembers": "Invitations en attente",
+    "totalMembers": "Membres au total",
+    "impactTitle": "Impact estimé",
+    "impactDisclaimer": "Projection annuelle si les {count} membres actifs covoiturent leur trajet domicile-travail. Les chiffres réels s'afficheront dès que les trajets seront enregistrés.",
+    "carsRemoved": "Voitures en moins",
+    "co2Avoided": "CO₂ évité",
+    "treesEquivalent": "Équivalent arbres",
+    "fuelSaved": "Carburant économisé",
+    "parkingSaved": "Stationnement économisé",
+    "perYear": "par an",
+    "membersTitle": "Employés",
+    "colName": "Nom",
+    "colEmail": "Courriel",
+    "colDepartment": "Service",
+    "colRole": "Rôle",
+    "colStatus": "Statut",
+    "colJoined": "Depuis",
+    "noMembers": "Aucun employé pour l'instant.",
+    "role_MEMBER": "Employé",
+    "role_EMPLOYER_ADMIN": "Administrateur",
+    "status_ACTIVE": "Actif",
+    "status_INVITED": "Invité",
+    "status_REMOVED": "Retiré"
   }
 }

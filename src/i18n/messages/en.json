@@ -527,5 +527,33 @@
     "successTitle": "Request received!",
     "successText": "Thank you — we'll get back to you within one business day to schedule the demo.",
     "errorText": "Something went wrong. Please try again in a moment."
+  },
+  "employer": {
+    "adminBadge": "Administrator portal",
+    "participationTitle": "Participation",
+    "activeMembers": "Active members",
+    "invitedMembers": "Pending invitations",
+    "totalMembers": "Total members",
+    "impactTitle": "Estimated impact",
+    "impactDisclaimer": "Annual projection if the {count} active members carpool their commute. Real figures appear as trips are recorded.",
+    "carsRemoved": "Cars off the road",
+    "co2Avoided": "CO₂ avoided",
+    "treesEquivalent": "Tree equivalent",
+    "fuelSaved": "Fuel saved",
+    "parkingSaved": "Parking saved",
+    "perYear": "per year",
+    "membersTitle": "Employees",
+    "colName": "Name",
+    "colEmail": "Email",
+    "colDepartment": "Department",
+    "colRole": "Role",
+    "colStatus": "Status",
+    "colJoined": "Since",
+    "noMembers": "No employees yet.",
+    "role_MEMBER": "Employee",
+    "role_EMPLOYER_ADMIN": "Administrator",
+    "status_ACTIVE": "Active",
+    "status_INVITED": "Invited",
+    "status_REMOVED": "Removed"
   }
 }
