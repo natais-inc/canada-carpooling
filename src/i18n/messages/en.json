@@ -672,5 +672,22 @@
     "invStatus_PAID": "Paid",
     "invStatus_VOID": "Void",
     "invStatus_TRIAL": "Free (trial)"
+  },
+  "employerSignup": {
+    "title": "Create your company workspace",
+    "subtitle": "Launch your company's commute carpooling program in seconds.",
+    "trialBadge": "30-day free trial",
+    "companyName": "Company name",
+    "companyNamePh": "e.g. Durham Transport Inc.",
+    "region": "Province or region (optional)",
+    "regionPh": "e.g. Ontario",
+    "avgKm": "Average commute distance",
+    "avgKmHint": "In km, one way. Used for impact figures.",
+    "parking": "Annual cost of one parking space",
+    "parkingHint": "In dollars. Used for savings figures.",
+    "submit": "Create my employer workspace",
+    "note": "You become the first administrator. You can invite employees next.",
+    "errName": "Company name is required.",
+    "errGeneric": "Creation failed. Please try again."
   }
 }

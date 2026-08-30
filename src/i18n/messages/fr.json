@@ -672,5 +672,22 @@
     "invStatus_PAID": "Payée",
     "invStatus_VOID": "Annulée",
     "invStatus_TRIAL": "Offerte (essai)"
+  },
+  "employerSignup": {
+    "title": "Créer l'espace de votre entreprise",
+    "subtitle": "Lancez le programme de covoiturage domicile-travail de votre entreprise en quelques secondes.",
+    "trialBadge": "Essai gratuit de 30 jours",
+    "companyName": "Nom de l'entreprise",
+    "companyNamePh": "Ex. : Transports Durham inc.",
+    "region": "Province ou région (optionnel)",
+    "regionPh": "Ex. : Ontario",
+    "avgKm": "Distance domicile-travail moyenne",
+    "avgKmHint": "En km, aller simple. Sert au calcul d'impact.",
+    "parking": "Coût annuel d'une place de stationnement",
+    "parkingHint": "En dollars. Sert au calcul des économies.",
+    "submit": "Créer mon espace employeur",
+    "note": "Vous devenez le premier administrateur. Vous pourrez inviter vos employés ensuite.",
+    "errName": "Le nom de l'entreprise est requis.",
+    "errGeneric": "La création a échoué. Réessayez."
   }
 }

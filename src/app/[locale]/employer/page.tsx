@@ -25,9 +25,17 @@ export default async function EmployerHome({ params }: { params: { locale: strin
           <h1 className="text-2xl font-bold text-gray-900">Espace employeur</h1>
           <p className="text-gray-600 mt-2">
             Cet espace est réservé aux administrateurs des entreprises abonnées à CarpoolWork.
-            Si votre entreprise participe au programme, demandez à votre administrateur de vous
-            donner accès.
+            Si votre entreprise participe déjà, demandez à votre administrateur de vous donner accès.
           </p>
+          <div className="mt-6">
+            <a
+              href={`/${locale}/employer/inscription`}
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 text-white text-sm font-medium px-5 py-2.5 hover:bg-brand-700"
+            >
+              Créer l’espace de mon entreprise
+            </a>
+            <p className="text-xs text-gray-400 mt-2">Essai gratuit de 30 jours — aucune carte requise.</p>
+          </div>
         </div>
       </div>
     );
