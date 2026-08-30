@@ -664,6 +664,13 @@
     "status_trial": "Offert (essai)",
     "status_due": "À payer",
     "status_paid": "Payé",
-    "methodology": "{price} par participant actif et par mois, facturé le mois suivant. Un participant actif = un employé ayant enregistré au moins un covoiturage dans le mois."
+    "methodology": "{price} par participant actif et par mois, facturé le mois suivant. Un participant actif = un employé ayant enregistré au moins un covoiturage dans le mois.",
+    "invoicesTitle": "Factures émises",
+    "invColNumber": "No de facture",
+    "invColDownload": "Télécharger",
+    "invStatus_DUE": "À payer",
+    "invStatus_PAID": "Payée",
+    "invStatus_VOID": "Annulée",
+    "invStatus_TRIAL": "Offerte (essai)"
   }
 }

@@ -49,6 +49,17 @@ export type BillingOverview = {
   currentMonth: { activeParticipants: number; amountCents: number };
   history: BillingMonth[]; // most recent first, current month included
   enterpriseSuggested: boolean; // crosses an Enterprise threshold
+  invoices: BillingInvoice[]; // issued invoices (immutable), most recent first
+};
+
+export type BillingInvoice = {
+  id: string;
+  number: string;
+  periodYear: number;
+  periodMonth: number;
+  amountCents: number;
+  status: 'DUE' | 'PAID' | 'VOID' | 'TRIAL';
+  issuedAtIso: string;
 };
 
 function monthStart(year: number, month0: number): Date {
@@ -144,6 +155,27 @@ export async function getBillingOverview(companyId: string): Promise<BillingOver
     tier !== 'ENTERPRISE' &&
     (current.activeParticipants >= BILLING.ENTERPRISE_PARTICIPANTS || siteCount > BILLING.ENTERPRISE_SITES);
 
+  // Issued invoices (immutable). Best-effort — table may not exist pre-migration.
+  let invoices: BillingInvoice[] = [];
+  try {
+    const rows = await prisma.invoice.findMany({
+      where: { companyId },
+      orderBy: [{ periodYear: 'desc' }, { periodMonth: 'desc' }],
+      select: { id: true, number: true, periodYear: true, periodMonth: true, amountCents: true, status: true, issuedAt: true },
+    });
+    invoices = rows.map((r: { id: string; number: string; periodYear: number; periodMonth: number; amountCents: number; status: string; issuedAt: Date }) => ({
+      id: r.id,
+      number: r.number,
+      periodYear: r.periodYear,
+      periodMonth: r.periodMonth,
+      amountCents: r.amountCents,
+      status: r.status as BillingInvoice['status'],
+      issuedAtIso: r.issuedAt.toISOString(),
+    }));
+  } catch {
+    invoices = [];
+  }
+
   return {
     company: { id: company.id, name: company.name, tier, pricePerParticipantCents: price },
     currency: BILLING.CURRENCY,
@@ -152,5 +184,6 @@ export async function getBillingOverview(companyId: string): Promise<BillingOver
     currentMonth: { activeParticipants: current.activeParticipants, amountCents: current.amountCents },
     history,
     enterpriseSuggested,
+    invoices,
   };
 }

@@ -147,8 +147,40 @@ model Company {
   pricePerParticipantCents Int         @default(2000) // 20.00 CAD / active participant / month
   memberships      CompanyMembership[]
   carpoolLogs      CarpoolLog[]
+  invoices         Invoice[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
+}
+
+enum InvoiceStatus {
+  DUE
+  PAID
+  VOID
+  TRIAL // period covered by the free trial — nothing to pay
+}
+
+// An immutable monthly invoice for one company (Phase 3, manual invoicing).
+// Frozen at close time; billing figures never change retroactively afterwards.
+model Invoice {
+  id                       String        @id @default(cuid())
+  companyId                String
+  number                   String        @unique // e.g. CW-202608-ab12cd
+  periodYear               Int           // the usage month billed
+  periodMonth              Int           // 1–12
+  activeParticipants       Int           // frozen snapshot
+  pricePerParticipantCents Int
+  amountCents              Int
+  currency                 String        @default("CAD")
+  status                   InvoiceStatus @default(DUE)
+  issuedAt                 DateTime      @default(now())
+  paidAt                   DateTime?
+  company                  Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
+
+  @@unique([companyId, periodYear, periodMonth])
+  @@index([companyId])
+  @@index([status])
 }
 
 model CompanyMembership {

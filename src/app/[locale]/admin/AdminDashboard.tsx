@@ -58,7 +58,40 @@ type PlatformOverview = {
   companies: PlatformCompany[];
 };
 
-type Tab = 'companies' | 'demos' | 'users';
+type Invoice = {
+  id: string;
+  number: string;
+  periodYear: number;
+  periodMonth: number;
+  activeParticipants: number;
+  pricePerParticipantCents: number;
+  amountCents: number;
+  currency: string;
+  status: 'DUE' | 'PAID' | 'VOID' | 'TRIAL';
+  issuedAt: string;
+  paidAt: string | null;
+  company: { name: string };
+};
+
+type Tab = 'companies' | 'invoices' | 'demos' | 'users';
+
+const MONTHS_FR = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juill.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+function periodLabel(y: number, m: number) {
+  return `${MONTHS_FR[m - 1] || m} ${y}`;
+}
+
+const invoiceStatusStyles: Record<Invoice['status'], string> = {
+  DUE: 'bg-brand-50 text-brand-700',
+  PAID: 'bg-green-100 text-green-700',
+  VOID: 'bg-gray-100 text-gray-500',
+  TRIAL: 'bg-amber-100 text-amber-700',
+};
+const invoiceStatusLabel: Record<Invoice['status'], string> = {
+  DUE: 'À payer',
+  PAID: 'Payée',
+  VOID: 'Annulée',
+  TRIAL: 'Offerte (essai)',
+};
 
 function fmtDate(s: string) {
   try {
@@ -84,6 +117,9 @@ export default function AdminDashboard({ locale }: { locale: string }) {
   const [demos, setDemos] = useState<DemoRequest[]>([]);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [overview, setOverview] = useState<PlatformOverview | null>(null);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [closing, setClosing] = useState(false);
+  const [closeMsg, setCloseMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -92,14 +128,16 @@ export default function AdminDashboard({ locale }: { locale: string }) {
     setLoading(true);
     setError('');
     try {
-      const [d, u, c] = await Promise.all([
+      const [d, u, c, inv] = await Promise.all([
         fetch('/api/admin/demo-requests').then((r) => r.json()),
         fetch('/api/admin/users').then((r) => r.json()),
         fetch('/api/admin/companies').then((r) => r.json()),
+        fetch('/api/admin/invoices').then((r) => r.json()),
       ]);
       setDemos(d.requests || []);
       setUsers(u.users || []);
       setOverview(c && c.companies ? c : null);
+      setInvoices(inv.invoices || []);
     } catch {
       setError('Impossible de charger les données.');
     } finally {
@@ -138,6 +176,51 @@ export default function AdminDashboard({ locale }: { locale: string }) {
     }
   };
 
+  const closeLastMonth = async () => {
+    if (closing) return;
+    setClosing(true);
+    setCloseMsg(null);
+    try {
+      const res = await fetch('/api/admin/invoices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'close' }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setCloseMsg(`Mois ${periodLabel(data.year, data.month)} clôturé : ${data.created} facture(s) créée(s), ${data.skipped} déjà existante(s).`);
+        await load();
+      } else {
+        setCloseMsg(data.error === 'month_not_complete' ? 'Le mois à clôturer n\'est pas encore terminé.' : 'La clôture a échoué.');
+      }
+    } catch {
+      setCloseMsg('La clôture a échoué.');
+    } finally {
+      setClosing(false);
+    }
+  };
+
+  const setInvoice = async (id: string, status: Invoice['status']) => {
+    setBusyId(id);
+    try {
+      const res = await fetch('/api/admin/invoices', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setInvoices((prev) => prev.map((iv) => (iv.id === id ? { ...iv, status: data.invoice.status, paidAt: data.invoice.paidAt } : iv)));
+      } else {
+        setError(data.error || "L'action a échoué.");
+      }
+    } catch {
+      setError("L'action a échoué.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
@@ -161,6 +244,14 @@ export default function AdminDashboard({ locale }: { locale: string }) {
           }`}
         >
           <Receipt className="h-4 w-4" /> Entreprises {overview ? `(${overview.totals.companies})` : ''}
+        </button>
+        <button
+          onClick={() => setTab('invoices')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 -mb-px ${
+            tab === 'invoices' ? 'border-brand-600 text-brand-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+          }`}
+        >
+          <Receipt className="h-4 w-4" /> Factures ({invoices.length})
         </button>
         <button
           onClick={() => setTab('demos')}
@@ -272,6 +363,79 @@ export default function AdminDashboard({ locale }: { locale: string }) {
             </p>
           </div>
         )
+      ) : tab === 'invoices' ? (
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <p className="text-sm text-gray-600">
+              Clôturer un mois fige les participants actifs de chaque entreprise en une facture immuable.
+            </p>
+            <button
+              onClick={closeLastMonth}
+              disabled={closing}
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 text-white text-sm font-medium px-4 py-2 hover:bg-brand-700 disabled:opacity-50"
+            >
+              {closing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Receipt className="h-4 w-4" />}
+              Clôturer le mois précédent
+            </button>
+          </div>
+          {closeMsg && <div className="bg-brand-50 text-brand-800 text-sm p-3 rounded-lg mb-4">{closeMsg}</div>}
+          <div className="overflow-x-auto border border-gray-200 rounded-lg">
+            {invoices.length === 0 ? (
+              <p className="text-gray-500 text-sm p-6">Aucune facture émise. Clôture un mois pour en générer.</p>
+            ) : (
+              <table className="min-w-full text-sm">
+                <thead className="bg-gray-50 text-gray-600 text-left">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">No</th>
+                    <th className="px-4 py-3 font-medium">Entreprise</th>
+                    <th className="px-4 py-3 font-medium">Période</th>
+                    <th className="px-4 py-3 font-medium text-right">Actifs</th>
+                    <th className="px-4 py-3 font-medium text-right">Montant</th>
+                    <th className="px-4 py-3 font-medium">Statut</th>
+                    <th className="px-4 py-3 font-medium text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {invoices.map((iv) => (
+                    <tr key={iv.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 font-mono text-xs text-gray-500 whitespace-nowrap">{iv.number}</td>
+                      <td className="px-4 py-3 font-medium text-gray-900">{iv.company.name}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">{periodLabel(iv.periodYear, iv.periodMonth)}</td>
+                      <td className="px-4 py-3 text-right tabular-nums text-gray-700">{iv.activeParticipants}</td>
+                      <td className="px-4 py-3 text-right tabular-nums text-gray-900 font-medium">{money(iv.amountCents)}</td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${invoiceStatusStyles[iv.status]}`}>
+                          {invoiceStatusLabel[iv.status]}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-wrap gap-1 justify-end items-center">
+                          <a href={`/api/invoice/${iv.id}?locale=fr`} target="_blank" rel="noopener noreferrer"
+                            className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200">PDF</a>
+                          {iv.status !== 'PAID' && iv.status !== 'TRIAL' && (
+                            <button onClick={() => setInvoice(iv.id, 'PAID')} disabled={busyId === iv.id}
+                              className="text-xs px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100 disabled:opacity-50">Marquer payée</button>
+                          )}
+                          {iv.status === 'PAID' && (
+                            <button onClick={() => setInvoice(iv.id, 'DUE')} disabled={busyId === iv.id}
+                              className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50">Rendre à payer</button>
+                          )}
+                          {iv.status !== 'VOID' ? (
+                            <button onClick={() => setInvoice(iv.id, 'VOID')} disabled={busyId === iv.id}
+                              className="text-xs px-2 py-1 rounded bg-red-50 text-red-700 hover:bg-red-100 disabled:opacity-50">Annuler</button>
+                          ) : (
+                            <button onClick={() => setInvoice(iv.id, 'DUE')} disabled={busyId === iv.id}
+                              className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50">Rétablir</button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
       ) : tab === 'demos' ? (
         <div className="overflow-x-auto border border-gray-200 rounded-lg">
           {demos.length === 0 ? (

@@ -664,6 +664,13 @@
     "status_trial": "Free (trial)",
     "status_due": "Due",
     "status_paid": "Paid",
-    "methodology": "{price} per active participant per month, billed the following month. An active participant = an employee who logged at least one carpool during the month."
+    "methodology": "{price} per active participant per month, billed the following month. An active participant = an employee who logged at least one carpool during the month.",
+    "invoicesTitle": "Issued invoices",
+    "invColNumber": "Invoice no.",
+    "invColDownload": "Download",
+    "invStatus_DUE": "Due",
+    "invStatus_PAID": "Paid",
+    "invStatus_VOID": "Void",
+    "invStatus_TRIAL": "Free (trial)"
   }
 }
