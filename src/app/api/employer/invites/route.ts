@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes } from 'crypto';
 import { requireCompanyAdmin } from '@/lib/company';
 import { prisma } from '@/lib/db';
+import { sendEmail, inviteEmail, appBaseUrl } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,7 +72,20 @@ export async function POST(req: NextRequest) {
     },
     select: { id: true, email: true, department: true, token: true },
   });
-  return NextResponse.json({ ok: true, invite });
+
+  // Email the invitation link (best-effort; no-op if email isn't configured).
+  let emailed = false;
+  try {
+    const company = await prisma.company.findUnique({ where: { id: access.companyId }, select: { name: true } });
+    const url = `${appBaseUrl()}/fr/rejoindre/${token}`;
+    const tpl = inviteEmail('fr', company?.name || 'CarpoolWork', url);
+    const r = await sendEmail({ to: email, subject: tpl.subject, html: tpl.html, text: tpl.text });
+    emailed = !!r.ok;
+  } catch {
+    emailed = false;
+  }
+
+  return NextResponse.json({ ok: true, invite, emailed });
 }
 
 export async function PATCH(req: NextRequest) {

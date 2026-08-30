@@ -116,6 +116,7 @@ model User {
   reports             Report[]           @relation("Reporter")
   reportsAgainst      Report[]           @relation("Reported")
   companyMemberships  CompanyMembership[]
+  emailVerifyTokens   EmailVerifyToken[]
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -177,6 +178,18 @@ enum InviteStatus {
   PENDING
   ACCEPTED
   REVOKED
+}
+
+// One-time email-verification token (Phase 5). Verifying sets User.emailVerified.
+model EmailVerifyToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 // A shareable, token-based invitation to join a company — works for people who

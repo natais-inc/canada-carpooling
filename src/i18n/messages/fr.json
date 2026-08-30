@@ -674,7 +674,11 @@
     "nudgeBody": "Tu n'as pas déclaré de covoiturage cette semaine. Un clic suffit pour compter dans l'impact de ton entreprise.",
     "nudgeAction": "J'ai covoituré",
     "pendingBadge": "En attente d'approbation",
-    "pendingBody": "Ta demande de rattachement est en attente d'approbation par l'entreprise. Tu recevras l'accès dès qu'un administrateur l'aura validée."
+    "pendingBody": "Ta demande de rattachement est en attente d'approbation par l'entreprise. Tu recevras l'accès dès qu'un administrateur l'aura validée.",
+    "verifyTitle": "Vérifiez votre courriel",
+    "verifyBody": "Confirmez votre adresse pour sécuriser votre compte et accélérer votre rattachement en entreprise.",
+    "verifySent": "Courriel de vérification envoyé — vérifiez votre boîte de réception.",
+    "verifyResend": "Renvoyer le courriel"
   },
   "billing": {
     "backToDashboard": "Retour au tableau de bord",
@@ -774,5 +778,16 @@
     "step3": "Rejoignez l'entreprise et déclarez votre trajet.",
     "orVisit": "Ou visitez :",
     "footer": "CarpoolWork — une solution de NATAIS Inc."
+  },
+  "verify": {
+    "loading": "Vérification en cours…",
+    "okTitle": "Courriel confirmé !",
+    "okBody": "Merci — votre adresse est vérifiée. Vous pouvez continuer.",
+    "continue": "Continuer",
+    "expiredTitle": "Lien expiré",
+    "expiredBody": "Ce lien de vérification a expiré. Demandez-en un nouveau depuis votre espace.",
+    "invalidTitle": "Lien invalide",
+    "invalidBody": "Ce lien de vérification est invalide ou a déjà été utilisé.",
+    "goHome": "Continuer"
   }
 }

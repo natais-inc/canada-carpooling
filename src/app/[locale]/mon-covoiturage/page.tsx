@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import MyCommute, { type EmployeeMembership, type PersonalImpact } from './MyCommute';
 import { findMatches, type Match } from '@/lib/matching';
 import { measuredImpact } from '@/lib/impact';
+import { emailConfigured } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -91,6 +92,17 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
     nudgeByMembership = {};
   }
 
+  // Show the email-verification banner only once email sending is configured.
+  let showVerifyBanner = false;
+  try {
+    if (emailConfigured()) {
+      const u = await prisma.user.findUnique({ where: { id: userId }, select: { emailVerified: true } });
+      showVerifyBanner = !u?.emailVerified;
+    }
+  } catch {
+    showVerifyBanner = false;
+  }
+
   return (
     <MyCommute
       memberships={memberships}
@@ -98,6 +110,7 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
       carpoolCountByMembership={carpoolCountByMembership}
       impactByMembership={impactByMembership}
       nudgeByMembership={nudgeByMembership}
+      showVerifyBanner={showVerifyBanner}
       locale={locale}
     />
   );

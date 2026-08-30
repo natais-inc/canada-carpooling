@@ -88,6 +88,37 @@ function InviteCard({ m, t }: { m: EmployeeMembership; t: any }) {
   );
 }
 
+function VerifyBanner({ t }: { t: any }) {
+  const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+  async function resend() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const res = await fetch('/api/auth/resend-verification', { method: 'POST' });
+      if (res.ok) setSent(true);
+    } catch {
+      /* ignore */
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="flex-1">
+        <p className="text-sm font-semibold text-amber-900">{t('verifyTitle')}</p>
+        <p className="text-sm text-amber-800">{sent ? t('verifySent') : t('verifyBody')}</p>
+      </div>
+      {!sent ? (
+        <button onClick={resend} disabled={busy}
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-300 bg-white text-amber-800 text-sm font-medium px-3 py-2 hover:border-amber-500 disabled:opacity-50 whitespace-nowrap">
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}{t('verifyResend')}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 function PendingCard({ m, t }: { m: EmployeeMembership; t: any }) {
   return (
     <div className="bg-white border border-orange-200 rounded-xl p-5 shadow-sm">
@@ -476,6 +507,7 @@ export default function MyCommute({
   carpoolCountByMembership,
   impactByMembership,
   nudgeByMembership,
+  showVerifyBanner,
   locale,
 }: {
   memberships: EmployeeMembership[];
@@ -483,6 +515,7 @@ export default function MyCommute({
   carpoolCountByMembership: Record<string, number>;
   impactByMembership: Record<string, PersonalImpact>;
   nudgeByMembership: Record<string, boolean>;
+  showVerifyBanner: boolean;
   locale: string;
 }) {
   const t = useTranslations('employee');
@@ -494,6 +527,8 @@ export default function MyCommute({
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
       <p className="text-gray-600 mt-1 mb-6">{t('subtitle')}</p>
+
+      {showVerifyBanner ? <VerifyBanner t={t} /> : null}
 
       {memberships.length === 0 ? (
         <div className="bg-white border border-gray-200 rounded-xl p-8 text-center text-gray-500">

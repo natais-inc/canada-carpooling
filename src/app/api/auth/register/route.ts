@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { recordConsent, logDataProcessing, CURRENT_PRIVACY_POLICY_VERSION } from '@/lib/consent';
 import { sanitizeInput, validatePasswordStrength as validatePassword, checkRateLimit, getClientIP } from '@/lib/security';
 import { isHoneypotTriggered, authTimingSafeDelay } from '@/lib/security-hardening';
+import { createAndSendVerification } from '@/lib/verification';
 
 const registerSchema = z.object({
   firstName: z.string().min(1).max(50).transform(sanitizeInput),
@@ -109,6 +110,13 @@ export async function POST(req: NextRequest) {
       'Account registration — name, email, phone collected for service provision',
       'consent'
     );
+
+    // Send email verification (best-effort — never blocks registration).
+    try {
+      await createAndSendVerification(user.id, user.email, user.firstName, data.preferredLanguage);
+    } catch (e) {
+      console.error('[register] verification email failed', e);
+    }
 
     return NextResponse.json({
       id: user.id,

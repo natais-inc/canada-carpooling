@@ -674,7 +674,11 @@
     "nudgeBody": "You haven't logged a carpool this week. One click counts toward your company's impact.",
     "nudgeAction": "I carpooled",
     "pendingBadge": "Awaiting approval",
-    "pendingBody": "Your request to join is awaiting approval by the company. You'll get access once an administrator approves it."
+    "pendingBody": "Your request to join is awaiting approval by the company. You'll get access once an administrator approves it.",
+    "verifyTitle": "Verify your email",
+    "verifyBody": "Confirm your address to secure your account and speed up joining your company.",
+    "verifySent": "Verification email sent — check your inbox.",
+    "verifyResend": "Resend email"
   },
   "billing": {
     "backToDashboard": "Back to dashboard",
@@ -774,5 +778,16 @@
     "step3": "Join the company and declare your commute.",
     "orVisit": "Or visit:",
     "footer": "CarpoolWork — a NATAIS Inc. solution"
+  },
+  "verify": {
+    "loading": "Verifying…",
+    "okTitle": "Email confirmed!",
+    "okBody": "Thanks — your address is verified. You can continue.",
+    "continue": "Continue",
+    "expiredTitle": "Link expired",
+    "expiredBody": "This verification link has expired. Request a new one from your space.",
+    "invalidTitle": "Invalid link",
+    "invalidBody": "This verification link is invalid or has already been used.",
+    "goHome": "Continue"
   }
 }
