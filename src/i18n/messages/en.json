@@ -651,7 +651,10 @@
     "impactCarpoolsMonth": "Carpools this month",
     "impactKmMonth": "Carpooled km this month",
     "impactCo2Month": "kg CO₂ avoided this month",
-    "impactAllTime": "Since you started: {carpools} carpools, {co2} kg of CO₂ avoided — about {trees} trees' worth over a year."
+    "impactAllTime": "Since you started: {carpools} carpools, {co2} kg of CO₂ avoided — about {trees} trees' worth over a year.",
+    "nudgeTitle": "It's been a while!",
+    "nudgeBody": "You haven't logged a carpool this week. One click counts toward your company's impact.",
+    "nudgeAction": "I carpooled"
   },
   "billing": {
     "backToDashboard": "Back to dashboard",

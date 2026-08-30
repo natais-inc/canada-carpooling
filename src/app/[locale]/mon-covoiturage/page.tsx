@@ -49,16 +49,20 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
   }
 
   // Carpools recorded this month + all-time, per active membership (measured
-  // participation), turned into the member's own impact (brick 4).
+  // participation), turned into the member's own impact (brick 4). Also a
+  // gentle engagement nudge when a set-up member hasn't logged in 7 days.
   let carpoolCountByMembership: Record<string, number> = {};
   let impactByMembership: Record<string, PersonalImpact> = {};
+  let nudgeByMembership: Record<string, boolean> = {};
   try {
     const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const sevenDaysAgo = new Date(Date.now() - 7 * 86400000);
     const entries = await Promise.all(
       active.map(async (m) => {
-        const [monthCarpools, allTimeCarpools] = await Promise.all([
+        const [monthCarpools, allTimeCarpools, lastLog] = await Promise.all([
           prisma.carpoolLog.count({ where: { membershipId: m.id, date: { gte: monthStart } } }),
           prisma.carpoolLog.count({ where: { membershipId: m.id } }),
+          prisma.carpoolLog.findFirst({ where: { membershipId: m.id }, orderBy: { date: 'desc' }, select: { date: true } }),
         ]);
         const avgKm = (m as any).company?.avgCommuteKm ?? 0;
         const month = measuredImpact(monthCarpools, avgKm);
@@ -72,14 +76,19 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
           allTimeCo2Kg: total.co2Kg,
           allTimeTrees: total.trees,
         };
-        return [m.id, { monthCarpools, impact }] as const;
+        // Nudge a member who has declared a commute but hasn't logged recently.
+        const hasCommute = !!m.commuteDays;
+        const nudge = hasCommute && (!lastLog || lastLog.date < sevenDaysAgo);
+        return [m.id, { monthCarpools, impact, nudge }] as const;
       })
     );
     carpoolCountByMembership = Object.fromEntries(entries.map(([id, v]) => [id, v.monthCarpools]));
     impactByMembership = Object.fromEntries(entries.map(([id, v]) => [id, v.impact]));
+    nudgeByMembership = Object.fromEntries(entries.map(([id, v]) => [id, v.nudge]));
   } catch {
     carpoolCountByMembership = {};
     impactByMembership = {};
+    nudgeByMembership = {};
   }
 
   return (
@@ -88,6 +97,7 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
       matchesByMembership={matchesByMembership}
       carpoolCountByMembership={carpoolCountByMembership}
       impactByMembership={impactByMembership}
+      nudgeByMembership={nudgeByMembership}
       locale={locale}
     />
   );

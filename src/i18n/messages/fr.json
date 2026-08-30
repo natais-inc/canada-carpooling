@@ -651,7 +651,10 @@
     "impactCarpoolsMonth": "Covoiturages ce mois-ci",
     "impactKmMonth": "Km covoiturés ce mois-ci",
     "impactCo2Month": "kg CO₂ évité ce mois-ci",
-    "impactAllTime": "Depuis le début : {carpools} covoiturages, {co2} kg de CO₂ évité — soit l'équivalent de {trees} arbres sur un an."
+    "impactAllTime": "Depuis le début : {carpools} covoiturages, {co2} kg de CO₂ évité — soit l'équivalent de {trees} arbres sur un an.",
+    "nudgeTitle": "Ça fait un moment !",
+    "nudgeBody": "Tu n'as pas déclaré de covoiturage cette semaine. Un clic suffit pour compter dans l'impact de ton entreprise.",
+    "nudgeAction": "J'ai covoituré"
   },
   "billing": {
     "backToDashboard": "Retour au tableau de bord",

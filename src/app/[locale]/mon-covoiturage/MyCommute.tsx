@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Building2, Check, X, Loader2, MapPin, Clock, Car, Users, Sparkles, Leaf, Route, TreePine } from 'lucide-react';
+import { Building2, Check, X, Loader2, MapPin, Clock, Car, Users, Sparkles, Leaf, Route, TreePine, Bell } from 'lucide-react';
 import type { Match } from '@/lib/matching';
 
 export type PersonalImpact = {
@@ -199,9 +199,9 @@ function ImpactPanel({ impact, t, locale }: { impact: PersonalImpact; t: any; lo
 }
 
 function CommuteForm({
-  m, t, matches, locale, carpoolCount, impact,
+  m, t, matches, locale, carpoolCount, impact, nudge,
 }: {
-  m: EmployeeMembership; t: any; matches: Match[]; locale: string; carpoolCount: number; impact: PersonalImpact | null;
+  m: EmployeeMembership; t: any; matches: Match[]; locale: string; carpoolCount: number; impact: PersonalImpact | null; nudge: boolean;
 }) {
   const router = useRouter();
   const [homeFsa, setHomeFsa] = useState(m.homeFsa || '');
@@ -305,6 +305,24 @@ function CommuteForm({
       </div>
       <h3 className="text-lg font-semibold text-gray-900">{m.company.name}</h3>
       <p className="text-sm text-gray-600 mt-1 mb-4">{t('commuteIntro')}</p>
+
+      {nudge ? (
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 flex flex-col sm:flex-row sm:items-center gap-3">
+          <Bell className="h-5 w-5 text-amber-600 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">{t('nudgeTitle')}</p>
+            <p className="text-sm text-amber-800">{t('nudgeBody')}</p>
+          </div>
+          <button
+            onClick={logCarpool}
+            disabled={logBusy}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-600 text-white text-sm font-medium px-3 py-2 hover:bg-amber-700 disabled:opacity-50 whitespace-nowrap"
+          >
+            {logBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+            {t('nudgeAction')}
+          </button>
+        </div>
+      ) : null}
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
@@ -438,12 +456,14 @@ export default function MyCommute({
   matchesByMembership,
   carpoolCountByMembership,
   impactByMembership,
+  nudgeByMembership,
   locale,
 }: {
   memberships: EmployeeMembership[];
   matchesByMembership: Record<string, Match[]>;
   carpoolCountByMembership: Record<string, number>;
   impactByMembership: Record<string, PersonalImpact>;
+  nudgeByMembership: Record<string, boolean>;
   locale: string;
 }) {
   const t = useTranslations('employee');
@@ -471,6 +491,7 @@ export default function MyCommute({
               matches={matchesByMembership[m.id] || []}
               carpoolCount={carpoolCountByMembership[m.id] || 0}
               impact={impactByMembership[m.id] || null}
+              nudge={!!nudgeByMembership[m.id]}
             />
           ))}
         </div>
