@@ -24,14 +24,33 @@ const DEMO: Record<number, [number, number]> = {
   8: [43.9100, -78.6800], // ~15 km
 };
 
+const DDL: string[] = [
+  `ALTER TABLE "CompanyMembership" ADD COLUMN IF NOT EXISTS "homeLat" DOUBLE PRECISION;`,
+  `ALTER TABLE "CompanyMembership" ADD COLUMN IF NOT EXISTS "homeLng" DOUBLE PRECISION;`,
+  `CREATE TABLE IF NOT EXISTS "CarpoolLog" (
+     "id" TEXT NOT NULL, "companyId" TEXT NOT NULL, "membershipId" TEXT NOT NULL,
+     "partnerName" TEXT, "date" TIMESTAMP(3) NOT NULL,
+     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     CONSTRAINT "CarpoolLog_pkey" PRIMARY KEY ("id"));`,
+  `CREATE INDEX IF NOT EXISTS "CarpoolLog_companyId_date_idx" ON "CarpoolLog"("companyId","date");`,
+  `CREATE INDEX IF NOT EXISTS "CarpoolLog_membershipId_date_idx" ON "CarpoolLog"("membershipId","date");`,
+  `DO $$ BEGIN ALTER TABLE "CarpoolLog" ADD CONSTRAINT "CarpoolLog_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE CASCADE ON UPDATE CASCADE; EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+  `DO $$ BEGIN ALTER TABLE "CarpoolLog" ADD CONSTRAINT "CarpoolLog_membershipId_fkey" FOREIGN KEY ("membershipId") REFERENCES "CompanyMembership"("id") ON DELETE CASCADE ON UPDATE CASCADE; EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+];
+
 export async function GET(req: NextRequest) {
   if (req.nextUrl.searchParams.get('token') !== SETUP_TOKEN) {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });
   }
-  const company = await prisma.company.findFirst({ where: { name: COMPANY }, select: { id: true } });
-  if (!company) return NextResponse.json({ ok: false, error: 'company not found' }, { status: 404 });
 
   const log: string[] = [];
+  for (const stmt of DDL) {
+    try { await prisma.$executeRawUnsafe(stmt); log.push('DDL ok: ' + stmt.slice(0, 46).replace(/\s+/g, ' ')); }
+    catch (e: any) { log.push('DDL ERR: ' + stmt.slice(0, 46).replace(/\s+/g, ' ') + ' -> ' + e.message); }
+  }
+
+  const company = await prisma.company.findFirst({ where: { name: COMPANY }, select: { id: true } });
+  if (!company) return NextResponse.json({ ok: false, log, error: 'company not found' }, { status: 404 });
 
   const admin = await prisma.user.findUnique({ where: { email: ADMIN_EMAIL }, select: { id: true } });
   if (admin) {
