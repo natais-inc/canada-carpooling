@@ -22,7 +22,7 @@ export type EmployerMember = {
   email: string;
   department: string | null;
   role: 'MEMBER' | 'EMPLOYER_ADMIN';
-  status: 'INVITED' | 'ACTIVE' | 'REMOVED';
+  status: 'INVITED' | 'ACTIVE' | 'REMOVED' | 'PENDING';
   joinedAt: string; // ISO
 };
 

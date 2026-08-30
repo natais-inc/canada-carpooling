@@ -592,7 +592,25 @@
     "inviteLinksNone": "No pending invite links.",
     "inviteLinksErrEmail": "Invalid email.",
     "inviteLinksErrMember": "This person is already in the company.",
-    "inviteLinksErr": "Failed. Please try again."
+    "inviteLinksErr": "Failed. Please try again.",
+    "qrTitle": "Company QR code",
+    "qrIntro": "Post a QR on-site for employees to scan and join. Auto-approved if the email matches a declared, verified domain; otherwise an admin approves.",
+    "qrDomainsLabel": "Allowed email domains",
+    "qrDomainsHint": "Comma-separated. A verified email from these domains is auto-approved (e.g. durham.ca).",
+    "qrDomainsSave": "Save",
+    "qrDomainsSaved": "Domains saved.",
+    "qrNoCodes": "No active code. Generate one to get started.",
+    "qrCreate": "Generate QR code",
+    "qrDeptLabel": "Department (optional)",
+    "qrDeptPh": "e.g. Whitby warehouse",
+    "qrAllCompany": "Whole company",
+    "qrPrint": "Print poster",
+    "qrRotate": "New code",
+    "qrRevoke": "Revoke",
+    "qrCopyLink": "Copy link",
+    "qrCopied": "Copied!",
+    "status_PENDING": "Pending",
+    "actionApprove": "Approve"
   },
   "employee": {
     "title": "My carpool",
@@ -654,7 +672,9 @@
     "impactAllTime": "Since you started: {carpools} carpools, {co2} kg of CO₂ avoided — about {trees} trees' worth over a year.",
     "nudgeTitle": "It's been a while!",
     "nudgeBody": "You haven't logged a carpool this week. One click counts toward your company's impact.",
-    "nudgeAction": "I carpooled"
+    "nudgeAction": "I carpooled",
+    "pendingBadge": "Awaiting approval",
+    "pendingBody": "Your request to join is awaiting approval by the company. You'll get access once an administrator approves it."
   },
   "billing": {
     "backToDashboard": "Back to dashboard",
@@ -723,5 +743,36 @@
     "alreadyBody": "You are already part of {company}.",
     "goToMyCarpool": "Go to My carpool",
     "acceptError": "Could not accept the invitation. Please try again."
+  },
+  "joinCompany": {
+    "eyebrow": "Join with your company code",
+    "service": "Department: {department}",
+    "body": "{company} uses CarpoolWork for commute carpooling. Join your company's program.",
+    "join": "Join {company}",
+    "authPrompt": "Log in or create an account to join.",
+    "createAccount": "Create account",
+    "logIn": "Log in",
+    "securityNote": "You're auto-approved if your verified work email matches the company domain; otherwise an administrator approves your request.",
+    "joinError": "Could not process the request. Please try again.",
+    "invalidTitle": "Code unavailable",
+    "invalidBody": "This company code is invalid or was revoked. Ask your employer for the current code.",
+    "goHome": "Back to home",
+    "activeTitle": "Welcome!",
+    "activeBody": "You're now part of {company}. Declare your commute to start carpooling.",
+    "pendingTitle": "Request sent",
+    "pendingBody": "Your request to join {company} was submitted. An administrator must approve it — you'll be notified when activated.",
+    "goToMyCarpool": "Go to My carpool"
+  },
+  "poster": {
+    "back": "Back",
+    "print": "Print",
+    "scanToJoin": "Scan to join the carpool program",
+    "revoked": "This code was revoked — generate a new one before posting.",
+    "howToTitle": "How it works",
+    "step1": "Scan the QR code with your phone camera.",
+    "step2": "Log in or create your CarpoolWork account.",
+    "step3": "Join the company and declare your commute.",
+    "orVisit": "Or visit:",
+    "footer": "CarpoolWork — a NATAIS Inc. solution"
   }
 }

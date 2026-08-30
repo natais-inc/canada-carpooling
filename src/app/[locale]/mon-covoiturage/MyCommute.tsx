@@ -18,7 +18,7 @@ export type PersonalImpact = {
 
 export type EmployeeMembership = {
   id: string;
-  status: 'INVITED' | 'ACTIVE';
+  status: 'INVITED' | 'ACTIVE' | 'PENDING';
   department: string | null;
   homeFsa: string | null;
   homeCity: string | null;
@@ -83,6 +83,25 @@ function InviteCard({ m, t }: { m: EmployeeMembership; t: any }) {
           {busy === 'decline' ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
           {t('decline')}
         </button>
+      </div>
+    </div>
+  );
+}
+
+function PendingCard({ m, t }: { m: EmployeeMembership; t: any }) {
+  return (
+    <div className="bg-white border border-orange-200 rounded-xl p-5 shadow-sm">
+      <div className="flex items-start gap-3">
+        <div className="w-11 h-11 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
+          <Building2 className="h-5 w-5 text-orange-600" />
+        </div>
+        <div className="flex-1">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-orange-700 bg-orange-100 rounded-full px-2 py-0.5">
+            {t('pendingBadge')}
+          </span>
+          <h3 className="text-lg font-semibold text-gray-900 mt-1">{m.company.name}</h3>
+          <p className="text-sm text-gray-600 mt-1">{t('pendingBody')}</p>
+        </div>
       </div>
     </div>
   );
@@ -469,6 +488,7 @@ export default function MyCommute({
   const t = useTranslations('employee');
   const invited = memberships.filter((m) => m.status === 'INVITED');
   const active = memberships.filter((m) => m.status === 'ACTIVE');
+  const pending = memberships.filter((m) => m.status === 'PENDING');
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -482,6 +502,7 @@ export default function MyCommute({
       ) : (
         <div className="flex flex-col gap-5">
           {invited.map((m) => <InviteCard key={m.id} m={m} t={t} />)}
+          {pending.map((m) => <PendingCard key={m.id} m={m} t={t} />)}
           {active.map((m) => (
             <CommuteForm
               key={m.id}

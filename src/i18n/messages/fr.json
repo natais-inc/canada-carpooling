@@ -592,7 +592,25 @@
     "inviteLinksNone": "Aucune invitation par lien en attente.",
     "inviteLinksErrEmail": "Courriel invalide.",
     "inviteLinksErrMember": "Cette personne fait déjà partie de l'entreprise.",
-    "inviteLinksErr": "Échec. Réessayez."
+    "inviteLinksErr": "Échec. Réessayez.",
+    "qrTitle": "Code QR d'entreprise",
+    "qrIntro": "Affichez un QR dans vos locaux : vos employés le scannent pour rejoindre. Rattachement automatique si le courriel correspond à un domaine déclaré et vérifié ; sinon, validation par un administrateur.",
+    "qrDomainsLabel": "Domaines de courriel autorisés",
+    "qrDomainsHint": "Séparés par des virgules. Un courriel vérifié de ces domaines est approuvé automatiquement (ex. : durham.ca).",
+    "qrDomainsSave": "Enregistrer",
+    "qrDomainsSaved": "Domaines enregistrés.",
+    "qrNoCodes": "Aucun code actif. Générez-en un pour commencer.",
+    "qrCreate": "Générer un code QR",
+    "qrDeptLabel": "Service (optionnel)",
+    "qrDeptPh": "Ex. : Entrepôt Whitby",
+    "qrAllCompany": "Toute l'entreprise",
+    "qrPrint": "Imprimer l'affiche",
+    "qrRotate": "Nouveau code",
+    "qrRevoke": "Révoquer",
+    "qrCopyLink": "Copier le lien",
+    "qrCopied": "Copié !",
+    "status_PENDING": "En attente",
+    "actionApprove": "Approuver"
   },
   "employee": {
     "title": "Mon covoiturage",
@@ -654,7 +672,9 @@
     "impactAllTime": "Depuis le début : {carpools} covoiturages, {co2} kg de CO₂ évité — soit l'équivalent de {trees} arbres sur un an.",
     "nudgeTitle": "Ça fait un moment !",
     "nudgeBody": "Tu n'as pas déclaré de covoiturage cette semaine. Un clic suffit pour compter dans l'impact de ton entreprise.",
-    "nudgeAction": "J'ai covoituré"
+    "nudgeAction": "J'ai covoituré",
+    "pendingBadge": "En attente d'approbation",
+    "pendingBody": "Ta demande de rattachement est en attente d'approbation par l'entreprise. Tu recevras l'accès dès qu'un administrateur l'aura validée."
   },
   "billing": {
     "backToDashboard": "Retour au tableau de bord",
@@ -723,5 +743,36 @@
     "alreadyBody": "Vous faites déjà partie de {company}.",
     "goToMyCarpool": "Aller à Mon covoiturage",
     "acceptError": "Impossible d'accepter l'invitation. Réessayez."
+  },
+  "joinCompany": {
+    "eyebrow": "Rejoindre via le code de votre entreprise",
+    "service": "Service : {department}",
+    "body": "{company} utilise CarpoolWork pour le covoiturage domicile-travail. Rejoignez le programme de votre entreprise.",
+    "join": "Rejoindre {company}",
+    "authPrompt": "Connectez-vous ou créez un compte pour rejoindre.",
+    "createAccount": "Créer un compte",
+    "logIn": "Se connecter",
+    "securityNote": "Votre rattachement est approuvé automatiquement si votre courriel professionnel (vérifié) correspond au domaine de l'entreprise ; sinon, un administrateur valide votre demande.",
+    "joinError": "Impossible de traiter la demande. Réessayez.",
+    "invalidTitle": "Code indisponible",
+    "invalidBody": "Ce code d'entreprise est invalide ou a été révoqué. Demandez le code à jour à votre employeur.",
+    "goHome": "Retour à l'accueil",
+    "activeTitle": "Bienvenue !",
+    "activeBody": "Vous êtes rattaché à {company}. Déclarez votre trajet pour commencer à covoiturer.",
+    "pendingTitle": "Demande envoyée",
+    "pendingBody": "Votre demande de rattachement à {company} a été transmise. Un administrateur doit l'approuver — vous serez notifié à l'activation.",
+    "goToMyCarpool": "Aller à Mon covoiturage"
+  },
+  "poster": {
+    "back": "Retour",
+    "print": "Imprimer",
+    "scanToJoin": "Scannez pour rejoindre le covoiturage",
+    "revoked": "Ce code a été révoqué — régénérez-en un avant d'afficher.",
+    "howToTitle": "Comment ça marche",
+    "step1": "Scannez le code QR avec l'appareil photo de votre téléphone.",
+    "step2": "Connectez-vous ou créez votre compte CarpoolWork.",
+    "step3": "Rejoignez l'entreprise et déclarez votre trajet.",
+    "orVisit": "Ou visitez :",
+    "footer": "CarpoolWork — une solution de NATAIS Inc."
   }
 }

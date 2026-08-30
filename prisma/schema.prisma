@@ -134,6 +134,7 @@ enum MembershipStatus {
   INVITED
   ACTIVE
   REMOVED
+  PENDING // self-joined via QR, awaiting admin approval
 }
 
 model Company {
@@ -145,12 +146,31 @@ model Company {
   subscriptionTier String?             // billing plan: "STANDARD" (default) | "ENTERPRISE"
   trialStartAt     DateTime?           // start of the 30-day free trial (defaults to createdAt)
   pricePerParticipantCents Int         @default(2000) // 20.00 CAD / active participant / month
+  allowedEmailDomains String?          // CSV of domains for QR auto-approval, e.g. "durham.ca,ville.durham.ca"
   memberships      CompanyMembership[]
   carpoolLogs      CarpoolLog[]
   invoices         Invoice[]
   invites          CompanyInvite[]
+  joinCodes        CompanyJoinCode[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
+}
+
+// A rotatable, revocable QR/join code for a company (or a specific service),
+// posted on-site so employees can self-join (Phase 4, QR onboarding).
+model CompanyJoinCode {
+  id              String   @id @default(cuid())
+  companyId       String
+  code            String   @unique
+  department      String?  // optional per-service scoping applied to the membership
+  enabled         Boolean  @default(true)
+  createdByUserId String?
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([companyId, enabled])
+  @@index([code])
 }
 
 enum InviteStatus {

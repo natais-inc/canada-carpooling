@@ -20,7 +20,7 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
   let memberships: EmployeeMembership[] = [];
   try {
     const rows = await prisma.companyMembership.findMany({
-      where: { userId, status: { in: ['INVITED', 'ACTIVE'] } },
+      where: { userId, status: { in: ['INVITED', 'ACTIVE', 'PENDING'] } },
       select: {
         id: true, status: true, department: true,
         homeFsa: true, homeCity: true, workSite: true,

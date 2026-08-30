@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { EmployerDashboardData, EmployerMember } from '@/lib/employer-metrics';
 import InviteLinks from './InviteLinks';
+import EmployerJoinCodes from './EmployerJoinCodes';
 
 function useNumber(locale: string) {
   const loc = locale === 'en' ? 'en-CA' : 'fr-CA';
@@ -56,6 +57,7 @@ const statusStyles: Record<EmployerMember['status'], string> = {
   ACTIVE: 'bg-green-100 text-green-700',
   INVITED: 'bg-amber-100 text-amber-700',
   REMOVED: 'bg-gray-100 text-gray-500',
+  PENDING: 'bg-orange-100 text-orange-700',
 };
 
 export default function EmployerDashboard({ data, locale }: { data: EmployerDashboardData; locale: string }) {
@@ -220,6 +222,9 @@ export default function EmployerDashboard({ data, locale }: { data: EmployerDash
         <h2 className="text-lg font-semibold text-gray-900">{t('membersTitle')}</h2>
       </div>
 
+      {/* On-site QR / join codes (per company or service) */}
+      <EmployerJoinCodes locale={locale} />
+
       {/* Invite by link (works for people without an account) */}
       <InviteLinks locale={locale} />
 
@@ -311,7 +316,14 @@ export default function EmployerDashboard({ data, locale }: { data: EmployerDash
                           <Loader2 className="h-4 w-4 animate-spin inline text-gray-400" />
                         ) : (
                           <span className="inline-flex gap-3">
-                            {m.status === 'INVITED' ? (
+                            {m.status === 'PENDING' ? (
+                              <button
+                                onClick={() => setStatus(m.id, 'ACTIVE')}
+                                className="text-brand-600 hover:text-brand-700 font-medium"
+                              >
+                                {t('actionApprove')}
+                              </button>
+                            ) : m.status === 'INVITED' ? (
                               <button
                                 onClick={() => setStatus(m.id, 'ACTIVE')}
                                 className="text-brand-600 hover:text-brand-700 font-medium"
