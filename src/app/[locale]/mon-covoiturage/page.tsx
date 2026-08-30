@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import MyCommute, { type EmployeeMembership } from './MyCommute';
+import { findMatches, type Match } from '@/lib/matching';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,5 +33,17 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
     memberships = [];
   }
 
-  return <MyCommute memberships={memberships} locale={locale} />;
+  // Matches for each active membership (best-effort).
+  let matchesByMembership: Record<string, Match[]> = {};
+  try {
+    const active = memberships.filter((m) => m.status === 'ACTIVE');
+    const entries = await Promise.all(
+      active.map(async (m) => [m.id, (await findMatches(userId, m.id)) || []] as const)
+    );
+    matchesByMembership = Object.fromEntries(entries);
+  } catch {
+    matchesByMembership = {};
+  }
+
+  return <MyCommute memberships={memberships} matchesByMembership={matchesByMembership} locale={locale} />;
 }

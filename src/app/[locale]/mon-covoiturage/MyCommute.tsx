@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Building2, Check, X, Loader2, MapPin, Clock, Car } from 'lucide-react';
+import { Building2, Check, X, Loader2, MapPin, Clock, Car, Users, Sparkles } from 'lucide-react';
+import type { Match } from '@/lib/matching';
 
 export type EmployeeMembership = {
   id: string;
@@ -75,7 +76,60 @@ function InviteCard({ m, t }: { m: EmployeeMembership; t: any }) {
   );
 }
 
-function CommuteForm({ m, t }: { m: EmployeeMembership; t: any }) {
+function MatchList({ matches, t }: { matches: Match[]; t: any }) {
+  return (
+    <div className="mt-6 border-t border-gray-100 pt-5">
+      <div className="flex items-center gap-2 mb-1">
+        <Sparkles className="h-4 w-4 text-brand-600" />
+        <h4 className="text-base font-semibold text-gray-900">{t('matchesTitle')}</h4>
+      </div>
+      {matches.length === 0 ? (
+        <p className="text-sm text-gray-500 mt-2">{t('matchesEmpty')}</p>
+      ) : (
+        <>
+          <p className="text-sm text-gray-500 mb-3">{t('matchesIntro', { count: matches.length })}</p>
+          <div className="flex flex-col gap-2.5">
+            {matches.map((mt) => (
+              <div key={mt.membershipId} className="flex items-start gap-3 rounded-lg border border-gray-200 p-3">
+                <div className="w-9 h-9 rounded-full bg-brand-50 flex items-center justify-center shrink-0">
+                  <Users className="h-4 w-4 text-brand-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium text-gray-900">{mt.name}</span>
+                    {mt.department ? <span className="text-xs text-gray-400">{mt.department}</span> : null}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mt-1.5">
+                    {mt.sharedDays.length > 0 && (
+                      <span className="inline-flex items-center gap-1 text-xs bg-brand-50 text-brand-700 rounded px-1.5 py-0.5">
+                        {mt.sharedDays.map((d) => t(`day_${d}`)).join(' · ')}
+                      </span>
+                    )}
+                    {mt.sameFsa && (
+                      <span className="text-xs bg-green-100 text-green-700 rounded px-1.5 py-0.5">{t('sameArea')}</span>
+                    )}
+                    {!mt.sameFsa && mt.sameCity && (
+                      <span className="text-xs bg-gray-100 text-gray-600 rounded px-1.5 py-0.5">{t('sameCity')}</span>
+                    )}
+                    {mt.timeGapMin != null && mt.timeGapMin <= 30 && (
+                      <span className="text-xs bg-gray-100 text-gray-600 rounded px-1.5 py-0.5">{t('closeTimes')}</span>
+                    )}
+                    {mt.role && (
+                      <span className="text-xs bg-gray-100 text-gray-600 rounded px-1.5 py-0.5">{t(`role_${mt.role}`)}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 mt-3">{t('matchesSoon')}</p>
+        </>
+      )}
+    </div>
+  );
+}
+
+function CommuteForm({ m, t, matches }: { m: EmployeeMembership; t: any; matches: Match[] }) {
   const router = useRouter();
   const [homeFsa, setHomeFsa] = useState(m.homeFsa || '');
   const [homeCity, setHomeCity] = useState(m.homeCity || '');
@@ -199,11 +253,21 @@ function CommuteForm({ m, t }: { m: EmployeeMembership; t: any }) {
         </button>
         {msg ? <span className={`text-sm ${msg.ok ? 'text-green-700' : 'text-red-600'}`}>{msg.text}</span> : null}
       </div>
+
+      <MatchList matches={matches} t={t} />
     </div>
   );
 }
 
-export default function MyCommute({ memberships, locale }: { memberships: EmployeeMembership[]; locale: string }) {
+export default function MyCommute({
+  memberships,
+  matchesByMembership,
+  locale,
+}: {
+  memberships: EmployeeMembership[];
+  matchesByMembership: Record<string, Match[]>;
+  locale: string;
+}) {
   const t = useTranslations('employee');
   const invited = memberships.filter((m) => m.status === 'INVITED');
   const active = memberships.filter((m) => m.status === 'ACTIVE');
@@ -220,7 +284,7 @@ export default function MyCommute({ memberships, locale }: { memberships: Employ
       ) : (
         <div className="flex flex-col gap-5">
           {invited.map((m) => <InviteCard key={m.id} m={m} t={t} />)}
-          {active.map((m) => <CommuteForm key={m.id} m={m} t={t} />)}
+          {active.map((m) => <CommuteForm key={m.id} m={m} t={t} matches={matchesByMembership[m.id] || []} />)}
         </div>
       )}
     </div>

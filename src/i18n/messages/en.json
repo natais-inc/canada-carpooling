@@ -604,6 +604,13 @@
     "role_passenger": "To ride",
     "save": "Save",
     "saved": "Commute saved.",
-    "saveError": "Something went wrong."
+    "saveError": "Something went wrong.",
+    "matchesTitle": "Your matches",
+    "matchesEmpty": "No matches yet. Complete your commute (neighbourhood, days, times) to find compatible colleagues.",
+    "matchesIntro": "{count} colleague(s) have a commute compatible with yours:",
+    "sameArea": "Same area",
+    "sameCity": "Same city",
+    "closeTimes": "Similar times",
+    "matchesSoon": "Connecting and arranging the carpool comes in the next step."
   }
 }
