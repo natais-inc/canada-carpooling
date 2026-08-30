@@ -567,6 +567,7 @@
     "msg_no_account": "Aucun compte CarpoolWork avec ce courriel. L'employé doit d'abord s'inscrire.",
     "msg_already_member": "Cet employé fait déjà partie de l'entreprise.",
     "msg_email_required": "Veuillez saisir un courriel.",
-    "msg_error": "Une erreur est survenue. Réessayez."
+    "msg_error": "Une erreur est survenue. Réessayez.",
+    "downloadReport": "Télécharger le rapport (PDF)"
   }
 }

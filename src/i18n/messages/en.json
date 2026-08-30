@@ -567,6 +567,7 @@
     "msg_no_account": "No CarpoolWork account with that email. The employee must sign up first.",
     "msg_already_member": "This employee already belongs to the company.",
     "msg_email_required": "Please enter an email.",
-    "msg_error": "Something went wrong. Please try again."
+    "msg_error": "Something went wrong. Please try again.",
+    "downloadReport": "Download report (PDF)"
   }
 }

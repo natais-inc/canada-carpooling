@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
-  Building2, Users, Car, Leaf, TreePine, Fuel, ParkingCircle, Info, UserPlus, Loader2,
+  Building2, Users, Car, Leaf, TreePine, Fuel, ParkingCircle, Info, UserPlus, Loader2, FileDown,
 } from 'lucide-react';
 import type { EmployerDashboardData, EmployerMember } from '@/lib/employer-metrics';
 
@@ -119,13 +119,20 @@ export default function EmployerDashboard({ data, locale }: { data: EmployerDash
         <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center shrink-0">
           <Building2 className="h-6 w-6 text-brand-600" />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-2xl font-bold text-gray-900">{company.name}</h1>
           <p className="text-gray-500 mt-0.5">
             {company.region ? `${company.region} · ` : ''}
             {t('adminBadge')}
           </p>
         </div>
+        <a
+          href={`/api/employer/report?locale=${locale}`}
+          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 px-4 py-2 hover:border-brand-500 hover:text-brand-700 whitespace-nowrap"
+        >
+          <FileDown className="h-4 w-4" />
+          {t('downloadReport')}
+        </a>
       </div>
 
       {/* Participation */}
