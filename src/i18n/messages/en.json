@@ -570,7 +570,15 @@
     "msg_already_member": "This employee already belongs to the company.",
     "msg_email_required": "Please enter an email.",
     "msg_error": "Something went wrong. Please try again.",
-    "downloadReport": "Download report (PDF)"
+    "downloadReport": "Download report (PDF)",
+    "measuredTitle": "Measured impact",
+    "measuredIntro": "Real figures, computed from the carpools your employees recorded this month.",
+    "measuredActiveParticipants": "Measured active participants",
+    "billingNote": "This is the billing basis: every employee who logged at least one carpool this month counts as one active participant.",
+    "measuredEmpty": "No carpools recorded yet. As soon as your employees log their trips, the real impact shows up here.",
+    "measuredCarpools": "Carpools",
+    "measuredKm": "Carpooled km",
+    "thisMonth": "this month"
   },
   "employee": {
     "title": "My carpool",
@@ -623,6 +631,12 @@
     "logIntro": "{count} carpool(s) this month. Log each shared ride — that's what counts toward your participation.",
     "logPartnerNone": "With a colleague (optional)",
     "logButton": "I carpooled today",
-    "logDone": "Recorded!"
+    "logDone": "Recorded!",
+    "impactTitle": "My impact",
+    "impactEmpty": "Log your first carpool above to see your impact: shared kilometres and CO₂ avoided.",
+    "impactCarpoolsMonth": "Carpools this month",
+    "impactKmMonth": "Carpooled km this month",
+    "impactCo2Month": "kg CO₂ avoided this month",
+    "impactAllTime": "Since you started: {carpools} carpools, {co2} kg of CO₂ avoided — about {trees} trees' worth over a year."
   }
 }

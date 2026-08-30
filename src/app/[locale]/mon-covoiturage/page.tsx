@@ -2,8 +2,9 @@ import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import MyCommute, { type EmployeeMembership } from './MyCommute';
+import MyCommute, { type EmployeeMembership, type PersonalImpact } from './MyCommute';
 import { findMatches, type Match } from '@/lib/matching';
+import { measuredImpact } from '@/lib/impact';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +26,7 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
         homeFsa: true, homeCity: true, workSite: true,
         commuteDays: true, arriveBy: true, departAt: true, commuteRole: true,
         homeLat: true, homeLng: true,
-        company: { select: { name: true, region: true } },
+        company: { select: { name: true, region: true, avgCommuteKm: true } },
       },
       orderBy: { createdAt: 'asc' },
     });
@@ -47,16 +48,38 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
     matchesByMembership = {};
   }
 
-  // Carpools recorded this month, per active membership (measured participation).
+  // Carpools recorded this month + all-time, per active membership (measured
+  // participation), turned into the member's own impact (brick 4).
   let carpoolCountByMembership: Record<string, number> = {};
+  let impactByMembership: Record<string, PersonalImpact> = {};
   try {
     const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const entries = await Promise.all(
-      active.map(async (m) => [m.id, await prisma.carpoolLog.count({ where: { membershipId: m.id, date: { gte: monthStart } } })] as const)
+      active.map(async (m) => {
+        const [monthCarpools, allTimeCarpools] = await Promise.all([
+          prisma.carpoolLog.count({ where: { membershipId: m.id, date: { gte: monthStart } } }),
+          prisma.carpoolLog.count({ where: { membershipId: m.id } }),
+        ]);
+        const avgKm = (m as any).company?.avgCommuteKm ?? 0;
+        const month = measuredImpact(monthCarpools, avgKm);
+        const total = measuredImpact(allTimeCarpools, avgKm);
+        const impact: PersonalImpact = {
+          monthCarpools,
+          allTimeCarpools,
+          monthKm: month.kmShared,
+          monthCo2Kg: month.co2Kg,
+          allTimeKm: total.kmShared,
+          allTimeCo2Kg: total.co2Kg,
+          allTimeTrees: total.trees,
+        };
+        return [m.id, { monthCarpools, impact }] as const;
+      })
     );
-    carpoolCountByMembership = Object.fromEntries(entries);
+    carpoolCountByMembership = Object.fromEntries(entries.map(([id, v]) => [id, v.monthCarpools]));
+    impactByMembership = Object.fromEntries(entries.map(([id, v]) => [id, v.impact]));
   } catch {
     carpoolCountByMembership = {};
+    impactByMembership = {};
   }
 
   return (
@@ -64,6 +87,7 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
       memberships={memberships}
       matchesByMembership={matchesByMembership}
       carpoolCountByMembership={carpoolCountByMembership}
+      impactByMembership={impactByMembership}
       locale={locale}
     />
   );

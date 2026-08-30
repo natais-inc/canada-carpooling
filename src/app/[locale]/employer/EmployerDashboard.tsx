@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   Building2, Users, Car, Leaf, TreePine, Fuel, ParkingCircle, Info, UserPlus, Loader2, FileDown,
+  BadgeCheck, Route, CheckCircle2,
 } from 'lucide-react';
 import type { EmployerDashboardData, EmployerMember } from '@/lib/employer-metrics';
 
@@ -18,6 +19,13 @@ function useNumber(locale: string) {
     date: (iso: string) => {
       try {
         return new Date(iso).toLocaleDateString(loc, { dateStyle: 'medium' });
+      } catch {
+        return iso;
+      }
+    },
+    month: (iso: string) => {
+      try {
+        return new Date(iso).toLocaleDateString(loc, { month: 'long', year: 'numeric' });
       } catch {
         return iso;
       }
@@ -53,7 +61,8 @@ export default function EmployerDashboard({ data, locale }: { data: EmployerDash
   const t = useTranslations('employer');
   const fmt = useNumber(locale);
   const router = useRouter();
-  const { company, counts, projection, members } = data;
+  const { company, counts, projection, measured, members } = data;
+  const monthLabel = fmt.month(measured.monthStartIso);
 
   const [email, setEmail] = useState('');
   const [department, setDepartment] = useState('');
@@ -142,6 +151,45 @@ export default function EmployerDashboard({ data, locale }: { data: EmployerDash
         <Metric icon={Users} value={fmt.int(counts.invited)} label={t('invitedMembers')} />
         <Metric icon={Users} value={fmt.int(counts.total)} label={t('totalMembers')} />
       </div>
+
+      {/* Measured impact — this month */}
+      <div className="flex items-center gap-2 mt-8 mb-1">
+        <BadgeCheck className="h-5 w-5 text-brand-600" />
+        <h2 className="text-lg font-semibold text-gray-900">{t('measuredTitle')}</h2>
+        <span className="text-sm font-normal text-gray-400 capitalize">· {monthLabel}</span>
+      </div>
+      <p className="text-sm text-gray-500 mb-3">{t('measuredIntro')}</p>
+
+      {/* Billing basis: measured active participants */}
+      <div className="rounded-xl border border-brand-200 bg-brand-50/60 p-5 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-lg bg-brand-600 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <div className="text-3xl font-bold text-gray-900 tabular-nums leading-none">
+              {fmt.int(measured.activeParticipants)}
+            </div>
+            <div className="text-sm font-medium text-brand-800 mt-1">{t('measuredActiveParticipants')}</div>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600 sm:border-l sm:border-brand-200 sm:pl-4 flex-1">
+          {t('billingNote')}
+        </p>
+      </div>
+
+      {measured.allTimeCarpools === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-5 text-sm text-gray-500 mb-4">
+          {t('measuredEmpty')}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+          <Metric icon={Car} value={fmt.int(measured.carpoolDays)} label={t('measuredCarpools')} hint={t('thisMonth')} />
+          <Metric icon={Route} value={`${fmt.int(measured.kmShared)} km`} label={t('measuredKm')} hint={t('thisMonth')} />
+          <Metric icon={Leaf} value={`${fmt.int(measured.co2Kg)} kg`} label={t('co2Avoided')} hint={t('thisMonth')} />
+          <Metric icon={TreePine} value={fmt.dec1(measured.trees)} label={t('treesEquivalent')} hint={t('thisMonth')} />
+        </div>
+      )}
 
       {/* Impact projection */}
       <h2 className="text-lg font-semibold text-gray-900 mt-8 mb-1">{t('impactTitle')}</h2>

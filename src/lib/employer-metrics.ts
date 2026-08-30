@@ -11,6 +11,8 @@ import {
   litresSaved,
   emissionsKg,
   treesEquivalent,
+  measuredImpact,
+  type MeasuredImpact,
 } from '@/lib/impact';
 
 export type EmployerMember = {
@@ -44,6 +46,16 @@ export type EmployerDashboardData = {
     co2KgYear: number;
     trees: number;
     parkingYear: number;
+  };
+  /**
+   * Impact actually measured from recorded carpools during the current month.
+   * `activeParticipants` is the billing basis: distinct members with at least
+   * one carpool logged this month.
+   */
+  measured: MeasuredImpact & {
+    activeParticipants: number;
+    monthStartIso: string;
+    allTimeCarpools: number;
   };
   members: EmployerMember[];
 };
@@ -102,6 +114,26 @@ export async function getEmployerDashboard(companyId: string): Promise<EmployerD
   const trees = treesEquivalent(co2KgYear);
   const parkingYear = cars * company.parkingCostYear; // each car removed frees ~1 place
 
+  // Measured impact — from carpools actually recorded this month.
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [monthLogs, monthParticipants, allTimeCarpools] = await Promise.all([
+    prisma.carpoolLog.count({ where: { companyId, date: { gte: monthStart } } }),
+    prisma.carpoolLog.groupBy({
+      by: ['membershipId'],
+      where: { companyId, date: { gte: monthStart } },
+    }),
+    prisma.carpoolLog.count({ where: { companyId } }),
+  ]);
+
+  const measured = {
+    ...measuredImpact(monthLogs, company.avgCommuteKm),
+    activeParticipants: monthParticipants.length,
+    monthStartIso: monthStart.toISOString(),
+    allTimeCarpools,
+  };
+
   return {
     company,
     counts: { total: members.length, active, invited },
@@ -113,6 +145,7 @@ export async function getEmployerDashboard(companyId: string): Promise<EmployerD
       trees,
       parkingYear,
     },
+    measured,
     members,
   };
 }

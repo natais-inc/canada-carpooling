@@ -3,8 +3,18 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Building2, Check, X, Loader2, MapPin, Clock, Car, Users, Sparkles } from 'lucide-react';
+import { Building2, Check, X, Loader2, MapPin, Clock, Car, Users, Sparkles, Leaf, Route, TreePine } from 'lucide-react';
 import type { Match } from '@/lib/matching';
+
+export type PersonalImpact = {
+  monthCarpools: number;
+  allTimeCarpools: number;
+  monthKm: number;
+  monthCo2Kg: number;
+  allTimeKm: number;
+  allTimeCo2Kg: number;
+  allTimeTrees: number;
+};
 
 export type EmployeeMembership = {
   id: string;
@@ -140,10 +150,58 @@ function MatchList({ matches, t, locale }: { matches: Match[]; t: any; locale: s
   );
 }
 
+function ImpactPanel({ impact, t, locale }: { impact: PersonalImpact; t: any; locale: string }) {
+  const loc = locale === 'en' ? 'en-CA' : 'fr-CA';
+  const int = (n: number) => new Intl.NumberFormat(loc, { maximumFractionDigits: 0 }).format(Math.round(n));
+  const dec1 = (n: number) =>
+    new Intl.NumberFormat(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
+
+  return (
+    <div className="mt-6 border-t border-gray-100 pt-5">
+      <div className="flex items-center gap-2 mb-3">
+        <Leaf className="h-4 w-4 text-green-600" />
+        <h4 className="text-base font-semibold text-gray-900">{t('impactTitle')}</h4>
+      </div>
+
+      {impact.allTimeCarpools === 0 ? (
+        <p className="text-sm text-gray-500">{t('impactEmpty')}</p>
+      ) : (
+        <>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="rounded-lg bg-green-50 border border-green-100 p-3 text-center">
+              <div className="flex justify-center mb-1"><Car className="h-4 w-4 text-green-600" /></div>
+              <div className="text-xl font-bold text-gray-900 tabular-nums leading-none">{int(impact.monthCarpools)}</div>
+              <div className="text-xs text-gray-500 mt-1">{t('impactCarpoolsMonth')}</div>
+            </div>
+            <div className="rounded-lg bg-green-50 border border-green-100 p-3 text-center">
+              <div className="flex justify-center mb-1"><Route className="h-4 w-4 text-green-600" /></div>
+              <div className="text-xl font-bold text-gray-900 tabular-nums leading-none">{int(impact.monthKm)}</div>
+              <div className="text-xs text-gray-500 mt-1">{t('impactKmMonth')}</div>
+            </div>
+            <div className="rounded-lg bg-green-50 border border-green-100 p-3 text-center">
+              <div className="flex justify-center mb-1"><Leaf className="h-4 w-4 text-green-600" /></div>
+              <div className="text-xl font-bold text-gray-900 tabular-nums leading-none">{int(impact.monthCo2Kg)}</div>
+              <div className="text-xs text-gray-500 mt-1">{t('impactCo2Month')}</div>
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-3 flex items-center gap-1.5">
+            <TreePine className="h-3.5 w-3.5 text-green-600 shrink-0" />
+            {t('impactAllTime', {
+              carpools: int(impact.allTimeCarpools),
+              co2: int(impact.allTimeCo2Kg),
+              trees: dec1(impact.allTimeTrees),
+            })}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
 function CommuteForm({
-  m, t, matches, locale, carpoolCount,
+  m, t, matches, locale, carpoolCount, impact,
 }: {
-  m: EmployeeMembership; t: any; matches: Match[]; locale: string; carpoolCount: number;
+  m: EmployeeMembership; t: any; matches: Match[]; locale: string; carpoolCount: number; impact: PersonalImpact | null;
 }) {
   const router = useRouter();
   const [homeFsa, setHomeFsa] = useState(m.homeFsa || '');
@@ -194,6 +252,7 @@ function CommuteForm({
         setCount(typeof body.monthCount === 'number' ? body.monthCount : count + 1);
         setLogDone(true);
         setPartner('');
+        router.refresh(); // recompute measured impact from the server
       }
     } catch {
       /* ignore */
@@ -367,6 +426,9 @@ function CommuteForm({
           {logDone ? <span className="text-sm text-green-700">{t('logDone')}</span> : null}
         </div>
       </div>
+
+      {/* Brick 4 — the member's own measured impact */}
+      {impact ? <ImpactPanel impact={impact} t={t} locale={locale} /> : null}
     </div>
   );
 }
@@ -375,11 +437,13 @@ export default function MyCommute({
   memberships,
   matchesByMembership,
   carpoolCountByMembership,
+  impactByMembership,
   locale,
 }: {
   memberships: EmployeeMembership[];
   matchesByMembership: Record<string, Match[]>;
   carpoolCountByMembership: Record<string, number>;
+  impactByMembership: Record<string, PersonalImpact>;
   locale: string;
 }) {
   const t = useTranslations('employee');
@@ -406,6 +470,7 @@ export default function MyCommute({
               locale={locale}
               matches={matchesByMembership[m.id] || []}
               carpoolCount={carpoolCountByMembership[m.id] || 0}
+              impact={impactByMembership[m.id] || null}
             />
           ))}
         </div>

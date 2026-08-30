@@ -37,3 +37,33 @@ export function treesEquivalent(kg: number): number {
 export function parkingSavedPerDay(cars: number, parkingCostYear: number): number {
   return cars * (parkingCostYear / IMPACT.WORKING_DAYS_YEAR);
 }
+
+export type MeasuredImpact = {
+  carpoolDays: number; // number of recorded carpool days
+  kmShared: number; // commute km covered by carpooling (round trips)
+  carsRemoved: number; // cars-equivalent taken off the road
+  litres: number; // fuel avoided
+  co2Kg: number; // CO2 avoided
+  trees: number; // tree-equivalent
+};
+
+/**
+ * Impact actually *measured* from recorded carpool days, using the same
+ * per-participant-per-day basis as the projection: one carpool day shares one
+ * commuter's round trip, removing `carsRemoved(1)` cars for that trip. If every
+ * active member logged all working days, this equals the annual projection.
+ */
+export function measuredImpact(carpoolDays: number, avgCommuteKm: number): MeasuredImpact {
+  const roundTrip = Math.max(0, avgCommuteKm) * 2;
+  const cars = carsRemoved(carpoolDays);
+  const litres = litresSaved(cars, roundTrip);
+  const co2Kg = emissionsKg(litres);
+  return {
+    carpoolDays,
+    kmShared: carpoolDays * roundTrip,
+    carsRemoved: cars,
+    litres,
+    co2Kg,
+    trees: treesEquivalent(co2Kg),
+  };
+}

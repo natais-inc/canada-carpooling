@@ -570,7 +570,15 @@
     "msg_already_member": "Cet employé fait déjà partie de l'entreprise.",
     "msg_email_required": "Veuillez saisir un courriel.",
     "msg_error": "Une erreur est survenue. Réessayez.",
-    "downloadReport": "Télécharger le rapport (PDF)"
+    "downloadReport": "Télécharger le rapport (PDF)",
+    "measuredTitle": "Impact mesuré",
+    "measuredIntro": "Chiffres réels, calculés à partir des covoiturages enregistrés par vos employés ce mois-ci.",
+    "measuredActiveParticipants": "Participants actifs mesurés",
+    "billingNote": "C'est la base de facturation : chaque employé ayant enregistré au moins un covoiturage ce mois-ci compte comme un participant actif.",
+    "measuredEmpty": "Aucun covoiturage enregistré pour l'instant. Dès que vos employés déclarent leurs trajets, l'impact réel s'affiche ici.",
+    "measuredCarpools": "Covoiturages",
+    "measuredKm": "Km covoiturés",
+    "thisMonth": "ce mois-ci"
   },
   "employee": {
     "title": "Mon covoiturage",
@@ -623,6 +631,12 @@
     "logIntro": "{count} covoiturage(s) ce mois-ci. Enregistrez chaque trajet partagé — c'est ce qui compte pour votre participation.",
     "logPartnerNone": "Avec un collègue (optionnel)",
     "logButton": "J'ai covoituré aujourd'hui",
-    "logDone": "Enregistré !"
+    "logDone": "Enregistré !",
+    "impactTitle": "Mon impact",
+    "impactEmpty": "Enregistre ton premier covoiturage ci-dessus pour voir ton impact : kilomètres partagés et CO₂ évité.",
+    "impactCarpoolsMonth": "Covoiturages ce mois-ci",
+    "impactKmMonth": "Km covoiturés ce mois-ci",
+    "impactCo2Month": "kg CO₂ évité ce mois-ci",
+    "impactAllTime": "Depuis le début : {carpools} covoiturages, {co2} kg de CO₂ évité — soit l'équivalent de {trees} arbres sur un an."
   }
 }
