@@ -611,6 +611,18 @@
     "sameArea": "Même quartier",
     "sameCity": "Même ville",
     "closeTimes": "Horaires proches",
-    "matchesSoon": "La mise en relation et l'organisation du covoiturage arrivent à la prochaine étape."
+    "matchesSoon": "La mise en relation et l'organisation du covoiturage arrivent à la prochaine étape.",
+    "homeLocation": "Position du domicile",
+    "useMyLocation": "Utiliser ma position",
+    "locationSet": "Position enregistrée",
+    "locationNotSet": "Non renseignée",
+    "locationError": "Impossible d'obtenir votre position. Autorisez la géolocalisation, puis réessayez.",
+    "homeLocationHint": "Depuis votre domicile — sert à trouver des collègues à moins de 2 km. Votre position exacte n'est jamais montrée aux autres.",
+    "atDistance": "à {km} km",
+    "logTitle": "Enregistrer un covoiturage",
+    "logIntro": "{count} covoiturage(s) ce mois-ci. Enregistrez chaque trajet partagé — c'est ce qui compte pour votre participation.",
+    "logPartnerNone": "Avec un collègue (optionnel)",
+    "logButton": "J'ai covoituré aujourd'hui",
+    "logDone": "Enregistré !"
   }
 }

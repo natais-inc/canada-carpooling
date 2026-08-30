@@ -24,6 +24,7 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
         id: true, status: true, department: true,
         homeFsa: true, homeCity: true, workSite: true,
         commuteDays: true, arriveBy: true, departAt: true, commuteRole: true,
+        homeLat: true, homeLng: true,
         company: { select: { name: true, region: true } },
       },
       orderBy: { createdAt: 'asc' },
@@ -33,10 +34,11 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
     memberships = [];
   }
 
+  const active = memberships.filter((m) => m.status === 'ACTIVE');
+
   // Matches for each active membership (best-effort).
   let matchesByMembership: Record<string, Match[]> = {};
   try {
-    const active = memberships.filter((m) => m.status === 'ACTIVE');
     const entries = await Promise.all(
       active.map(async (m) => [m.id, (await findMatches(userId, m.id)) || []] as const)
     );
@@ -45,5 +47,24 @@ export default async function MyCarpoolPage({ params }: { params: { locale: stri
     matchesByMembership = {};
   }
 
-  return <MyCommute memberships={memberships} matchesByMembership={matchesByMembership} locale={locale} />;
+  // Carpools recorded this month, per active membership (measured participation).
+  let carpoolCountByMembership: Record<string, number> = {};
+  try {
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const entries = await Promise.all(
+      active.map(async (m) => [m.id, await prisma.carpoolLog.count({ where: { membershipId: m.id, date: { gte: monthStart } } })] as const)
+    );
+    carpoolCountByMembership = Object.fromEntries(entries);
+  } catch {
+    carpoolCountByMembership = {};
+  }
+
+  return (
+    <MyCommute
+      memberships={memberships}
+      matchesByMembership={matchesByMembership}
+      carpoolCountByMembership={carpoolCountByMembership}
+      locale={locale}
+    />
+  );
 }

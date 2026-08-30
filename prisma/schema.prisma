@@ -144,6 +144,7 @@ model Company {
   avgCommuteKm     Float               @default(20)
   subscriptionTier String?             // facturation Stripe (à définir)
   memberships      CompanyMembership[]
+  carpoolLogs      CarpoolLog[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
 }
@@ -167,15 +168,35 @@ model CompanyMembership {
   arriveBy    String?  // "HH:MM"
   departAt    String?  // "HH:MM"
   commuteRole String?  // "driver" | "passenger" | "either"
+  homeLat     Float?   // home latitude (for within-2km matching)
+  homeLng     Float?   // home longitude
 
-  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  company    Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company      Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  carpoolLogs  CarpoolLog[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
   @@unique([userId, companyId])
   @@index([companyId, status])
   @@index([userId])
+}
+
+// A recorded carpool for one member on a given day (Phase 2, brick 3).
+// Turns "estimated" participation into measured participation.
+model CarpoolLog {
+  id           String            @id @default(cuid())
+  companyId    String
+  membershipId String
+  partnerName  String?
+  date         DateTime          // the day the carpool happened
+  createdAt    DateTime          @default(now())
+
+  company      Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  membership   CompanyMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, date])
+  @@index([membershipId, date])
 }
 
 model Account {

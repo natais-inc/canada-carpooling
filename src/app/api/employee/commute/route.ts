@@ -46,6 +46,9 @@ export async function PUT(req: NextRequest) {
   const departAt = clean(body?.departAt, 5);
   const role = ['driver', 'passenger', 'either'].includes(body?.commuteRole) ? body.commuteRole : null;
 
+  const lat = typeof body?.homeLat === 'number' && body.homeLat >= -90 && body.homeLat <= 90 ? body.homeLat : null;
+  const lng = typeof body?.homeLng === 'number' && body.homeLng >= -180 && body.homeLng <= 180 ? body.homeLng : null;
+
   await prisma.companyMembership.update({
     where: { id: membershipId },
     data: {
@@ -56,6 +59,8 @@ export async function PUT(req: NextRequest) {
       arriveBy: arriveBy && TIME.test(arriveBy) ? arriveBy : null,
       departAt: departAt && TIME.test(departAt) ? departAt : null,
       commuteRole: role,
+      // Only overwrite coordinates when the client sends them (keeps a saved location).
+      ...(lat != null && lng != null ? { homeLat: lat, homeLng: lng } : {}),
     },
   });
   return NextResponse.json({ ok: true });

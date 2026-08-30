@@ -611,6 +611,18 @@
     "sameArea": "Same area",
     "sameCity": "Same city",
     "closeTimes": "Similar times",
-    "matchesSoon": "Connecting and arranging the carpool comes in the next step."
+    "matchesSoon": "Connecting and arranging the carpool comes in the next step.",
+    "homeLocation": "Home location",
+    "useMyLocation": "Use my location",
+    "locationSet": "Location set",
+    "locationNotSet": "Not set",
+    "locationError": "Couldn't get your location. Allow location access, then try again.",
+    "homeLocationHint": "From home — used to find colleagues within 2 km. Your exact location is never shown to others.",
+    "atDistance": "{km} km away",
+    "logTitle": "Record a carpool",
+    "logIntro": "{count} carpool(s) this month. Log each shared ride — that's what counts toward your participation.",
+    "logPartnerNone": "With a colleague (optional)",
+    "logButton": "I carpooled today",
+    "logDone": "Recorded!"
   }
 }
