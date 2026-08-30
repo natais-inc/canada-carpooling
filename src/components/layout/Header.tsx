@@ -1,10 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { Menu, X, User, MessageSquare, Car, Globe, LogOut, HelpCircle, Shield } from 'lucide-react';
+import { Menu, X, User, MessageSquare, Car, Globe, LogOut, HelpCircle, Shield, Building2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 
@@ -18,6 +18,25 @@ export default function Header() {
   const { data: session } = useSession();
   const isAdmin = (session?.user as any)?.role === 'ADMIN';
   const displayName = (session?.user as any)?.name || session?.user?.email || '';
+
+  // Whether the current user administers a company (drives the Employer portal link).
+  const [isEmployerAdmin, setIsEmployerAdmin] = useState(false);
+  useEffect(() => {
+    if (!session) {
+      setIsEmployerAdmin(false);
+      return;
+    }
+    let cancelled = false;
+    fetch('/api/employer/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!cancelled && d) setIsEmployerAdmin(!!d.isEmployerAdmin);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [session]);
 
   const switchLocale = () => {
     const newLocale = locale === 'fr' ? 'en' : 'fr';
@@ -67,6 +86,11 @@ export default function Header() {
 
             {session ? (
               <div className="flex items-center gap-3">
+                {isEmployerAdmin && (
+                  <Link href={`/${locale}/employer`} className="flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-700">
+                    <Building2 className="h-4 w-4" /> {t('employerPortal')}
+                  </Link>
+                )}
                 {isAdmin && (
                   <Link href={`/${locale}/admin`} className="flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-700">
                     <Shield className="h-4 w-4" /> Admin
@@ -121,6 +145,11 @@ export default function Header() {
               </button>
               {session ? (
                 <>
+                  {isEmployerAdmin && (
+                    <Link href={`/${locale}/employer`} className="flex items-center gap-1 text-brand-600 font-medium py-2">
+                      <Building2 className="h-4 w-4" /> {t('employerPortal')}
+                    </Link>
+                  )}
                   {isAdmin && (
                     <Link href={`/${locale}/admin`} className="flex items-center gap-1 text-brand-600 font-medium py-2">
                       <Shield className="h-4 w-4" /> Admin
