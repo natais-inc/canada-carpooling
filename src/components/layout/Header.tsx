@@ -38,6 +38,25 @@ export default function Header() {
     };
   }, [session]);
 
+  // Whether the current user belongs to (or is invited to) an employer program.
+  const [employee, setEmployee] = useState({ hasMembership: false, invitedCount: 0 });
+  useEffect(() => {
+    if (!session) {
+      setEmployee({ hasMembership: false, invitedCount: 0 });
+      return;
+    }
+    let cancelled = false;
+    fetch('/api/employee/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!cancelled && d) setEmployee({ hasMembership: !!d.hasMembership, invitedCount: d.invitedCount || 0 });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [session]);
+
   const switchLocale = () => {
     const newLocale = locale === 'fr' ? 'en' : 'fr';
     const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
@@ -89,6 +108,14 @@ export default function Header() {
                 {isEmployerAdmin && (
                   <Link href={`/${locale}/employer`} className="flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-700">
                     <Building2 className="h-4 w-4" /> {t('employerPortal')}
+                  </Link>
+                )}
+                {employee.hasMembership && (
+                  <Link href={`/${locale}/mon-covoiturage`} className="relative flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-brand-600">
+                    <Car className="h-4 w-4" /> {t('myCarpool')}
+                    {employee.invitedCount > 0 && (
+                      <span className="absolute -top-1 -right-2 w-2 h-2 rounded-full bg-brand-600"></span>
+                    )}
                   </Link>
                 )}
                 {isAdmin && (
@@ -148,6 +175,12 @@ export default function Header() {
                   {isEmployerAdmin && (
                     <Link href={`/${locale}/employer`} className="flex items-center gap-1 text-brand-600 font-medium py-2">
                       <Building2 className="h-4 w-4" /> {t('employerPortal')}
+                    </Link>
+                  )}
+                  {employee.hasMembership && (
+                    <Link href={`/${locale}/mon-covoiturage`} className="flex items-center gap-1 text-gray-600 hover:text-brand-600 font-medium py-2">
+                      <Car className="h-4 w-4" /> {t('myCarpool')}
+                      {employee.invitedCount > 0 && <span className="ml-1 w-2 h-2 rounded-full bg-brand-600 inline-block"></span>}
                     </Link>
                   )}
                   {isAdmin && (

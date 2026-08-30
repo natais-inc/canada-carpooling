@@ -34,7 +34,8 @@
     "logout": "Log out",
     "faq": "FAQ",
     "employers": "Employers",
-    "employerPortal": "Employer portal"
+    "employerPortal": "Employer portal",
+    "myCarpool": "My carpool"
   },
   "home": {
     "title": "Travel across Canada for less",
@@ -570,5 +571,39 @@
     "msg_email_required": "Please enter an email.",
     "msg_error": "Something went wrong. Please try again.",
     "downloadReport": "Download report (PDF)"
+  },
+  "employee": {
+    "title": "My carpool",
+    "subtitle": "Join your employer's carpool program and set your home-to-work commute.",
+    "empty": "Your employer hasn't invited you to the carpool program yet. Check back once you receive an invitation.",
+    "inviteEyebrow": "Invitation",
+    "inviteBody": "This company invites you to join its home-to-work carpool program. By accepting, you share your commute so we can match you with colleagues.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "activeAt": "Active member",
+    "commuteIntro": "Set your commute so we can match you with colleagues going the same way.",
+    "homeCity": "Home city",
+    "homeCityPh": "e.g. Oshawa",
+    "homeFsa": "First 3 characters of your postal code",
+    "homeFsaHint": "Used to match by neighbourhood, without revealing your address.",
+    "workSite": "Work location",
+    "workSitePh": "e.g. HQ, 100 Main St",
+    "days": "Commute days",
+    "day_1": "Mo",
+    "day_2": "Tu",
+    "day_3": "We",
+    "day_4": "Th",
+    "day_5": "Fr",
+    "day_6": "Sa",
+    "day_7": "Su",
+    "arriveBy": "Arrive by",
+    "departAt": "Leave at",
+    "role": "I prefer",
+    "role_either": "No preference",
+    "role_driver": "To drive",
+    "role_passenger": "To ride",
+    "save": "Save",
+    "saved": "Commute saved.",
+    "saveError": "Something went wrong."
   }
 }

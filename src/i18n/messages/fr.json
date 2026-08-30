@@ -34,7 +34,8 @@
     "logout": "Déconnexion",
     "faq": "FAQ",
     "employers": "Employeurs",
-    "employerPortal": "Espace employeur"
+    "employerPortal": "Espace employeur",
+    "myCarpool": "Mon covoiturage"
   },
   "home": {
     "title": "Voyagez à travers le Canada pour moins cher",
@@ -570,5 +571,39 @@
     "msg_email_required": "Veuillez saisir un courriel.",
     "msg_error": "Une erreur est survenue. Réessayez.",
     "downloadReport": "Télécharger le rapport (PDF)"
+  },
+  "employee": {
+    "title": "Mon covoiturage",
+    "subtitle": "Rejoignez le programme de covoiturage de votre employeur et indiquez votre trajet domicile-travail.",
+    "empty": "Votre employeur ne vous a pas encore invité au programme de covoiturage. Revenez quand vous aurez reçu une invitation.",
+    "inviteEyebrow": "Invitation",
+    "inviteBody": "Cette entreprise vous invite à rejoindre son programme de covoiturage domicile-travail. En acceptant, vous partagez votre trajet pour être jumelé à des collègues.",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "activeAt": "Membre actif",
+    "commuteIntro": "Indiquez votre trajet pour qu'on vous jumelle à des collègues qui font le même chemin.",
+    "homeCity": "Ville de départ",
+    "homeCityPh": "Ex. : Oshawa",
+    "homeFsa": "3 premiers caractères du code postal",
+    "homeFsaHint": "Sert au jumelage par quartier, sans révéler votre adresse.",
+    "workSite": "Lieu de travail",
+    "workSitePh": "Ex. : Siège, 100 rue Principale",
+    "days": "Jours de trajet",
+    "day_1": "Lu",
+    "day_2": "Ma",
+    "day_3": "Me",
+    "day_4": "Je",
+    "day_5": "Ve",
+    "day_6": "Sa",
+    "day_7": "Di",
+    "arriveBy": "Arrivée avant",
+    "departAt": "Départ à",
+    "role": "Je préfère",
+    "role_either": "Peu importe",
+    "role_driver": "Conduire",
+    "role_passenger": "Être passager",
+    "save": "Enregistrer",
+    "saved": "Trajet enregistré.",
+    "saveError": "Une erreur est survenue."
   }
 }

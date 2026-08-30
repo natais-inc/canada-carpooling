@@ -155,6 +155,19 @@ model CompanyMembership {
   role       MembershipRole   @default(MEMBER)
   status     MembershipStatus @default(INVITED)
   department String?
+
+  // Consent: set when the employee accepts joining the employer's program.
+  acceptedAt DateTime?
+
+  // Commute profile (declared by the employee) — feeds matching in Phase 2.
+  homeFsa     String?  // forward sortation area (first 3 chars of postal code) — privacy-friendly
+  homeCity    String?
+  workSite    String?  // site / address the employee commutes to (defaults to company)
+  commuteDays String?  // CSV of weekday numbers, e.g. "1,2,3,4,5"
+  arriveBy    String?  // "HH:MM"
+  departAt    String?  // "HH:MM"
+  commuteRole String?  // "driver" | "passenger" | "either"
+
   user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   company    Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
   createdAt  DateTime         @default(now())
