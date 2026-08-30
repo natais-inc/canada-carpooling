@@ -579,7 +579,20 @@
     "measuredCarpools": "Covoiturages",
     "measuredKm": "Km covoiturés",
     "thisMonth": "ce mois-ci",
-    "billingLink": "Facturation"
+    "billingLink": "Facturation",
+    "inviteLinksTitle": "Inviter par lien",
+    "inviteLinksIntro": "Générez un lien d'invitation à partager — même pour des employés qui n'ont pas encore de compte.",
+    "inviteLinksEmail": "Courriel de l'employé",
+    "inviteLinksDept": "Service (optionnel)",
+    "inviteLinksGenerate": "Générer le lien",
+    "inviteLinksCopy": "Copier",
+    "inviteLinksCopied": "Copié !",
+    "inviteLinksRevoke": "Révoquer",
+    "inviteLinksPending": "Invitations par lien en attente",
+    "inviteLinksNone": "Aucune invitation par lien en attente.",
+    "inviteLinksErrEmail": "Courriel invalide.",
+    "inviteLinksErrMember": "Cette personne fait déjà partie de l'entreprise.",
+    "inviteLinksErr": "Échec. Réessayez."
   },
   "employee": {
     "title": "Mon covoiturage",
@@ -689,5 +702,23 @@
     "note": "Vous devenez le premier administrateur. Vous pourrez inviter vos employés ensuite.",
     "errName": "Le nom de l'entreprise est requis.",
     "errGeneric": "La création a échoué. Réessayez."
+  },
+  "joinInvite": {
+    "eyebrow": "Invitation à rejoindre",
+    "body": "{company} vous invite à rejoindre son programme de covoiturage domicile-travail sur CarpoolWork.",
+    "join": "Rejoindre {company}",
+    "authPrompt": "Connectez-vous ou créez un compte pour accepter l'invitation.",
+    "createAccount": "Créer un compte",
+    "logIn": "Se connecter",
+    "inviteFor": "Invitation envoyée à {email}",
+    "invalidTitle": "Invitation indisponible",
+    "invalid_notfound": "Ce lien d'invitation est introuvable.",
+    "invalid_revoked": "Cette invitation a été révoquée par l'entreprise.",
+    "invalid_expired": "Cette invitation a expiré. Demandez-en une nouvelle à votre employeur.",
+    "goHome": "Retour à l'accueil",
+    "alreadyTitle": "Invitation déjà acceptée",
+    "alreadyBody": "Vous faites déjà partie de {company}.",
+    "goToMyCarpool": "Aller à Mon covoiturage",
+    "acceptError": "Impossible d'accepter l'invitation. Réessayez."
   }
 }

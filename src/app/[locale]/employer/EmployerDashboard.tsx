@@ -8,6 +8,7 @@ import {
   BadgeCheck, Route, CheckCircle2, Receipt,
 } from 'lucide-react';
 import type { EmployerDashboardData, EmployerMember } from '@/lib/employer-metrics';
+import InviteLinks from './InviteLinks';
 
 function useNumber(locale: string) {
   const loc = locale === 'en' ? 'en-CA' : 'fr-CA';
@@ -219,7 +220,10 @@ export default function EmployerDashboard({ data, locale }: { data: EmployerDash
         <h2 className="text-lg font-semibold text-gray-900">{t('membersTitle')}</h2>
       </div>
 
-      {/* Invite form */}
+      {/* Invite by link (works for people without an account) */}
+      <InviteLinks locale={locale} />
+
+      {/* Invite form — add an existing CarpoolWork account */}
       <form onSubmit={invite} className="bg-white border border-gray-200 rounded-xl p-4 mb-4">
         <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
           <div className="flex-1">

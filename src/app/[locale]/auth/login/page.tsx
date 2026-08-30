@@ -3,8 +3,13 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, Car } from 'lucide-react';
+
+// Only honour relative, single-slash callback paths (no open redirects).
+function safeCallback(raw: string | null): string | null {
+  return raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : null;
+}
 import Card, { CardBody } from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
@@ -13,6 +18,7 @@ export default function LoginPage() {
   const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
+  const callbackUrl = safeCallback(useSearchParams().get('callbackUrl'));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,7 +38,7 @@ export default function LoginPage() {
       setError(t('invalidCredentials'));
       return;
     }
-    router.push(`/${locale}`);
+    router.push(callbackUrl || `/${locale}`);
     router.refresh();
   };
 
@@ -88,7 +94,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-gray-600 mt-4">
           {t('noAccount')}{' '}
-          <Link href={`/${locale}/auth/register`} className="text-brand-600 font-medium hover:underline">
+          <Link href={`/${locale}/auth/register${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`} className="text-brand-600 font-medium hover:underline">
             {t('registerNow')}
           </Link>
         </p>

@@ -3,8 +3,13 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, User, Phone, Car, Shield } from 'lucide-react';
+
+// Only honour relative, single-slash callback paths (no open redirects).
+function safeCallback(raw: string | null): string | null {
+  return raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : null;
+}
 import Card, { CardBody } from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
@@ -13,6 +18,7 @@ export default function RegisterPage() {
   const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
+  const callbackUrl = safeCallback(useSearchParams().get('callbackUrl'));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
@@ -62,10 +68,11 @@ export default function RegisterPage() {
         redirect: false,
       });
       if (signInRes?.error) {
-        router.push(`/${locale}/auth/login?registered=true`);
+        const cb = callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : '';
+        router.push(`/${locale}/auth/login?registered=true${cb}`);
         return;
       }
-      router.push(`/${locale}`);
+      router.push(callbackUrl || `/${locale}`);
       router.refresh();
     } catch (err: any) {
       setError(err.message);
@@ -122,7 +129,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm text-gray-600 mt-4">
           {t('hasAccount')}{' '}
-          <Link href={`/${locale}/auth/login`} className="text-brand-600 font-medium hover:underline">{t('loginNow')}</Link>
+          <Link href={`/${locale}/auth/login${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`} className="text-brand-600 font-medium hover:underline">{t('loginNow')}</Link>
         </p>
       </div>
     </div>

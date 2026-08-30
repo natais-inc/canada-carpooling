@@ -148,8 +148,36 @@ model Company {
   memberships      CompanyMembership[]
   carpoolLogs      CarpoolLog[]
   invoices         Invoice[]
+  invites          CompanyInvite[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
+
+// A shareable, token-based invitation to join a company — works for people who
+// don't have a CarpoolWork account yet (Phase 4, employee onboarding at scale).
+model CompanyInvite {
+  id               String       @id @default(cuid())
+  companyId        String
+  email            String       // intended recipient, lowercased
+  token            String       @unique
+  department       String?
+  status           InviteStatus @default(PENDING)
+  invitedByUserId  String?
+  acceptedByUserId String?
+  acceptedAt       DateTime?
+  expiresAt        DateTime
+  company          Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([companyId, status])
+  @@index([token])
 }
 
 enum InvoiceStatus {

@@ -579,7 +579,20 @@
     "measuredCarpools": "Carpools",
     "measuredKm": "Carpooled km",
     "thisMonth": "this month",
-    "billingLink": "Billing"
+    "billingLink": "Billing",
+    "inviteLinksTitle": "Invite by link",
+    "inviteLinksIntro": "Generate an invite link to share — even for employees who don't have an account yet.",
+    "inviteLinksEmail": "Employee email",
+    "inviteLinksDept": "Department (optional)",
+    "inviteLinksGenerate": "Generate link",
+    "inviteLinksCopy": "Copy",
+    "inviteLinksCopied": "Copied!",
+    "inviteLinksRevoke": "Revoke",
+    "inviteLinksPending": "Pending invite links",
+    "inviteLinksNone": "No pending invite links.",
+    "inviteLinksErrEmail": "Invalid email.",
+    "inviteLinksErrMember": "This person is already in the company.",
+    "inviteLinksErr": "Failed. Please try again."
   },
   "employee": {
     "title": "My carpool",
@@ -689,5 +702,23 @@
     "note": "You become the first administrator. You can invite employees next.",
     "errName": "Company name is required.",
     "errGeneric": "Creation failed. Please try again."
+  },
+  "joinInvite": {
+    "eyebrow": "Invitation to join",
+    "body": "{company} invites you to join its commute carpooling program on CarpoolWork.",
+    "join": "Join {company}",
+    "authPrompt": "Log in or create an account to accept the invitation.",
+    "createAccount": "Create account",
+    "logIn": "Log in",
+    "inviteFor": "Invitation sent to {email}",
+    "invalidTitle": "Invitation unavailable",
+    "invalid_notfound": "This invite link could not be found.",
+    "invalid_revoked": "This invitation was revoked by the company.",
+    "invalid_expired": "This invitation has expired. Ask your employer for a new one.",
+    "goHome": "Back to home",
+    "alreadyTitle": "Invitation already accepted",
+    "alreadyBody": "You are already part of {company}.",
+    "goToMyCarpool": "Go to My carpool",
+    "acceptError": "Could not accept the invitation. Please try again."
   }
 }
