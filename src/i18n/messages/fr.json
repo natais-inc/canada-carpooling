@@ -578,7 +578,8 @@
     "measuredEmpty": "Aucun covoiturage enregistré pour l'instant. Dès que vos employés déclarent leurs trajets, l'impact réel s'affiche ici.",
     "measuredCarpools": "Covoiturages",
     "measuredKm": "Km covoiturés",
-    "thisMonth": "ce mois-ci"
+    "thisMonth": "ce mois-ci",
+    "billingLink": "Facturation"
   },
   "employee": {
     "title": "Mon covoiturage",
@@ -638,5 +639,31 @@
     "impactKmMonth": "Km covoiturés ce mois-ci",
     "impactCo2Month": "kg CO₂ évité ce mois-ci",
     "impactAllTime": "Depuis le début : {carpools} covoiturages, {co2} kg de CO₂ évité — soit l'équivalent de {trees} arbres sur un an."
+  },
+  "billing": {
+    "backToDashboard": "Retour au tableau de bord",
+    "title": "Facturation",
+    "tier_STANDARD": "Standard",
+    "tier_ENTERPRISE": "Enterprise",
+    "trialActive": "Essai gratuit — {days} jours restants",
+    "trialUntil": "Aucun montant facturé jusqu'au {date}.",
+    "nextInvoiceTitle": "Prochaine facture",
+    "freeTrialAmount": "0 $ (essai)",
+    "nextInvoiceDetail": "Pour {month} — {count} participant(s) actif(s).",
+    "coveredByTrial": "Couvert par l'essai gratuit — rien à payer.",
+    "noInvoiceYet": "Aucune facture pour l'instant. La première couvrira le mois écoulé.",
+    "runRateTitle": "À ce rythme",
+    "runRateDetail": "{count} participant(s) actif(s) ce mois-ci × {price}/mois.",
+    "enterpriseSuggested": "Vous approchez ou dépassez les seuils du palier Enterprise (250+ participants actifs ou plus de 2 sites). Contactez CarpoolWork pour une tarification adaptée.",
+    "historyTitle": "Historique mensuel",
+    "colMonth": "Mois",
+    "colParticipants": "Participants actifs",
+    "colAmount": "Montant",
+    "colStatus": "Statut",
+    "status_current": "En cours",
+    "status_trial": "Offert (essai)",
+    "status_due": "À payer",
+    "status_paid": "Payé",
+    "methodology": "{price} par participant actif et par mois, facturé le mois suivant. Un participant actif = un employé ayant enregistré au moins un covoiturage dans le mois."
   }
 }

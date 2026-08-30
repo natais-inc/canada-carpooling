@@ -142,7 +142,9 @@ model Company {
   region           String?
   parkingCostYear  Int                 @default(1200) // $ / place / an
   avgCommuteKm     Float               @default(20)
-  subscriptionTier String?             // facturation Stripe (à définir)
+  subscriptionTier String?             // billing plan: "STANDARD" (default) | "ENTERPRISE"
+  trialStartAt     DateTime?           // start of the 30-day free trial (defaults to createdAt)
+  pricePerParticipantCents Int         @default(2000) // 20.00 CAD / active participant / month
   memberships      CompanyMembership[]
   carpoolLogs      CarpoolLog[]
   createdAt        DateTime            @default(now())

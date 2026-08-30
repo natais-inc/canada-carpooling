@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   Building2, Users, Car, Leaf, TreePine, Fuel, ParkingCircle, Info, UserPlus, Loader2, FileDown,
-  BadgeCheck, Route, CheckCircle2,
+  BadgeCheck, Route, CheckCircle2, Receipt,
 } from 'lucide-react';
 import type { EmployerDashboardData, EmployerMember } from '@/lib/employer-metrics';
 
@@ -135,13 +135,22 @@ export default function EmployerDashboard({ data, locale }: { data: EmployerDash
             {t('adminBadge')}
           </p>
         </div>
-        <a
-          href={`/api/employer/report?locale=${locale}`}
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 px-4 py-2 hover:border-brand-500 hover:text-brand-700 whitespace-nowrap"
-        >
-          <FileDown className="h-4 w-4" />
-          {t('downloadReport')}
-        </a>
+        <div className="flex items-center gap-2 flex-wrap justify-end">
+          <a
+            href={`/${locale}/employer/facturation`}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 px-4 py-2 hover:border-brand-500 hover:text-brand-700 whitespace-nowrap"
+          >
+            <Receipt className="h-4 w-4" />
+            {t('billingLink')}
+          </a>
+          <a
+            href={`/api/employer/report?locale=${locale}`}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 px-4 py-2 hover:border-brand-500 hover:text-brand-700 whitespace-nowrap"
+          >
+            <FileDown className="h-4 w-4" />
+            {t('downloadReport')}
+          </a>
+        </div>
       </div>
 
       {/* Participation */}

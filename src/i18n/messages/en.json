@@ -578,7 +578,8 @@
     "measuredEmpty": "No carpools recorded yet. As soon as your employees log their trips, the real impact shows up here.",
     "measuredCarpools": "Carpools",
     "measuredKm": "Carpooled km",
-    "thisMonth": "this month"
+    "thisMonth": "this month",
+    "billingLink": "Billing"
   },
   "employee": {
     "title": "My carpool",
@@ -638,5 +639,31 @@
     "impactKmMonth": "Carpooled km this month",
     "impactCo2Month": "kg CO₂ avoided this month",
     "impactAllTime": "Since you started: {carpools} carpools, {co2} kg of CO₂ avoided — about {trees} trees' worth over a year."
+  },
+  "billing": {
+    "backToDashboard": "Back to dashboard",
+    "title": "Billing",
+    "tier_STANDARD": "Standard",
+    "tier_ENTERPRISE": "Enterprise",
+    "trialActive": "Free trial — {days} days left",
+    "trialUntil": "No charges until {date}.",
+    "nextInvoiceTitle": "Next invoice",
+    "freeTrialAmount": "$0 (trial)",
+    "nextInvoiceDetail": "For {month} — {count} active participant(s).",
+    "coveredByTrial": "Covered by the free trial — nothing to pay.",
+    "noInvoiceYet": "No invoice yet. The first will cover the completed month.",
+    "runRateTitle": "At this rate",
+    "runRateDetail": "{count} active participant(s) this month × {price}/month.",
+    "enterpriseSuggested": "You are at or above the Enterprise thresholds (250+ active participants or more than 2 sites). Contact CarpoolWork for tailored pricing.",
+    "historyTitle": "Monthly history",
+    "colMonth": "Month",
+    "colParticipants": "Active participants",
+    "colAmount": "Amount",
+    "colStatus": "Status",
+    "status_current": "In progress",
+    "status_trial": "Free (trial)",
+    "status_due": "Due",
+    "status_paid": "Paid",
+    "methodology": "{price} per active participant per month, billed the following month. An active participant = an employee who logged at least one carpool during the month."
   }
 }
