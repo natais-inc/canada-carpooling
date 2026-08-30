@@ -606,7 +606,7 @@
     "saved": "Trajet enregistré.",
     "saveError": "Une erreur est survenue.",
     "matchesTitle": "Vos correspondances",
-    "matchesEmpty": "Aucune correspondance pour l'instant. Complétez votre trajet (quartier, jours, horaires) pour trouver des collègues compatibles.",
+    "matchesEmpty": "Aucune correspondance pour l'instant. Dès qu'un collègue déclare un trajet compatible avec le vôtre, il apparaîtra ici.",
     "matchesIntro": "{count} collègue(s) font un trajet compatible avec le vôtre :",
     "sameArea": "Même quartier",
     "sameCity": "Même ville",
