@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Building2, Check, X, Loader2, MapPin, Clock, Car, Users, Sparkles, Leaf, Route, TreePine, Bell } from 'lucide-react';
 import type { Match } from '@/lib/matching';
+import GroupsPanel from './GroupsPanel';
 
 export type PersonalImpact = {
   monthCarpools: number;
@@ -466,6 +467,9 @@ function CommuteForm({
       </div>
 
       <MatchList matches={matches} t={t} locale={locale} />
+
+      {/* Carpool groups — alternate driver, one confirmation logs everyone */}
+      <GroupsPanel membershipId={m.id} t={t} />
 
       {/* Brick 3 — record a carpool */}
       <div className="mt-6 border-t border-gray-100 pt-5">

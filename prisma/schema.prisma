@@ -154,6 +154,7 @@ model Company {
   invoices         Invoice[]
   invites          CompanyInvite[]
   joinCodes        CompanyJoinCode[]
+  carpoolGroups    CarpoolGroup[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
 }
@@ -270,6 +271,7 @@ model CompanyMembership {
   user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   company      Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
   carpoolLogs  CarpoolLog[]
+  groupMemberships CarpoolGroupMember[]
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
 
@@ -285,6 +287,8 @@ model CarpoolLog {
   companyId    String
   membershipId String
   partnerName  String?
+  groupId            String?     // set when the log came from a group trip confirmation
+  driverMembershipId String?     // who drove that day (for rotation display)
   date         DateTime          // the day the carpool happened
   createdAt    DateTime          @default(now())
 
@@ -293,6 +297,43 @@ model CarpoolLog {
 
   @@index([companyId, date])
   @@index([membershipId, date])
+}
+
+enum GroupMemberStatus {
+  INVITED
+  ACTIVE
+  DECLINED
+  REMOVED
+}
+
+// A small standing carpool group (2–4 colleagues of the same company) who
+// commute together and alternate as driver. One driver confirmation logs a
+// carpool for every active member of the group that day (auto-validation).
+model CarpoolGroup {
+  id                    String               @id @default(cuid())
+  companyId             String
+  name                  String
+  createdByMembershipId String
+  company               Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  members               CarpoolGroupMember[]
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  @@index([companyId])
+}
+
+model CarpoolGroupMember {
+  id           String            @id @default(cuid())
+  groupId      String
+  membershipId String
+  status       GroupMemberStatus @default(INVITED)
+  group        CarpoolGroup      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  membership   CompanyMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@unique([groupId, membershipId])
+  @@index([membershipId])
 }
 
 model Account {
