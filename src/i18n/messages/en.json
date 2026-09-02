@@ -38,48 +38,30 @@
     "myCarpool": "My carpool"
   },
   "home": {
-    "title": "Travel across Canada for less",
-    "subtitle": "Connect with trusted drivers and passengers. Save up to 75% compared to bus or train.",
-    "heroTitle": "Travel across Canada for less",
-    "heroSubtitle": "Connect with trusted drivers and passengers. Save up to 75% compared to bus or train.",
-    "whyUs": "Why choose CarpoolWork?",
-    "features": {
-      "verified": {
-        "title": "Verified drivers",
-        "description": "Every driver's license and identity is verified with biometric checks."
-      },
-      "payment": {
-        "title": "Hybrid payment",
-        "description": "Trip price paid directly to the driver. Only $1.99 (taxes included) service fee per booking for passengers."
-      },
-      "chat": {
-        "title": "Built-in messaging",
-        "description": "Communicate directly with your driver or passenger before the trip."
-      },
-      "reviews": {
-        "title": "Verified reviews",
-        "description": "Check reviews from other users before booking."
-      }
-    },
-    "popularRoutes": "Popular routes",
-    "ctaTitle": "Ready to share the road?",
-    "ctaSubtitle": "Join thousands of Canadians saving on their trips.",
-    "ctaPassenger": "Find a ride",
-    "ctaDriver": "Offer a ride",
-    "step1Title": "Search",
-    "step1Desc": "Enter your departure city, destination, and travel date.",
-    "step2Title": "Book",
-    "step2Desc": "Choose your ride, message the driver, and book securely online.",
-    "step3Title": "Travel",
-    "step3Desc": "Meet at the pickup point and enjoy your trip!",
-    "benefit1Title": "Verified drivers",
-    "benefit1Desc": "Every driver's license and identity is verified with biometric checks.",
-    "benefit2Title": "Hybrid payment",
-    "benefit2Desc": "Trip price paid directly to the driver. Only $1.99 (taxes included) service fee per booking for passengers. Drivers pay nothing.",
-    "benefit3Title": "Fair prices",
-    "benefit3Desc": "Only $1.99 (taxes included) per booking — the lowest fees in Canada. Free for drivers.",
-    "benefit4Title": "24/7 Support",
-    "benefit4Desc": "Our team is here to help you every day, any time."
+    "eyebrow": "Employer-paid workplace carpooling",
+    "title": "Fewer cars on your parking lot. More meaning for your employees.",
+    "subtitle": "CarpoolWork organizes your employees' commute carpooling — simple, bilingual, with measured impact, and ready in about a week.",
+    "ctaEmployer": "For employers",
+    "ctaEmployee": "Join my company",
+    "howTitle": "How it works",
+    "step1Title": "Join",
+    "step1Desc": "Your employees sign up by scanning a QR poster or through an invite link — in 30 seconds.",
+    "step2Title": "Carpool",
+    "step2Desc": "They are matched with colleagues from the same area and carpool to work.",
+    "step3Title": "Measure impact",
+    "step3Desc": "You track parking spots freed and CO₂ avoided, in real time.",
+    "whyTitle": "Why employers choose CarpoolWork",
+    "benefit1Title": "Less pressure on parking",
+    "benefit1Desc": "Every carpool frees a space — without expanding your parking lot.",
+    "benefit2Title": "Measured impact, not estimated",
+    "benefit2Desc": "CO₂-avoided reports based on real trips, for your sustainability targets.",
+    "benefit3Title": "Retention and wellbeing",
+    "benefit3Desc": "A concrete benefit that cuts the cost and stress of your employees' commute.",
+    "benefit4Title": "Deployed in a week",
+    "benefit4Desc": "Bilingual, compliant (PIPEDA) and pay-as-you-go — with no heavy IT project.",
+    "ctaTitle": "Ready to relieve your parking lot?",
+    "ctaSubtitle": "Launch a risk-free pilot: free setup, a 30-day trial, no commitment.",
+    "ctaPrimary": "Create your employer workspace"
   },
   "auth": {
     "loginTitle": "Welcome back",

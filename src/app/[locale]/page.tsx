@@ -1,24 +1,30 @@
 import { useTranslations } from 'next-intl';
-import { Shield, CreditCard, MessageSquare, Star, MapPin, Users } from 'lucide-react';
-import SearchForm from '@/components/trips/SearchForm';
+import {
+  QrCode,
+  Users,
+  BarChart3,
+  ParkingSquare,
+  Leaf,
+  HeartHandshake,
+  Rocket,
+  ArrowRight,
+} from 'lucide-react';
 
-export default function HomePage() {
+export default function HomePage({ params }: { params: { locale: string } }) {
   const t = useTranslations('home');
+  const locale = params.locale;
 
-  const features = [
-    { icon: Shield, title: t('features.verified.title'), desc: t('features.verified.description') },
-    { icon: CreditCard, title: t('features.payment.title'), desc: t('features.payment.description') },
-    { icon: MessageSquare, title: t('features.chat.title'), desc: t('features.chat.description') },
-    { icon: Star, title: t('features.reviews.title'), desc: t('features.reviews.description') },
+  const steps = [
+    { icon: QrCode, title: t('step1Title'), desc: t('step1Desc') },
+    { icon: Users, title: t('step2Title'), desc: t('step2Desc') },
+    { icon: BarChart3, title: t('step3Title'), desc: t('step3Desc') },
   ];
 
-  const popularRoutes = [
-    { from: 'Montréal', to: 'Québec', price: 25 },
-    { from: 'Toronto', to: 'Ottawa', price: 30 },
-    { from: 'Montréal', to: 'Toronto', price: 45 },
-    { from: 'Calgary', to: 'Edmonton', price: 25 },
-    { from: 'Vancouver', to: 'Whistler', price: 20 },
-    { from: 'Ottawa', to: 'Montréal', price: 25 },
+  const benefits = [
+    { icon: ParkingSquare, title: t('benefit1Title'), desc: t('benefit1Desc') },
+    { icon: Leaf, title: t('benefit2Title'), desc: t('benefit2Desc') },
+    { icon: HeartHandshake, title: t('benefit3Title'), desc: t('benefit3Desc') },
+    { icon: Rocket, title: t('benefit4Title'), desc: t('benefit4Desc') },
   ];
 
   return (
@@ -26,59 +32,68 @@ export default function HomePage() {
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-brand-600 via-brand-700 to-brand-800 text-white">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-              {t('title')}
-            </h1>
-            <p className="text-lg sm:text-xl text-brand-100 max-w-2xl mx-auto">
-              {t('subtitle')}
-            </p>
-          </div>
-
-          {/* Search Box */}
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
-            <SearchForm />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center">
+          <span className="inline-block text-xs sm:text-sm font-semibold uppercase tracking-widest text-brand-100 mb-5">
+            {t('eyebrow')}
+          </span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-balance">
+            {t('title')}
+          </h1>
+          <p className="text-lg sm:text-xl text-brand-100 max-w-2xl mx-auto mb-10">
+            {t('subtitle')}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={`/${locale}/employers`}
+              className="inline-flex items-center justify-center px-8 py-3 bg-white text-brand-700 font-semibold rounded-xl hover:bg-brand-50 transition-colors"
+            >
+              {t('ctaEmployer')} <ArrowRight className="h-5 w-5 ml-2" />
+            </a>
+            <a
+              href={`/${locale}/mon-covoiturage`}
+              className="inline-flex items-center justify-center px-8 py-3 bg-brand-500/30 text-white font-semibold rounded-xl border-2 border-white/40 hover:bg-brand-500/50 transition-colors"
+            >
+              {t('ctaEmployee')}
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            {t('whyUs')}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((f, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
+      {/* How it works */}
+      <section className="py-16 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">{t('howTitle')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {steps.map((s, i) => (
+              <div key={i} className="relative bg-white rounded-2xl border border-gray-200 p-7 shadow-sm">
+                <span className="absolute -top-3 -left-3 flex items-center justify-center w-8 h-8 rounded-lg bg-brand-600 text-white font-mono text-sm font-semibold">
+                  {i + 1}
+                </span>
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-brand-100 text-brand-600 rounded-xl mb-4">
-                  <f.icon className="h-6 w-6" />
+                  <s.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{f.title}</h3>
-                <p className="text-sm text-gray-600">{f.desc}</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{s.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Popular Routes */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            {t('popularRoutes')}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {popularRoutes.map((route, i) => (
-              <div key={i} className="flex items-center justify-between bg-white rounded-xl border border-gray-200 p-4 hover:border-brand-300 hover:shadow-sm transition-all cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-brand-500" />
-                  <div>
-                    <p className="font-medium text-gray-900">{route.from} → {route.to}</p>
-                  </div>
+      {/* Why employers choose us */}
+      <section className="py-16 sm:py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">{t('whyTitle')}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {benefits.map((b, i) => (
+              <div key={i} className="flex gap-4 bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+                <div className="flex-none inline-flex items-center justify-center w-12 h-12 bg-maple-50 text-maple-600 rounded-xl">
+                  <b.icon className="h-6 w-6" />
                 </div>
-                <span className="text-lg font-bold text-brand-600">{route.price} $</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{b.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{b.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -86,18 +101,16 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-maple-50">
+      <section className="py-16 sm:py-20">
         <div className="max-w-3xl mx-auto text-center px-4">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('ctaTitle')}</h2>
           <p className="text-lg text-gray-600 mb-8">{t('ctaSubtitle')}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#" className="inline-flex items-center justify-center px-8 py-3 bg-brand-600 text-white font-semibold rounded-xl hover:bg-brand-700 transition-colors">
-              <Users className="h-5 w-5 mr-2" /> {t('ctaPassenger')}
-            </a>
-            <a href="#" className="inline-flex items-center justify-center px-8 py-3 bg-white text-brand-600 font-semibold rounded-xl border-2 border-brand-600 hover:bg-brand-50 transition-colors">
-              {t('ctaDriver')}
-            </a>
-          </div>
+          <a
+            href={`/${locale}/employer/inscription`}
+            className="inline-flex items-center justify-center px-8 py-3 bg-brand-600 text-white font-semibold rounded-xl hover:bg-brand-700 transition-colors"
+          >
+            {t('ctaPrimary')} <ArrowRight className="h-5 w-5 ml-2" />
+          </a>
         </div>
       </section>
     </div>

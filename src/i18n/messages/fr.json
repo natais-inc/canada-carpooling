@@ -38,48 +38,30 @@
     "myCarpool": "Mon covoiturage"
   },
   "home": {
-    "title": "Voyagez à travers le Canada pour moins cher",
-    "subtitle": "Connectez-vous avec des conducteurs et passagers vérifiés. Économisez jusqu'à 75% vs le bus ou le train.",
-    "heroTitle": "Voyagez à travers le Canada pour moins cher",
-    "heroSubtitle": "Connectez-vous avec des conducteurs et passagers vérifiés. Économisez jusqu'à 75% vs le bus ou le train.",
-    "whyUs": "Pourquoi choisir CarpoolWork?",
-    "features": {
-      "verified": {
-        "title": "Conducteurs vérifiés",
-        "description": "Chaque permis de conduire et identité est vérifié par contrôle biométrique."
-      },
-      "payment": {
-        "title": "Paiement hybride",
-        "description": "Payez le conducteur directement (comptant, Interac). Frais de service de seulement 1,99 $ (taxes incluses) par réservation."
-      },
-      "chat": {
-        "title": "Messagerie intégrée",
-        "description": "Communiquez directement avec votre conducteur ou passager avant le trajet."
-      },
-      "reviews": {
-        "title": "Avis vérifiés",
-        "description": "Consultez les avis des autres utilisateurs avant de réserver."
-      }
-    },
-    "popularRoutes": "Trajets populaires",
-    "ctaTitle": "Prêt à partager la route?",
-    "ctaSubtitle": "Rejoignez des milliers de Canadiens qui économisent sur leurs trajets.",
-    "ctaPassenger": "Trouver un trajet",
-    "ctaDriver": "Offrir un trajet",
-    "step1Title": "Recherchez",
-    "step1Desc": "Entrez votre ville de départ, destination et date de voyage.",
-    "step2Title": "Réservez",
-    "step2Desc": "Choisissez votre trajet, écrivez au conducteur et réservez votre place.",
-    "step3Title": "Voyagez",
-    "step3Desc": "Retrouvez-vous au point de rencontre et profitez du voyage!",
-    "benefit1Title": "Conducteurs vérifiés",
-    "benefit1Desc": "Chaque permis de conduire et identité est vérifié par contrôle biométrique.",
-    "benefit2Title": "Paiement hybride",
-    "benefit2Desc": "Payez le conducteur directement (comptant, Interac). Frais de service de seulement 1,99 $ (taxes incluses).",
-    "benefit3Title": "Prix imbattables",
-    "benefit3Desc": "Seulement 1,99 $ (taxes incluses) par réservation — les frais les plus bas au Canada. Inscription gratuite.",
-    "benefit4Title": "Support 24/7",
-    "benefit4Desc": "Notre équipe est là pour vous aider chaque jour, à tout moment."
+    "eyebrow": "Covoiturage d'entreprise, payé par l'employeur",
+    "title": "Moins de voitures sur votre stationnement. Plus de sens pour vos employés.",
+    "subtitle": "CarpoolWork organise le covoiturage domicile-travail de vos employés — simple, bilingue, à impact mesuré, et prêt en une semaine.",
+    "ctaEmployer": "Pour les employeurs",
+    "ctaEmployee": "Rejoindre mon entreprise",
+    "howTitle": "Comment ça marche",
+    "step1Title": "Rejoindre",
+    "step1Desc": "Vos employés s'inscrivent en scannant une affiche QR ou via un lien d'invitation — en 30 secondes.",
+    "step2Title": "Covoiturer",
+    "step2Desc": "Ils sont mis en relation avec des collègues du même secteur et covoiturent au travail.",
+    "step3Title": "Mesurer l'impact",
+    "step3Desc": "Vous suivez les places de stationnement libérées et le CO₂ évité, en temps réel.",
+    "whyTitle": "Pourquoi les employeurs choisissent CarpoolWork",
+    "benefit1Title": "Moins de pression sur le stationnement",
+    "benefit1Desc": "Chaque covoiturage libère une place — sans avoir à agrandir votre stationnement.",
+    "benefit2Title": "Impact mesuré, pas estimé",
+    "benefit2Desc": "Des rapports de CO₂ évité fondés sur les trajets réels, pour vos cibles de développement durable.",
+    "benefit3Title": "Rétention et bien-être",
+    "benefit3Desc": "Un avantage concret qui réduit le coût et le stress du trajet de vos employés.",
+    "benefit4Title": "Déployé en une semaine",
+    "benefit4Desc": "Bilingue, conforme (PIPEDA) et payé à l'usage — sans projet informatique lourd.",
+    "ctaTitle": "Prêt à désengorger votre stationnement ?",
+    "ctaSubtitle": "Lancez un pilote sans risque : mise en place gratuite, 30 jours d'essai, sans engagement.",
+    "ctaPrimary": "Créer votre espace employeur"
   },
   "auth": {
     "loginTitle": "Bon retour",
