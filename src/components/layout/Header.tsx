@@ -79,12 +79,6 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link href={`/${locale}/trips/search`} className="text-gray-600 hover:text-brand-600 font-medium transition-colors">
-              {t('findRide')}
-            </Link>
-            <Link href={`/${locale}/trips/create`} className="text-gray-600 hover:text-brand-600 font-medium transition-colors">
-              {t('offerRide')}
-            </Link>
             <Link href={`/${locale}/faq`} className="text-gray-600 hover:text-brand-600 font-medium transition-colors">
               {t('faq')}
             </Link>
@@ -155,12 +149,6 @@ export default function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-100">
             <div className="flex flex-col gap-3">
-              <Link href={`/${locale}/trips/search`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
-                {t('findRide')}
-              </Link>
-              <Link href={`/${locale}/trips/create`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
-                {t('offerRide')}
-              </Link>
               <Link href={`/${locale}/faq`} className="text-gray-600 hover:text-brand-600 font-medium py-2">
                 {t('faq')}
               </Link>

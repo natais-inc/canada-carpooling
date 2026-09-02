@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://carpoolwork.ca';
   const locales = ['fr', 'en'];
-  const pages = ['', '/trips/search', '/trips/create', '/faq', '/employers'];
+  const pages = ['', '/faq', '/employers', '/employer/inscription'];
 
   const entries: MetadataRoute.Sitemap = [];
 
