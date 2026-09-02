@@ -704,7 +704,7 @@
     "status_trial": "Free (trial)",
     "status_due": "Due",
     "status_paid": "Paid",
-    "methodology": "{price} per active participant per month, billed the following month. An active participant = an employee who logged at least one carpool during the month.",
+    "methodology": "{price} per active participant per month, billed the following month. An active participant = an employee who logged at least one carpool during the month. A minimum of $500 per site applies in months that had at least one carpool.",
     "invoicesTitle": "Issued invoices",
     "invColNumber": "Invoice no.",
     "invColDownload": "Download",

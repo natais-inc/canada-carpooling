@@ -5,7 +5,7 @@
  * Access is gated to platform admins (User.role === 'ADMIN') by the API route.
  */
 import { prisma } from '@/lib/db';
-import { BILLING } from '@/lib/billing';
+import { BILLING, billableCents, siteCountsByCompany } from '@/lib/billing';
 
 export type PlatformCompany = {
   id: string;
@@ -60,7 +60,7 @@ export async function getPlatformOverview(): Promise<PlatformOverview> {
   const prevFrom = monthStart(now.getFullYear(), now.getMonth() - 1);
   const prevTo = curFrom;
 
-  const [companies, curMap, prevMap] = await Promise.all([
+  const [companies, curMap, prevMap, siteMap] = await Promise.all([
     prisma.company.findMany({
       select: {
         id: true,
@@ -69,6 +69,7 @@ export async function getPlatformOverview(): Promise<PlatformOverview> {
         subscriptionTier: true,
         trialStartAt: true,
         pricePerParticipantCents: true,
+        monthlyFloorCents: true,
         createdAt: true,
         _count: { select: { memberships: true } },
       },
@@ -76,6 +77,7 @@ export async function getPlatformOverview(): Promise<PlatformOverview> {
     }),
     participantsByCompany(curFrom, curTo),
     participantsByCompany(prevFrom, prevTo),
+    siteCountsByCompany(),
   ]);
 
   type CompanyRow = {
@@ -85,12 +87,15 @@ export async function getPlatformOverview(): Promise<PlatformOverview> {
     subscriptionTier: string | null;
     trialStartAt: Date | null;
     pricePerParticipantCents: number | null;
+    monthlyFloorCents: number | null;
     createdAt: Date;
     _count: { memberships: number };
   };
 
   const rows: PlatformCompany[] = (companies as CompanyRow[]).map((c) => {
     const price = c.pricePerParticipantCents ?? BILLING.DEFAULT_PRICE_CENTS;
+    const floor = c.monthlyFloorCents ?? BILLING.DEFAULT_FLOOR_CENTS;
+    const sites = siteMap.get(c.id) ?? 1;
     const tier: 'STANDARD' | 'ENTERPRISE' = c.subscriptionTier === 'ENTERPRISE' ? 'ENTERPRISE' : 'STANDARD';
     const trialStart = c.trialStartAt ?? c.createdAt;
     const trialEnd = new Date(trialStart.getTime() + BILLING.TRIAL_DAYS * 86400000);
@@ -101,7 +106,7 @@ export async function getPlatformOverview(): Promise<PlatformOverview> {
     const lastMonthParticipants = prevMap.get(c.id) ?? 0;
     // The previous month is covered by the trial when it began before the trial ended.
     const prevMonthFree = prevFrom < trialEnd;
-    const lastMonthBillableCents = prevMonthFree ? 0 : lastMonthParticipants * price;
+    const lastMonthBillableCents = billableCents(lastMonthParticipants, price, floor, sites, prevMonthFree);
 
     return {
       id: c.id,
@@ -112,7 +117,7 @@ export async function getPlatformOverview(): Promise<PlatformOverview> {
       trialDaysLeft,
       trialEndsAtIso: trialEnd.toISOString(),
       activeParticipants,
-      runRateCents: activeParticipants * price,
+      runRateCents: billableCents(activeParticipants, price, floor, sites, false),
       lastMonthParticipants,
       lastMonthBillableCents,
       pricePerParticipantCents: price,

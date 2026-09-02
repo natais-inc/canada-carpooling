@@ -704,7 +704,7 @@
     "status_trial": "Offert (essai)",
     "status_due": "À payer",
     "status_paid": "Payé",
-    "methodology": "{price} par participant actif et par mois, facturé le mois suivant. Un participant actif = un employé ayant enregistré au moins un covoiturage dans le mois.",
+    "methodology": "{price} par participant actif et par mois, facturé le mois suivant. Un participant actif = un employé ayant enregistré au moins un covoiturage dans le mois. Un minimum de 500 $ par site s'applique aux mois ayant eu au moins un covoiturage.",
     "invoicesTitle": "Factures émises",
     "invColNumber": "No de facture",
     "invColDownload": "Télécharger",

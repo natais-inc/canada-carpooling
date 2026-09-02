@@ -6,7 +6,7 @@
  * manually (mark paid / void) until Stripe automates it.
  */
 import { prisma } from '@/lib/db';
-import { BILLING } from '@/lib/billing';
+import { BILLING, billableCents, siteCountsByCompany } from '@/lib/billing';
 
 export type InvoiceStatus = 'DUE' | 'PAID' | 'VOID' | 'TRIAL';
 
@@ -57,13 +57,14 @@ export async function closeMonth(year: number, month: number): Promise<CloseResu
   }
 
   const companies = await prisma.company.findMany({
-    select: { id: true, name: true, subscriptionTier: true, trialStartAt: true, pricePerParticipantCents: true, createdAt: true },
+    select: { id: true, name: true, subscriptionTier: true, trialStartAt: true, pricePerParticipantCents: true, monthlyFloorCents: true, createdAt: true },
     orderBy: { createdAt: 'asc' },
   });
+  const siteMap = await siteCountsByCompany();
 
   for (const c of companies as {
     id: string; name: string; subscriptionTier: string | null;
-    trialStartAt: Date | null; pricePerParticipantCents: number | null; createdAt: Date;
+    trialStartAt: Date | null; pricePerParticipantCents: number | null; monthlyFloorCents: number | null; createdAt: Date;
   }[]) {
     const existing = await prisma.invoice.findUnique({
       where: { companyId_periodYear_periodMonth: { companyId: c.id, periodYear: year, periodMonth: month } },
@@ -81,10 +82,12 @@ export async function closeMonth(year: number, month: number): Promise<CloseResu
     }
 
     const price = c.pricePerParticipantCents ?? BILLING.DEFAULT_PRICE_CENTS;
+    const floor = c.monthlyFloorCents ?? BILLING.DEFAULT_FLOOR_CENTS;
+    const sites = siteMap.get(c.id) ?? 1;
     const trialStart = c.trialStartAt ?? c.createdAt;
     const trialEnd = new Date(trialStart.getTime() + BILLING.TRIAL_DAYS * 86400000);
     const isTrial = from < trialEnd;
-    const amountCents = isTrial ? 0 : participants * price;
+    const amountCents = billableCents(participants, price, floor, sites, isTrial);
     const status: InvoiceStatus = isTrial ? 'TRIAL' : 'DUE';
 
     await prisma.invoice.create({

@@ -3,8 +3,10 @@
  *
  * Pricing model (decided): bill retrospectively on the number of *active
  * participants of a month* — an employee who recorded at least one carpool
- * that month. Flat 20 CAD / active participant / month. 30-day free trial.
- * Enterprise is a manual tier (custom price / bespoke needs).
+ * that month. 25 CAD / active participant / month, with a monthly floor of
+ * 500 CAD per site (billed only in months that had at least one carpool, so a
+ * fully inactive site is never charged). 30-day free trial. Enterprise is a
+ * manual tier (custom price / bespoke needs).
  *
  * This module derives every billing figure from CarpoolLog + the company's
  * billing config. Nothing here moves money — it computes what would be
@@ -14,12 +16,55 @@ import { prisma } from '@/lib/db';
 
 export const BILLING = {
   TRIAL_DAYS: 30,
-  DEFAULT_PRICE_CENTS: 2000, // 20.00 CAD / active participant / month
+  DEFAULT_PRICE_CENTS: 2500, // 25.00 CAD / active participant / month
+  DEFAULT_FLOOR_CENTS: 50000, // 500.00 CAD / site / month minimum
   CURRENCY: 'CAD',
   // Enterprise thresholds (informational — flagged when a company crosses them).
   ENTERPRISE_PARTICIPANTS: 250,
   ENTERPRISE_SITES: 2,
 } as const;
+
+/**
+ * The billable amount for one company-month, in cents.
+ * - Trial months and months with no active participant → 0.
+ * - Otherwise: the greater of (participants × price) and (floor × sites).
+ * The floor only bites in a month that had activity, so it recovers the
+ * shortfall from under-logging without ever charging a dormant site.
+ */
+export function billableCents(
+  participants: number,
+  priceCents: number,
+  floorCents: number,
+  siteCount: number,
+  isTrial: boolean,
+): number {
+  if (isTrial || participants <= 0) return 0;
+  const sites = Math.max(1, siteCount);
+  return Math.max(participants * priceCents, floorCents * sites);
+}
+
+/** Number of distinct declared work sites among a company's ACTIVE members (min 1). */
+export async function siteCountForCompany(companyId: string): Promise<number> {
+  const rows = await prisma.companyMembership.findMany({
+    where: { companyId, status: 'ACTIVE', workSite: { not: null } },
+    select: { workSite: true },
+    distinct: ['workSite'],
+  });
+  return Math.max(1, rows.length);
+}
+
+/** Distinct ACTIVE work sites per company, in one query (min 1 each). */
+export async function siteCountsByCompany(): Promise<Map<string, number>> {
+  const rows = await prisma.companyMembership.groupBy({
+    by: ['companyId', 'workSite'],
+    where: { status: 'ACTIVE', workSite: { not: null } },
+  });
+  const map = new Map<string, number>();
+  for (const r of rows as { companyId: string; workSite: string | null }[]) {
+    map.set(r.companyId, (map.get(r.companyId) ?? 0) + 1);
+  }
+  return map;
+}
 
 export type BillingMonthStatus = 'current' | 'trial' | 'due' | 'paid';
 
@@ -28,12 +73,19 @@ export type BillingMonth = {
   month: number; // 1–12 (the usage month)
   monthStartIso: string;
   activeParticipants: number;
-  amountCents: number; // participants × price (the billable value)
+  amountCents: number; // billable value after floor
   status: BillingMonthStatus;
 };
 
 export type BillingOverview = {
-  company: { id: string; name: string; tier: 'STANDARD' | 'ENTERPRISE'; pricePerParticipantCents: number };
+  company: {
+    id: string;
+    name: string;
+    tier: 'STANDARD' | 'ENTERPRISE';
+    pricePerParticipantCents: number;
+    monthlyFloorCents: number;
+    siteCount: number;
+  };
   currency: string;
   trial: { active: boolean; endsAtIso: string; daysLeft: number };
   // Retrospective invoice that would be issued now, for last completed month.
@@ -83,6 +135,7 @@ export async function getBillingOverview(companyId: string): Promise<BillingOver
       subscriptionTier: true,
       trialStartAt: true,
       pricePerParticipantCents: true,
+      monthlyFloorCents: true,
       createdAt: true,
     },
   });
@@ -90,6 +143,8 @@ export async function getBillingOverview(companyId: string): Promise<BillingOver
 
   const tier: 'STANDARD' | 'ENTERPRISE' = company.subscriptionTier === 'ENTERPRISE' ? 'ENTERPRISE' : 'STANDARD';
   const price = company.pricePerParticipantCents ?? BILLING.DEFAULT_PRICE_CENTS;
+  const floor = company.monthlyFloorCents ?? BILLING.DEFAULT_FLOOR_CENTS;
+  const siteCount = await siteCountForCompany(companyId);
 
   const now = new Date();
   const trialStart = company.trialStartAt ?? company.createdAt;
@@ -116,13 +171,14 @@ export async function getBillingOverview(companyId: string): Promise<BillingOver
       const to = monthStart(year, month0 + 1);
       const participants = await distinctActiveParticipants(companyId, from, to);
       const isCurrent = year === y && month0 === m0;
-      const status: BillingMonthStatus = isCurrent ? 'current' : freeMonth(from) ? 'trial' : 'due';
+      const isTrialMonth = freeMonth(from);
+      const status: BillingMonthStatus = isCurrent ? 'current' : isTrialMonth ? 'trial' : 'due';
       return {
         year,
         month: month0 + 1,
         monthStartIso: from.toISOString(),
         activeParticipants: participants,
-        amountCents: participants * price,
+        amountCents: billableCents(participants, price, floor, siteCount, isTrialMonth),
         status,
       };
     })
@@ -137,20 +193,12 @@ export async function getBillingOverview(companyId: string): Promise<BillingOver
         month: previous.month,
         monthStartIso: previous.monthStartIso,
         activeParticipants: previous.activeParticipants,
-        amountCents: previous.status === 'trial' ? 0 : previous.amountCents,
+        amountCents: previous.amountCents,
         isTrial: previous.status === 'trial',
       }
     : null;
 
-  // Enterprise suggestion: current active participants cross the threshold.
-  const siteCount = await prisma.companyMembership
-    .findMany({
-      where: { companyId, status: 'ACTIVE', workSite: { not: null } },
-      select: { workSite: true },
-      distinct: ['workSite'],
-    })
-    .then((rows: { workSite: string | null }[]) => rows.length);
-
+  // Enterprise suggestion: current active participants or multi-site.
   const enterpriseSuggested =
     tier !== 'ENTERPRISE' &&
     (current.activeParticipants >= BILLING.ENTERPRISE_PARTICIPANTS || siteCount > BILLING.ENTERPRISE_SITES);
@@ -177,7 +225,7 @@ export async function getBillingOverview(companyId: string): Promise<BillingOver
   }
 
   return {
-    company: { id: company.id, name: company.name, tier, pricePerParticipantCents: price },
+    company: { id: company.id, name: company.name, tier, pricePerParticipantCents: price, monthlyFloorCents: floor, siteCount },
     currency: BILLING.CURRENCY,
     trial: { active: trialActive, endsAtIso: trialEnd.toISOString(), daysLeft },
     nextInvoice,

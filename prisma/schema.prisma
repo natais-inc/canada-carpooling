@@ -146,7 +146,8 @@ model Company {
   avgCommuteKm     Float               @default(20)
   subscriptionTier String?             // billing plan: "STANDARD" (default) | "ENTERPRISE"
   trialStartAt     DateTime?           // start of the 30-day free trial (defaults to createdAt)
-  pricePerParticipantCents Int         @default(2000) // 20.00 CAD / active participant / month
+  pricePerParticipantCents Int         @default(2500) // 25.00 CAD / active participant / month
+  monthlyFloorCents        Int         @default(50000) // 500.00 CAD / site / month minimum (billed only in months with activity)
   allowedEmailDomains String?          // CSV of domains for QR auto-approval, e.g. "durham.ca,ville.durham.ca"
   memberships      CompanyMembership[]
   carpoolLogs      CarpoolLog[]
