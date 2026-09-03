@@ -28,6 +28,102 @@ const AUTHOR = 'Magloire Pondi Simb, Founder / CEO, North American Technologies 
 
 export const articles: BlogArticle[] = [
   {
+    slug: 'vrai-cout-stationnement-travail',
+    date: '2026-09-03',
+    author: AUTHOR,
+    readingMinutes: 6,
+    fr: {
+      title: 'Le vrai coût du stationnement au travail — et pourquoi le covoiturage le réduit directement',
+      excerpt:
+        'Une place de stationnement peut coûter de l’ordre de 25 000 $ à bâtir en structure, et jusqu’à 230 000 $ en souterrain dans les marchés denses — puis des centaines à des milliers de dollars par an à exploiter. Pour un employeur, chaque place évitée est une économie, et le covoiturage domicile-travail en supprime directement.',
+      intro:
+        'Le stationnement paraît gratuit parce qu’on ne le paie presque jamais à l’usage. Pour l’employeur qui le fournit, il ne l’est pas du tout : c’est un actif coûteux à construire, à louer et à entretenir, dont le nombre de places découle directement de la façon dont les employés viennent travailler. Quand la grande majorité arrive seule en voiture, on finit par bâtir et payer une place par personne — pour des véhicules souvent à moitié vides.',
+      sections: [
+        {
+          heading: 'Une place de stationnement : bien plus qu’une ligne peinte',
+          paragraphs: [
+            'Le coût dépend du type. Une place en surface est peu coûteuse à bâtir, mais très gourmande en terrain : en comptant les voies d’accès, elle occupe de 25 à 35 m², soit environ 85 à 175 places par acre. Une place en stationnement structuré (en étages) coûte de l’ordre de 25 000 $ à construire. En souterrain, la facture grimpe : de 20 000 $ à 35 000 $ par place dans bien des cas, et jusqu’à 230 000 $ par place dans la région métropolitaine de Vancouver, selon une analyse de Metro Vancouver (2024).',
+            'À cela s’ajoute l’exploitation : entretien, déneigement, éclairage, assurance, réfection du revêtement. Les estimations situent le coût annualisé entre environ 600 $ par place (surface en banlieue) et plus de 4 000 $ par place (stationnement structuré au centre-ville) — chaque année, pour chaque place.',
+          ],
+        },
+        {
+          heading: 'Un coût que les employeurs rattachent rarement à la navette',
+          paragraphs: [
+            'Dans les livres, le stationnement se cache dans l’immobilier et les charges d’exploitation, pas dans un poste « mobilité ». Pourtant il est la conséquence directe des choix de déplacement du personnel : plus il y a de conducteurs seuls, plus il faut de places.',
+            'L’ampleur du gaspillage est documentée. Toujours selon Metro Vancouver, exiger environ 1,2 place par logement ajoute en moyenne 35 000 $ au revenu annuel nécessaire pour se qualifier à l’hypothèque, et les bâtiments affichent une suroffre de stationnement de 47 % (copropriétés) et 35 % (immeubles locatifs). Autrement dit, on construit — et on paie — beaucoup trop de places. La logique vaut pour un employeur : des places bâties, louées et entretenues pour une demande gonflée par l’autosolo.',
+          ],
+        },
+        {
+          heading: 'Le maillon manquant : conduire seul',
+          paragraphs: [
+            'C’est ici que le lien se fait. Dans la région métropolitaine de Toronto, près de 85 % des automobilistes se rendaient au travail seuls au volant (Recensement de 2021, Statistique Canada — voir notre premier article sur la dynamique des navettes du Grand Toronto). En pratique, un conducteur seul correspond à une place occupée à l’heure de pointe.',
+            'Le coût ne pèse pas que sur l’employeur. Posséder et faire rouler une voiture se chiffre en milliers de dollars par an : le calculateur des coûts d’utilisation de la CAA estime, par exemple, une Nissan Sentra 2025 en Ontario à environ 4 550 $ par an (carburant et frais d’exploitation) — sans même compter le stationnement. Réduire l’autosolo allège donc les deux côtés de l’équation.',
+          ],
+        },
+        {
+          heading: 'Ce que le covoiturage change, concrètement',
+          paragraphs: [
+            'Regrouper 2 à 4 collègues dans une même voiture réduit le nombre de véhicules à l’heure de pointe — donc le nombre de places nécessaires au pic. Transformer ne serait-ce qu’une fraction des sièges vides en places partagées, c’est des dizaines de places en moins à fournir : du capital évité (de l’ordre de 25 000 $ par place en structure), de l’exploitation évitée (des centaines à des milliers de dollars par place et par an) et de l’emprise foncière libérée pour un autre usage.',
+            'C’est exactement le levier de CarpoolWork : un programme payé par l’employeur, facturé uniquement sur les participants réellement actifs, qui organise le covoiturage entre collègues. Une place de stationnement réservée aux covoitureurs devient au passage un incitatif à faible coût — elle réoriente une place qui existe déjà, au lieu d’en construire une nouvelle.',
+            'Soyons honnêtes sur les chiffres : ces économies dépendent du taux d’adoption et du fait que la réduction du stationnement soit réellement actée — places non construites, baux réduits, espace requalifié. Le covoiturage crée la marge de manœuvre ; c’est à l’employeur de la capter en ajustant son offre de stationnement.',
+          ],
+        },
+      ],
+      sourcesTitle: 'Sources',
+      sources: [
+        { label: 'Victoria Transport Policy Institute — Parking Costs (Transportation Cost and Benefit Analysis)', url: 'https://www.vtpi.org/tca/tca0504.pdf' },
+        { label: 'Metro Vancouver — coût de construction jusqu’à 230 000 $ par place (rapport 2024, rapporté par Vancouver Is Awesome)', url: 'https://www.vancouverisawesome.com/highlights/cost-to-build-metro-vancouver-parking-stall-reaches-230000-finds-report-10025743' },
+        { label: 'CAA — Calculateur des coûts d’utilisation d’une automobile', url: 'https://carcosts.caa.ca/' },
+        { label: 'Statistique Canada — « RGT : s’y rendre en automobile » (Recensement de 2021)', url: 'https://www.statcan.gc.ca/o1/en/plus/2697-gta-getting-there-automobile' },
+      ],
+    },
+    en: {
+      title: 'The real cost of workplace parking — and why carpooling cuts it directly',
+      excerpt:
+        'A single parking space can cost around $25,000 to build in a structure, and up to $230,000 underground in dense markets — then hundreds to thousands of dollars a year to operate. For an employer, every space avoided is money saved, and workplace carpooling removes them directly.',
+      intro:
+        'Parking feels free because you almost never pay for it by the hour. For the employer who provides it, it is anything but: it is a costly asset to build, lease and maintain, and the number of spaces follows directly from how employees get to work. When the vast majority arrive alone by car, you end up building and paying for one space per person — for vehicles that are often half empty.',
+      sections: [
+        {
+          heading: 'A parking space is far more than a painted line',
+          paragraphs: [
+            'The cost depends on the type. A surface space is cheap to build but very land-hungry: counting access lanes, it takes up 25 to 35 m², or roughly 85 to 175 spaces per acre. A space in a structured (above-ground) garage costs on the order of $25,000 to build. Underground, the bill climbs: often $20,000 to $35,000 per space, and up to $230,000 per space in Metro Vancouver, according to a 2024 Metro Vancouver analysis.',
+            'On top of that comes operation: maintenance, snow clearing, lighting, insurance, resurfacing. Estimates put the annualized cost between about $600 per space (suburban surface lot) and more than $4,000 per space (downtown structured parking) — every year, for every space.',
+          ],
+        },
+        {
+          heading: 'A cost employers rarely tie back to the commute',
+          paragraphs: [
+            'On the books, parking hides inside real estate and operating expenses, not a “mobility” line. Yet it is a direct consequence of how staff travel: the more solo drivers, the more spaces you need.',
+            'The scale of the waste is documented. Again per Metro Vancouver, requiring about 1.2 spaces per home adds on average $35,000 to the household income needed to qualify for the mortgage, and buildings show a parking oversupply of 47% (strata) and 35% (rental). In short, far too many spaces are built — and paid for. The same logic applies to an employer: spaces built, leased and maintained for demand inflated by solo driving.',
+          ],
+        },
+        {
+          heading: 'The missing link: driving alone',
+          paragraphs: [
+            'This is where it connects. In the Toronto metropolitan area, nearly 85% of car commuters drove to work alone (2021 Census, Statistics Canada — see our first article on Greater Toronto commuting dynamics). In practice, one solo driver equals one space occupied at peak.',
+            'The cost is not only the employer’s. Owning and operating a car runs into thousands of dollars a year: the CAA Driving Costs Calculator estimates, for example, a 2025 Nissan Sentra in Ontario at about $4,550 per year (fuel and operating costs) — before parking is even counted. Cutting solo driving therefore eases both sides of the equation.',
+          ],
+        },
+        {
+          heading: 'What carpooling changes, concretely',
+          paragraphs: [
+            'Putting 2 to 4 coworkers in one car reduces the number of vehicles at peak — and therefore the number of spaces needed at peak. Turning even a fraction of those empty seats into shared rides means dozens fewer spaces to provide: capital avoided (on the order of $25,000 per structured space), operation avoided (hundreds to thousands of dollars per space per year) and land freed for another use.',
+            'This is exactly the lever CarpoolWork provides: an employer-paid program, billed only on participants who are actually active, that organizes carpooling among coworkers. A parking space reserved for carpoolers also becomes a low-cost incentive — it repurposes a space that already exists instead of building a new one.',
+            'Let’s be honest about the numbers: these savings depend on adoption and on the parking reduction actually being realized — spaces not built, leases trimmed, space repurposed. Carpooling creates the room to manoeuvre; it is up to the employer to capture it by adjusting the parking supply.',
+          ],
+        },
+      ],
+      sourcesTitle: 'Sources',
+      sources: [
+        { label: 'Victoria Transport Policy Institute — Parking Costs (Transportation Cost and Benefit Analysis)', url: 'https://www.vtpi.org/tca/tca0504.pdf' },
+        { label: 'Metro Vancouver — construction cost up to $230,000 per stall (2024 report, as reported by Vancouver Is Awesome)', url: 'https://www.vancouverisawesome.com/highlights/cost-to-build-metro-vancouver-parking-stall-reaches-230000-finds-report-10025743' },
+        { label: 'CAA — Driving Costs Calculator', url: 'https://carcosts.caa.ca/' },
+        { label: 'Statistics Canada — “GTA: getting there by automobile” (2021 Census)', url: 'https://www.statcan.gc.ca/o1/en/plus/2697-gta-getting-there-automobile' },
+      ],
+    },
+  },
+  {
     slug: 'dynamique-navettes-grand-toronto',
     date: '2026-09-02',
     author: AUTHOR,
