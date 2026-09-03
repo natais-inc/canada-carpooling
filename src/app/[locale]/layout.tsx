@@ -21,11 +21,11 @@ export async function generateMetadata({
   const isEn = locale === 'en';
   return {
     title: isEn
-      ? 'CarpoolWork | Intercity Ridesharing in Canada'
-      : 'CarpoolWork | Covoiturage intercité au Canada',
+      ? 'CarpoolWork | Employer-Paid Commuter Carpooling'
+      : 'CarpoolWork | Covoiturage domicile-travail payé par l\'employeur',
     description: isEn
-      ? 'Find or offer rides between Canadian cities. Save up to 75% vs bus or train. Verified drivers, only $1.99 service fee.'
-      : 'Trouvez ou offrez un trajet entre villes canadiennes. Économisez jusqu\'à 75% vs bus ou train. Conducteurs vérifiés, seulement 1,99$ de frais.',
+      ? 'Employer-paid, organized home-to-work carpooling. Coworkers commute together; free for employees. Less parking, fewer emissions.'
+      : 'La navette domicile-travail organisée et payée par l\'employeur. Des collègues covoiturent ensemble; gratuit pour les employés, moins de stationnement et moins d\'émissions.',
     alternates: {
       canonical: `https://carpoolwork.ca/${locale}`,
       languages: {
@@ -57,15 +57,17 @@ export default async function LocaleLayout({
     name: 'CarpoolWork',
     url: `https://carpoolwork.ca/${locale}`,
     description: locale === 'en'
-      ? 'Intercity carpooling platform connecting drivers and passengers across Canada'
-      : 'Plateforme de covoiturage intercité connectant conducteurs et passagers à travers le Canada',
-    applicationCategory: 'TravelApplication',
+      ? 'Employer-paid home-to-work carpooling connecting coworkers across Canada'
+      : 'Covoiturage domicile-travail payé par l\'employeur, reliant les collègues à travers le Canada',
+    applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     offers: {
       '@type': 'Offer',
-      price: '1.99',
+      price: '0',
       priceCurrency: 'CAD',
-      description: locale === 'en' ? 'Service fee per booking' : 'Frais de service par réservation',
+      description: locale === 'en'
+        ? 'Free for employees; paid by the employer'
+        : 'Gratuit pour les employés; payé par l\'employeur',
     },
     areaServed: {
       '@type': 'Country',
