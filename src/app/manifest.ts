@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'CarpoolWork',
     short_name: 'CarpoolWork',
-    description: 'Covoiturage intercité au Canada / Intercity carpooling in Canada',
+    description: 'Covoiturage domicile-travail payé par l\'employeur / Employer-paid commuter carpooling',
     start_url: '/fr',
     display: 'standalone',
     background_color: '#ffffff',
