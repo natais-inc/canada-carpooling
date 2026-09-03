@@ -13,48 +13,39 @@ interface Message {
 // This is a local rule-based chatbot (no external API needed)
 function getKnowledgeBase(t: (key: string) => string, locale: string) {
   const entries: { keywords: string[]; answer: string; category: string }[] = [
-    // Safety
-    { keywords: ['safe', 'safety', 'secure', 'sécurité', 'sûr', 'danger', 'dangerous', 'dangereux', 'verified', 'vérifié', 'background check', 'vérification'],
+    // What / who
+    { keywords: ['what is', "c'est quoi", 'cest quoi', 'quest-ce', "qu'est-ce", 'about', 'à propos', 'presentation', 'présentation', 'comment ça marche', 'how does it work', 'how it works'],
+      answer: t('kb.whatIsIt'), category: 'general' },
+    { keywords: ['who pays', 'qui paie', 'qui paye', 'employee pay', 'employé paie', 'gratuit', 'free', 'employer pay', 'employeur paie'],
+      answer: t('kb.whoPays'), category: 'general' },
+    // Pricing
+    { keywords: ['price', 'prix', 'cost', 'coût', 'cout', 'combien', 'how much', 'pricing', 'tarif', 'fee', 'frais', 'plancher', 'floor', 'participant', 'per participant', 'par participant', 'invoice', 'facture', 'facturation', 'billing'],
+      answer: t('kb.pricing'), category: 'employers' },
+    // Groups & driving
+    { keywords: ['group', 'groupe', 'team up', 'colleagues', 'collègues', 'collegues', '2 to 4', '2 à 4', 'members', 'membres'],
+      answer: t('kb.groups'), category: 'employees' },
+    { keywords: ['driver', 'conducteur', 'chauffeur', 'who drives', 'qui conduit', 'alternate', 'alterner', 'rotation', 'take turns', 'tour de rôle', 'passenger', 'passager'],
+      answer: t('kb.driver'), category: 'employees' },
+    { keywords: ['record', 'enregistrer', 'log', 'validate', 'valider', 'validation', 'confirm', 'confirmer', 'carpooled today', 'covoituré', 'covoiture'],
+      answer: t('kb.validation'), category: 'employees' },
+    // Joining
+    { keywords: ['join', 'rejoindre', 'code', 'qr', 'invite', 'invitation', 'lien', 'link', 'connect employer', 'relier'],
+      answer: t('kb.joinEmployee'), category: 'account' },
+    { keywords: ['employer', 'employeur', 'company', 'entreprise', 'pilot', 'pilote', 'demo', 'démo', 'start', 'démarrer', 'get started', 'commencer'],
+      answer: t('kb.employerStart'), category: 'employers' },
+    // Safety / insurance / privacy
+    { keywords: ['safe', 'safety', 'secure', 'sécurité', 'securite', 'sûr', 'stranger', 'inconnu', 'danger'],
       answer: t('kb.safety'), category: 'safety' },
     { keywords: ['insurance', 'assurance', 'covered', 'couvert', 'accident'],
       answer: t('kb.insurance'), category: 'safety' },
-    { keywords: ['sos', 'emergency', 'urgence', 'help', 'aide', 'police'],
-      answer: t('kb.emergency'), category: 'safety' },
-    // Payments
-    { keywords: ['pay', 'payment', 'paiement', 'payer', 'credit card', 'carte', 'money', 'argent', 'cost', 'coût', 'price', 'prix', 'fee', 'frais', 'commission'],
-      answer: t('kb.payment'), category: 'payments' },
-    { keywords: ['refund', 'remboursement', 'rembourser', 'money back'],
-      answer: t('kb.refund'), category: 'payments' },
-    { keywords: ['driver earn', 'conducteur gagne', 'revenus', 'earnings', 'payout', 'versement', 'receive', 'reçoit'],
-      answer: t('kb.driverEarnings'), category: 'payments' },
-    { keywords: ['free', 'gratuit', 'cost driver', 'frais conducteur'],
-      answer: t('kb.driverFree'), category: 'payments' },
-    // Trips
-    { keywords: ['book', 'réserver', 'reservation', 'réservation', 'how to book', 'comment réserver'],
-      answer: t('kb.howToBook'), category: 'trips' },
-    { keywords: ['offer', 'offrir', 'create trip', 'créer trajet', 'publish', 'publier', 'driver', 'conducteur'],
-      answer: t('kb.offerTrip'), category: 'trips' },
-    { keywords: ['late', 'retard', 'delay', 'délai', 'no show', 'absent', 'absence'],
-      answer: t('kb.noShow'), category: 'trips' },
-    // Cancellations
-    { keywords: ['cancel', 'annuler', 'cancellation', 'annulation'],
-      answer: t('kb.cancellation'), category: 'cancellations' },
-    // Account
-    { keywords: ['account', 'compte', 'register', 'inscription', 'sign up', 'créer compte', 'login', 'connexion', 'connect'],
-      answer: t('kb.account'), category: 'account' },
-    { keywords: ['verify', 'vérifier', 'identity', 'identité', 'id', 'licence', 'permis', 'biometric', 'biométrique'],
-      answer: t('kb.verification'), category: 'account' },
-    { keywords: ['delete account', 'supprimer compte', 'data', 'données', 'privacy', 'confidentialité', 'pipeda', 'lprpde'],
+    { keywords: ['delete', 'supprimer', 'data', 'données', 'donnees', 'privacy', 'confidentialité', 'confidentialite', 'pipeda', 'lprpde'],
       answer: t('kb.dataPrivacy'), category: 'account' },
-    { keywords: ['google', 'email', 'courriel', 'password', 'mot de passe'],
-      answer: t('kb.loginMethods'), category: 'account' },
+    // Account
+    { keywords: ['account', 'compte', 'register', 'inscription', 'sign up', 'créer compte', 'login', 'connexion', 'google', 'email', 'courriel', 'password', 'mot de passe'],
+      answer: t('kb.account'), category: 'account' },
     // Support
-    { keywords: ['contact', 'support', 'customer service', 'service client', 'report', 'signaler', 'complaint', 'plainte', 'problem', 'problème'],
+    { keywords: ['contact', 'support', 'customer service', 'service client', 'help', 'aide', 'report', 'signaler', 'problem', 'problème', 'probleme'],
       answer: t('kb.support'), category: 'support' },
-    { keywords: ['review', 'avis', 'rating', 'note', 'évaluation'],
-      answer: t('kb.reviews'), category: 'general' },
-    { keywords: ['discrimination', 'discrimin', 'harass', 'harcèlement', 'racist', 'racis'],
-      answer: t('kb.discrimination'), category: 'safety' },
   ];
   return entries;
 }

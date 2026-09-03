@@ -1,16 +1,15 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ChevronDown, ChevronUp, Search, Shield, CreditCard, Car, Users, AlertTriangle, Phone, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search, Shield, Car, Users, Phone, HelpCircle, Building2 } from 'lucide-react';
 
 const categoryIcons: Record<string, any> = {
-  safety: Shield,
-  payments: CreditCard,
-  trips: Car,
-  account: Users,
-  cancellations: AlertTriangle,
-  support: Phone,
   general: HelpCircle,
+  employers: Building2,
+  employees: Car,
+  safety: Shield,
+  account: Users,
+  support: Phone,
 };
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
@@ -38,10 +37,10 @@ export default function FAQPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
 
-  const categories = ['all', 'safety', 'payments', 'trips', 'cancellations', 'account', 'support', 'general'];
+  const categories = ['all', 'general', 'employers', 'employees', 'safety', 'account', 'support'];
 
   const faqItems: { category: string; question: string; answer: string }[] = [];
-  const faqCategories = ['safety', 'payments', 'trips', 'cancellations', 'account', 'support', 'general'];
+  const faqCategories = ['general', 'employers', 'employees', 'safety', 'account', 'support'];
 
   for (const cat of faqCategories) {
     for (let i = 1; i <= 8; i++) {
