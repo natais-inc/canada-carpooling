@@ -24,7 +24,7 @@ export type BlogArticle = {
   en: BlogArticleLocale;
 };
 
-const AUTHOR = 'North American Technologies and AI solutions Inc.';
+const AUTHOR = 'Magloire Pondi Simb, Founder / CEO, North American Technologies and AI solutions Inc.';
 
 export const articles: BlogArticle[] = [
   {
@@ -63,7 +63,7 @@ export const articles: BlogArticle[] = [
           ],
         },
         {
-          heading: 'Pourquoi cette dynamique ouvre la voie au covoiturage ’entreprise',
+          heading: 'Pourquoi cette dynamique ouvre la voie au covoiturage d’entreprise',
           paragraphs: [
             'Quand 3 travailleurs sur 4 conduisent seuls vers le même quartier d’affaires, le même hôpital, la même usine ou le même centre de distribution, la conséquence est directe : des stationnements saturés, des coûts d’aménagement élevés pour l’employeur et des émissions évitables.',
             'C’est exactement l’espace que CarpoolWork occupe. Plutôt que de laisser chacun organiser son propre trajet, l’employeur met en place un programme : des collègues qui habitent à proximité forment des groupes de 2 à 4 personnes et s’alternent comme chauffeurs. Le chauffeur du jour confirme le covoiturage en un seul geste, et le trajet est enregistré automatiquement pour tout le groupe.',
