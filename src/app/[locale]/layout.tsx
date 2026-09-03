@@ -21,8 +21,8 @@ export async function generateMetadata({
   const isEn = locale === 'en';
   return {
     title: isEn
-      ? 'CarpoolWork | Employer-Paid Commuter Carpooling'
-      : 'CarpoolWork | Covoiturage domicile-travail payé par l\'employeur',
+      ? 'Employer-Paid Commuter Carpooling'
+      : 'Covoiturage domicile-travail payé par l\'employeur',
     description: isEn
       ? 'Employer-paid, organized home-to-work carpooling. Coworkers commute together; free for employees. Less parking, fewer emissions.'
       : 'La navette domicile-travail organisée et payée par l\'employeur. Des collègues covoiturent ensemble; gratuit pour les employés, moins de stationnement et moins d\'émissions.',
