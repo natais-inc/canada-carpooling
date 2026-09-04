@@ -1,12 +1,13 @@
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
-import { ArrowLeft, ArrowRight, CalendarDays, Clock, Building2, ExternalLink } from 'lucide-react';
-import { getArticle, articleLocale, articles } from '@/lib/blog';
+import { getTranslations } from 'next-intl/server';
+import { getServerSession } from 'next-auth';
+import { ArrowLeft, ArrowRight, CalendarDays, Clock, Building2, ExternalLink, Pencil } from 'lucide-react';
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/db';
+import { articleLocale } from '@/lib/blog';
+import { getEffectiveArticle } from '@/lib/blog-content';
 
-export function generateStaticParams() {
-  const locales = ['fr', 'en'];
-  return locales.flatMap((locale) => articles.map((a) => ({ locale, slug: a.slug })));
-}
+export const dynamic = 'force-dynamic';
 
 function formatDate(iso: string, locale: string) {
   try {
@@ -18,10 +19,23 @@ function formatDate(iso: string, locale: string) {
   }
 }
 
-export default function BlogArticlePage({ params }: { params: { locale: string; slug: string } }) {
-  const t = useTranslations('blog');
+async function viewerIsAdmin(): Promise<boolean> {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as any)?.id as string | undefined;
+  if (!userId) return false;
+  try {
+    const u = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
+    return u?.role === 'ADMIN';
+  } catch {
+    return false;
+  }
+}
+
+export default async function BlogArticlePage({ params }: { params: { locale: string; slug: string } }) {
   const { locale, slug } = params;
-  const article = getArticle(slug);
+  const t = await getTranslations({ locale, namespace: 'blog' });
+  const article = await getEffectiveArticle(slug);
+  const admin = await viewerIsAdmin();
 
   if (!article) {
     return (
@@ -38,9 +52,19 @@ export default function BlogArticlePage({ params }: { params: { locale: string; 
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <Link href={`/${locale}/blog`} className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600 mb-6">
-        <ArrowLeft className="h-4 w-4" /> {t('backToBlog')}
-      </Link>
+      <div className="flex items-center justify-between mb-6">
+        <Link href={`/${locale}/blog`} className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600">
+          <ArrowLeft className="h-4 w-4" /> {t('backToBlog')}
+        </Link>
+        {admin && (
+          <Link
+            href={`/${locale}/admin/blog/${slug}`}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-3 py-1.5 text-sm font-medium text-brand-700 hover:bg-brand-100"
+          >
+            <Pencil className="h-3.5 w-3.5" /> Modifier
+          </Link>
+        )}
+      </div>
 
       <article>
         <h1 className="text-3xl font-bold text-gray-900 leading-tight mb-4">{loc.title}</h1>
