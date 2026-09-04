@@ -1,7 +1,10 @@
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { ArrowRight, CalendarDays, Newspaper } from 'lucide-react';
-import { articles, articleLocale } from '@/lib/blog';
+import { articleLocale } from '@/lib/blog';
+import { getEffectiveArticles } from '@/lib/blog-content';
+
+export const dynamic = 'force-dynamic';
 
 function formatDate(iso: string, locale: string) {
   try {
@@ -13,10 +16,11 @@ function formatDate(iso: string, locale: string) {
   }
 }
 
-export default function BlogIndexPage({ params }: { params: { locale: string } }) {
-  const t = useTranslations('blog');
+export default async function BlogIndexPage({ params }: { params: { locale: string } }) {
   const locale = params.locale;
-  const sorted = [...articles].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const t = await getTranslations({ locale, namespace: 'blog' });
+  const all = await getEffectiveArticles();
+  const sorted = [...all].sort((a, b) => (a.date < b.date ? 1 : -1));
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
