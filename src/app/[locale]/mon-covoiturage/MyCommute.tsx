@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Building2, Check, X, Loader2, MapPin, Clock, Car, Users, Sparkles, Leaf, Route, TreePine, Bell } from 'lucide-react';
@@ -275,6 +275,9 @@ function CommuteForm({
   const [partner, setPartner] = useState('');
   const [logBusy, setLogBusy] = useState(false);
   const [count, setCount] = useState(carpoolCount);
+  // Keep the monthly count in sync after a server refresh (e.g. a group trip
+  // confirmed elsewhere on the page updates carpoolCount via router.refresh()).
+  useEffect(() => { setCount(carpoolCount); }, [carpoolCount]);
   const [logDone, setLogDone] = useState(false);
 
   function useMyLocation() {
