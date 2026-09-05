@@ -27,7 +27,7 @@ function useNumber(locale: string) {
     },
     month: (iso: string) => {
       try {
-        return new Date(iso).toLocaleDateString(loc, { month: 'long', year: 'numeric' });
+        return new Date(iso).toLocaleDateString(loc, { month: 'long', year: 'numeric', timeZone: 'UTC' });
       } catch {
         return iso;
       }
