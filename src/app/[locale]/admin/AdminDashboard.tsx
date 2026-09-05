@@ -359,7 +359,7 @@ export default function AdminDashboard({ locale }: { locale: string }) {
               )}
             </div>
             <p className="text-xs text-gray-400 mt-3">
-              Facturation rétrospective : 20 $/participant actif/mois, facturé le mois suivant. « Facturable » exclut les entreprises encore en essai.
+              Facturation rétrospective : 25 $/participant actif/mois (plancher 500 $/site/mois), facturé le mois suivant. « Facturable » exclut les entreprises encore en essai.
             </p>
           </div>
         )
