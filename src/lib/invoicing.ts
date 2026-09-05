@@ -1,8 +1,9 @@
 /**
  * CarpoolWork — manual invoicing (Phase 3).
  * Closing a completed usage month freezes each company's active-participant
- * count into an immutable Invoice. Retrospective model: 20 CAD / active
- * participant / month, trial months recorded as TRIAL ($0). Payment is tracked
+ * count into an immutable Invoice. Retrospective model: 25 CAD / active
+ * participant / month (with a 500 CAD / site monthly floor), trial months
+ * recorded as TRIAL ($0). Payment is tracked
  * manually (mark paid / void) until Stripe automates it.
  */
 import { prisma } from '@/lib/db';
