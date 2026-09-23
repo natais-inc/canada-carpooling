@@ -4,7 +4,7 @@ import { articles } from '@/lib/blog';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://carpoolwork.ca';
   const locales = ['fr', 'en'];
-  const pages = ['', '/faq', '/employers', '/employer/inscription', '/blog'];
+  const pages = ['', '/faq', '/employers', '/blog', '/confidentialite', '/conditions'];
   const blogPages = articles.map((a) => `/blog/${a.slug}`);
 
   const entries: MetadataRoute.Sitemap = [];

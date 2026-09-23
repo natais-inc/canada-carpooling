@@ -6,7 +6,7 @@ import { getSecurityHeaders, getClientIP, isIPBlocked, rateLimit, rateLimitRespo
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
-  localePrefix: 'as-needed',
+  localePrefix: 'always',
 });
 
 export default async function middleware(request: NextRequest) {
@@ -37,9 +37,6 @@ export default async function middleware(request: NextRequest) {
       const isSensitiveAuth = /^\/api\/auth\/(callback|register|signin|reset|forgot)/.test(pathname);
       limitType = isSensitiveAuth ? 'auth' : 'api';
     }
-    else if (pathname.startsWith('/api/trips') && request.method === 'GET') limitType = 'search';
-    else if (pathname.startsWith('/api/bookings') && request.method === 'POST') limitType = 'booking';
-    else if (pathname.startsWith('/api/messages')) limitType = 'message';
     else if (isWebhook) limitType = 'webhook';
 
     // Apply rate limiting

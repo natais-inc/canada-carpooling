@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
   const email = String(body?.email || '').trim().toLowerCase();
   if (!email || !EMAIL.test(email)) return NextResponse.json({ error: 'invalid_email' }, { status: 400 });
   const department = typeof body?.department === 'string' ? body.department.trim().slice(0, 120) || null : null;
+  const lang: 'fr' | 'en' = body?.lang === 'en' ? 'en' : 'fr';
 
   // Already a member of this company?
   const existingUser = await prisma.user.findUnique({ where: { email }, select: { id: true } });
@@ -77,8 +78,8 @@ export async function POST(req: NextRequest) {
   let emailed = false;
   try {
     const company = await prisma.company.findUnique({ where: { id: access.companyId }, select: { name: true } });
-    const url = `${appBaseUrl()}/fr/rejoindre/${token}`;
-    const tpl = inviteEmail('fr', company?.name || 'CarpoolWork', url);
+    const url = `${appBaseUrl()}/${lang}/rejoindre/${token}`;
+    const tpl = inviteEmail(lang, company?.name || 'CarpoolWork', url);
     const r = await sendEmail({ to: email, subject: tpl.subject, html: tpl.html, text: tpl.text });
     emailed = !!r.ok;
   } catch {

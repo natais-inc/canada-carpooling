@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { Users, Building2, ShieldCheck, ShieldX, Star, RefreshCw, Loader2, Receipt, Crown, TrendingUp, Sparkles } from 'lucide-react';
+import { Users, Building2, RefreshCw, Loader2, Receipt, Crown, TrendingUp, Sparkles } from 'lucide-react';
 
 type DemoRequest = {
   id: number;
@@ -104,13 +104,6 @@ function fmtDate(s: string) {
 function money(cents: number) {
   return new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(cents / 100);
 }
-
-const statusStyles: Record<string, string> = {
-  verified: 'bg-green-100 text-green-700',
-  pending: 'bg-amber-100 text-amber-700',
-  rejected: 'bg-red-100 text-red-700',
-  unverified: 'bg-gray-100 text-gray-600',
-};
 
 export default function AdminDashboard({ locale }: { locale: string }) {
   const [tab, setTab] = useState<Tab>('companies');
@@ -480,8 +473,6 @@ export default function AdminDashboard({ locale }: { locale: string }) {
                 <tr>
                   <th className="px-4 py-3 font-medium">Utilisateur</th>
                   <th className="px-4 py-3 font-medium">Rôle</th>
-                  <th className="px-4 py-3 font-medium">Vérification</th>
-                  <th className="px-4 py-3 font-medium">Note</th>
                   <th className="px-4 py-3 font-medium">Inscrit</th>
                   <th className="px-4 py-3 font-medium text-right">Actions</th>
                 </tr>
@@ -501,31 +492,9 @@ export default function AdminDashboard({ locale }: { locale: string }) {
                         {u.role}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs ${statusStyles[u.verificationStatus] || statusStyles.unverified}`}>
-                        {u.verificationStatus}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1 text-gray-700">
-                        <Star className="h-3.5 w-3.5 text-amber-500" /> {u.averageRating.toFixed(1)}
-                      </span>
-                    </td>
                     <td className="px-4 py-3 whitespace-nowrap text-gray-500">{fmtDate(u.createdAt)}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 justify-end">
-                        {u.verificationStatus !== 'verified' && (
-                          <button onClick={() => act(u.id, 'verify')} disabled={busyId === u.id}
-                            className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100 disabled:opacity-50">
-                            <ShieldCheck className="h-3.5 w-3.5" /> Vérifier
-                          </button>
-                        )}
-                        {u.verificationStatus !== 'rejected' && (
-                          <button onClick={() => act(u.id, 'reject')} disabled={busyId === u.id}
-                            className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-red-50 text-red-700 hover:bg-red-100 disabled:opacity-50">
-                            <ShieldX className="h-3.5 w-3.5" /> Rejeter
-                          </button>
-                        )}
                         {u.role === 'USER' ? (
                           <button onClick={() => act(u.id, 'promote')} disabled={busyId === u.id}
                             className="text-xs px-2 py-1 rounded bg-brand-50 text-brand-700 hover:bg-brand-100 disabled:opacity-50">

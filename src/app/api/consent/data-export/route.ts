@@ -32,81 +32,57 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Gather all user data (PIPEDA right of access)
+    // Gather all user data (PIPEDA right of access) — current product tables only.
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
         id: true,
         email: true,
+        emailVerified: true,
         firstName: true,
         lastName: true,
         phone: true,
-        bio: true,
         preferredLanguage: true,
-        averageRating: true,
-        totalTripsAsDriver: true,
-        totalTripsAsPassenger: true,
+        role: true,
         consentAt: true,
         consentVersion: true,
         privacyPolicyAccepted: true,
         termsAccepted: true,
         marketingConsent: true,
-        locationConsent: true,
         createdAt: true,
         updatedAt: true,
-        // Exclude: passwordHash, stripeCustomerId, stripeAccountId, internal IDs
+        // Excluded: passwordHash and internal identifiers.
       },
     });
 
-    const bookings = await prisma.booking.findMany({
-      where: { passengerId: session.user.id },
-      select: {
-        id: true,
-        seatsBooked: true,
-        totalPrice: true,
-        serviceFee: true,
-        status: true,
-        paymentStatus: true,
-        pickupLocation: true,
-        dropoffLocation: true,
-        createdAt: true,
-      },
-    });
-
-    const trips = await prisma.trip.findMany({
-      where: { driverId: session.user.id },
-      select: {
-        id: true,
-        originCity: true,
-        destinationCity: true,
-        departureDate: true,
-        departureTime: true,
-        pricePerSeat: true,
-        availableSeats: true,
-        totalSeats: true,
-        status: true,
-        createdAt: true,
-      },
-    });
-
-    const reviewsGiven = await prisma.review.findMany({
-      where: { authorId: session.user.id },
-      select: { id: true, rating: true, comment: true, createdAt: true },
-    });
-
-    const reviewsReceived = await prisma.review.findMany({
-      where: { targetId: session.user.id },
-      select: { id: true, rating: true, comment: true, createdAt: true },
-    });
-
-    const messages = await prisma.message.findMany({
-      where: { OR: [{ senderId: session.user.id }, { receiverId: session.user.id }] },
-      select: { id: true, content: true, createdAt: true, senderId: true },
-    });
-
-    const vehicles = await prisma.vehicle.findMany({
+    const memberships = await prisma.companyMembership.findMany({
       where: { userId: session.user.id },
-      select: { id: true, make: true, model: true, year: true, color: true, seats: true },
+      select: {
+        id: true,
+        role: true,
+        status: true,
+        department: true,
+        acceptedAt: true,
+        homeFsa: true,
+        homeCity: true,
+        workSite: true,
+        commuteDays: true,
+        arriveBy: true,
+        departAt: true,
+        commuteRole: true,
+        homeLat: true,
+        homeLng: true,
+        createdAt: true,
+        updatedAt: true,
+        company: { select: { name: true } },
+        carpoolLogs: {
+          select: { id: true, date: true, partnerName: true, groupId: true, createdAt: true },
+          orderBy: { date: 'desc' },
+        },
+        groupMemberships: {
+          select: { id: true, status: true, createdAt: true, group: { select: { id: true, name: true } } },
+        },
+      },
     });
 
     const consentHistory = await prisma.consentLog.findMany({
@@ -116,17 +92,9 @@ export async function GET(req: NextRequest) {
 
     const exportData = {
       exportDate: new Date().toISOString(),
-      exportVersion: '1.0',
+      exportVersion: '2.0',
       user,
-      trips,
-      bookings,
-      reviewsGiven,
-      reviewsReceived,
-      messages: messages.map(m => ({
-        ...m,
-        direction: m.senderId === session.user.id ? 'sent' : 'received',
-      })),
-      vehicles,
+      employerMemberships: memberships,
       consentHistory,
     };
 

@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { siteCountForCompany } from '@/lib/billing';
 import { getInvoiceWithCompany } from '@/lib/invoicing';
 import { buildInvoicePdf, type InvoiceData } from '@/lib/invoice-pdf';
 
@@ -45,6 +46,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     issuedAt: inv.issuedAt.toISOString(),
     paidAt: inv.paidAt ? inv.paidAt.toISOString() : null,
     company: { name: inv.company.name, region: inv.company.region },
+    monthlyFloorCents: inv.company.monthlyFloorCents ?? undefined,
+    siteCount: await siteCountForCompany(inv.companyId),
   };
 
   const pdf = await buildInvoicePdf(data, locale);

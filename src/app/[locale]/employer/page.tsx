@@ -18,23 +18,25 @@ export default async function EmployerHome({ params }: { params: { locale: strin
 
   const access = await requireCompanyAdmin();
 
+  const en = locale === 'en';
   if (!access.ok) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center px-4">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold text-gray-900">Espace employeur</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{en ? 'Employer portal' : 'Espace employeur'}</h1>
           <p className="text-gray-600 mt-2">
-            Cet espace est réservé aux administrateurs des entreprises abonnées à CarpoolWork.
-            Si votre entreprise participe déjà, demandez à votre administrateur de vous donner accès.
+            {en
+              ? 'This area is reserved for administrators of organizations subscribed to CarpoolWork. If your organization already takes part, ask your administrator for access.'
+              : 'Cet espace est réservé aux administrateurs des entreprises abonnées à CarpoolWork. Si votre entreprise participe déjà, demandez à votre administrateur de vous donner accès.'}
           </p>
           <div className="mt-6">
             <a
               href={`/${locale}/employer/inscription`}
               className="inline-flex items-center gap-2 rounded-lg bg-brand-600 text-white text-sm font-medium px-5 py-2.5 hover:bg-brand-700"
             >
-              Créer l’espace de mon entreprise
+              {en ? 'Create my organization\'s workspace' : 'Créer l’espace de mon entreprise'}
             </a>
-            <p className="text-xs text-gray-400 mt-2">Essai gratuit de 30 jours — aucune carte requise.</p>
+            <p className="text-xs text-gray-400 mt-2">{en ? '30-day free trial — no card required.' : 'Essai gratuit de 30 jours — aucune carte requise.'}</p>
           </div>
         </div>
       </div>
@@ -46,9 +48,9 @@ export default async function EmployerHome({ params }: { params: { locale: strin
     return (
       <div className="min-h-[70vh] flex items-center justify-center px-4">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold text-gray-900">Espace employeur</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{en ? 'Employer portal' : 'Espace employeur'}</h1>
           <p className="text-gray-600 mt-2">
-            Entreprise introuvable. Contactez l’équipe CarpoolWork.
+            {en ? 'Organization not found. Contact the CarpoolWork team.' : 'Entreprise introuvable. Contactez l’équipe CarpoolWork.'}
           </p>
         </div>
       </div>

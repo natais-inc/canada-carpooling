@@ -80,9 +80,9 @@ export default function LoginPage() {
               />
 
               <div className="flex justify-end">
-                <Link href={`/${locale}/auth/forgot`} className="text-sm text-brand-600 hover:underline">
+                <a href="mailto:support@carpoolwork.ca" className="text-sm text-brand-600 hover:underline">
                   {t('forgotPassword')}
-                </Link>
+                </a>
               </div>
 
               <Button type="submit" size="lg" className="w-full" loading={loading}>

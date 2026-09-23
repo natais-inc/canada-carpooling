@@ -3,15 +3,17 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import { recordConsent, logDataProcessing, CURRENT_PRIVACY_POLICY_VERSION } from '@/lib/consent';
-import { sanitizeInput, validatePasswordStrength as validatePassword, checkRateLimit, getClientIP } from '@/lib/security';
+import { validatePasswordStrength as validatePassword, checkRateLimit, getClientIP } from '@/lib/security';
 import { isHoneypotTriggered, authTimingSafeDelay } from '@/lib/security-hardening';
 import { createAndSendVerification } from '@/lib/verification';
 
 const registerSchema = z.object({
-  firstName: z.string().min(1).max(50).transform(sanitizeInput),
-  lastName: z.string().min(1).max(50).transform(sanitizeInput),
+  // Names are stored raw (React and the e-mail templates escape on output); only strip markup characters.
+  firstName: z.string().min(1).max(50).transform((s) => s.replace(/[<>]/g, '').trim()),
+  lastName: z.string().min(1).max(50).transform((s) => s.replace(/[<>]/g, '').trim()),
   email: z.string().email().max(255).toLowerCase(),
-  phone: z.string().min(10).max(20),
+  // Phone is optional: the product never uses it (PIPEDA — limiting collection).
+  phone: z.string().max(20).optional().or(z.literal('')),
   password: z.string().min(8).max(128),
   preferredLanguage: z.enum(['fr', 'en']).default('fr'),
   // PIPEDA consent — required at registration
@@ -78,7 +80,7 @@ export async function POST(req: NextRequest) {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
-        phone: data.phone,
+        phone: data.phone ? data.phone : null,
         passwordHash: hashedPassword,
         preferredLanguage: data.preferredLanguage,
         // PIPEDA consent recorded at creation
@@ -107,7 +109,7 @@ export async function POST(req: NextRequest) {
       user.id,
       'collection',
       'personal_info',
-      'Account registration — name, email, phone collected for service provision',
+      'Account registration — name and email collected for service provision (phone optional)',
       'consent'
     );
 

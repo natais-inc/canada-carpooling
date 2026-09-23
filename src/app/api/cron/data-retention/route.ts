@@ -4,12 +4,13 @@ import { executeRetentionPolicies } from '@/lib/data-retention';
 /**
  * Vercel Cron Job — Data Retention
  * Runs daily at 3 AM (configured in vercel.json).
- * Purges expired accounts, old messages, and stale sessions per PIPEDA.
+ * Purges expired accounts and stale sessions per PIPEDA.
  */
 export async function GET(request: NextRequest) {
   // Verify the request is from Vercel Cron
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret || authHeader !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

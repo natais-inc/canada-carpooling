@@ -21,6 +21,7 @@ export default function Footer() {
             </div>
             <p className="text-gray-400 text-sm max-w-md">{t('description')}</p>
             <p className="text-gray-500 text-xs mt-4">{t('byline')}</p>
+            <p className="text-gray-500 text-xs mt-1">{t('address')}</p>
           </div>
 
           {/* Product */}
@@ -43,6 +44,11 @@ export default function Footer() {
                 </a>
               </li>
               <li><Link href={`/${locale}/employer/inscription`} className="hover:text-white transition-colors">{t('startPilot')}</Link></li>
+            </ul>
+            <h4 className="text-white font-semibold mb-3 mt-6">{t('legal')}</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link href={`/${locale}/confidentialite`} className="hover:text-white transition-colors">{t('privacy')}</Link></li>
+              <li><Link href={`/${locale}/conditions`} className="hover:text-white transition-colors">{t('terms')}</Link></li>
             </ul>
           </div>
         </div>

@@ -41,7 +41,7 @@ export async function GET(_req: NextRequest) {
 
 const patchSchema = z.object({
   userId: z.string().min(1),
-  action: z.enum(['verify', 'reject', 'promote', 'demote', 'ban', 'unban']),
+  action: z.enum(['promote', 'demote', 'ban', 'unban']),
 });
 
 // PATCH /api/admin/users — act on a user (admin only)
@@ -63,13 +63,6 @@ export async function PATCH(req: NextRequest) {
 
   const data: Record<string, any> = {};
   switch (action) {
-    case 'verify':
-      data.verificationStatus = 'verified';
-      data.verifiedAt = new Date();
-      break;
-    case 'reject':
-      data.verificationStatus = 'rejected';
-      break;
     case 'promote':
       data.role = 'ADMIN';
       break;

@@ -31,7 +31,7 @@ export default function CookieConsent() {
   const setCookieConsent = (level: string) => {
     // Set cookie with 1 year expiry, Secure + SameSite
     const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
-    document.cookie = `cookie_consent=${level}; expires=${expires}; path=/; SameSite=Lax; Secure`;
+    document.cookie = `cookie_consent=${level}; expires=${expires}; path=/; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
   };
 
   if (!visible) return null;
@@ -53,10 +53,6 @@ export default function CookieConsent() {
                 <div className="flex items-center gap-2">
                   <span className="inline-block w-2 h-2 bg-green-500 rounded-full" />
                   <span><strong>{t('essentialCookies')}</strong> — {t('essentialCookiesDesc')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 bg-blue-500 rounded-full" />
-                  <span><strong>{t('analyticsCookies')}</strong> — {t('analyticsCookiesDesc')}</span>
                 </div>
               </div>
             )}

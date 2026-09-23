@@ -4,7 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Mail, Lock, User, Phone, Car, Shield } from 'lucide-react';
+import { Mail, Lock, User, Phone, Car } from 'lucide-react';
 
 // Only honour relative, single-slash callback paths (no open redirects).
 function safeCallback(raw: string | null): string | null {
@@ -101,8 +101,8 @@ export default function RegisterPage() {
                 onChange={e => update('name', e.target.value)} icon={<User className="h-4 w-4" />} required />
               <Input id="email" label={t('email')} type="email" placeholder="vous@exemple.com" value={form.email}
                 onChange={e => update('email', e.target.value)} icon={<Mail className="h-4 w-4" />} required />
-              <Input id="phone" label={t('phone')} type="tel" placeholder="+1 (514) 555-0123" value={form.phone}
-                onChange={e => update('phone', e.target.value)} icon={<Phone className="h-4 w-4" />} required />
+              <Input id="phone" label={t('phoneOptional')} type="tel" placeholder="+1 (905) 555-0123" value={form.phone}
+                onChange={e => update('phone', e.target.value)} icon={<Phone className="h-4 w-4" />} />
               <Input id="password" label={t('password')} type="password" placeholder="••••••••" value={form.password}
                 onChange={e => update('password', e.target.value)} icon={<Lock className="h-4 w-4" />} required />
               <Input id="confirmPassword" label={t('confirmPassword')} type="password" placeholder="••••••••" value={form.confirmPassword}
@@ -113,17 +113,15 @@ export default function RegisterPage() {
                   className="mt-1 rounded text-brand-600 focus:ring-brand-500 h-4 w-4" />
                 <span className="text-sm text-gray-600">
                   {t('acceptTerms')}{' '}
-                  <Link href={`/${locale}/terms`} className="text-brand-600 hover:underline">{t('termsLink')}</Link>
+                  <Link href={`/${locale}/conditions`} className="text-brand-600 hover:underline">{t('termsLink')}</Link>
+                  {t('and')}
+                  <Link href={`/${locale}/confidentialite`} className="text-brand-600 hover:underline">{t('privacyLink')}</Link>
                 </span>
               </label>
 
               <Button type="submit" size="lg" className="w-full" loading={loading}>{t('register')}</Button>
             </form>
 
-            <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
-              <Shield className="h-4 w-4 flex-shrink-0" />
-              <span>{t('verificationNote')}</span>
-            </div>
           </CardBody>
         </Card>
 

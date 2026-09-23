@@ -14,9 +14,9 @@ export const metadata: Metadata = {
     'workplace carpooling', 'covoiturage Canada', 'carpooling Canada',
     'réduction stationnement', 'mobilité durable entreprise',
   ],
-  authors: [{ name: 'North American Technologies and AI solutions Inc.' }],
+  authors: [{ name: 'North American Technologies and AI Solutions Inc.' }],
   creator: 'CarpoolWork',
-  publisher: 'North American Technologies and AI solutions Inc.',
+  publisher: 'North American Technologies and AI Solutions Inc.',
   robots: {
     index: true,
     follow: true,
@@ -56,10 +56,8 @@ export const metadata: Metadata = {
     languages: {
       'fr-CA': 'https://carpoolwork.ca/fr',
       'en-CA': 'https://carpoolwork.ca/en',
+      'x-default': 'https://carpoolwork.ca/fr',
     },
-  },
-  verification: {
-    google: 'GOOGLE_SITE_VERIFICATION_ID',
   },
   category: 'transportation',
 };

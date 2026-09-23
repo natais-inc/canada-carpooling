@@ -31,6 +31,7 @@ export async function generateMetadata({
       languages: {
         'fr-CA': 'https://carpoolwork.ca/fr',
         'en-CA': 'https://carpoolwork.ca/en',
+        'x-default': 'https://carpoolwork.ca/fr',
       },
     },
     openGraph: {
@@ -63,11 +64,11 @@ export default async function LocaleLayout({
     operatingSystem: 'Web',
     offers: {
       '@type': 'Offer',
-      price: '0',
+      price: '25',
       priceCurrency: 'CAD',
       description: locale === 'en'
-        ? 'Free for employees; paid by the employer'
-        : 'Gratuit pour les employés; payé par l\'employeur',
+        ? '$25 per active participant per month, $500 per site minimum; paid by the employer, free for employees'
+        : '25 $ par participant actif par mois, minimum 500 $ par site ; payé par l\'employeur, gratuit pour les employés',
     },
     areaServed: {
       '@type': 'Country',
