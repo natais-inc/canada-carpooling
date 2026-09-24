@@ -18,7 +18,6 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
   pages: {
     signIn: '/auth/login',
-    signUp: '/auth/signup',
   },
   providers: [
     // Google sign-in is opt-in: only registered when OAuth credentials are set.

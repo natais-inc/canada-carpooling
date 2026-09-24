@@ -22,6 +22,9 @@ export type InvoiceData = {
   issuedAt: string; // ISO
   paidAt: string | null;
   company: { name: string; region: string | null };
+  /** Optional: monthly floor per site and number of active sites, to explain the amount when the floor applies. */
+  monthlyFloorCents?: number;
+  siteCount?: number;
 };
 
 const STR = {
@@ -47,7 +50,12 @@ const STR = {
     paidOn: (d: string) => `Payée le ${d}`,
     trialNote: 'Cette période est couverte par l\'essai gratuit de 30 jours — aucun montant n\'est dû.',
     methodNote: 'Facturation rétrospective : un participant actif est un employé ayant enregistré au moins un covoiturage durant le mois facturé.',
-    footer: 'CarpoolWork — carpoolwork.ca — une solution de NATAIS Inc.',
+    floorLine: 'Minimum mensuel par site (500 $ / site) appliqué',
+    floorNote: (n: number, c: string) => `Montant ajusté au minimum mensuel : ${n} site(s) actif(s) x ${c}.`,
+    taxNote: 'Aucune TPS/TVH facturée : fournisseur non inscrit (petit fournisseur). Un numéro d\'inscription figurera sur les factures dès l\'inscription.',
+    payTerms: 'Payable dans les 30 jours suivant la date d\'émission, par virement bancaire, Interac ou chèque à l\'ordre de North American Technologies and AI Solutions Inc. Aucun paiement par carte. Coordonnées bancaires : support@carpoolwork.ca.',
+    vendorAddr: '151 Alma Street, Oshawa (Ontario) L1G 2C3, Canada — support@carpoolwork.ca',
+    footer: 'CarpoolWork — carpoolwork.ca — North American Technologies and AI Solutions Inc., 151 Alma Street, Oshawa (Ontario) L1G 2C3',
     months: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
   },
   en: {
@@ -72,7 +80,12 @@ const STR = {
     paidOn: (d: string) => `Paid on ${d}`,
     trialNote: 'This period is covered by the 30-day free trial — nothing is due.',
     methodNote: 'Retrospective billing: an active participant is an employee who logged at least one carpool during the billed month.',
-    footer: 'CarpoolWork — carpoolwork.ca — a NATAIS Inc. solution',
+    floorLine: 'Monthly minimum per site ($500 / site) applied',
+    floorNote: (n: number, c: string) => `Amount adjusted to the monthly minimum: ${n} active site(s) x ${c}.`,
+    taxNote: 'No GST/HST charged: supplier not registered (small supplier). A registration number will appear on invoices once registered.',
+    payTerms: 'Payable within 30 days of the issue date by bank transfer, Interac or cheque payable to North American Technologies and AI Solutions Inc. No card payments. Banking details: support@carpoolwork.ca.',
+    vendorAddr: '151 Alma Street, Oshawa, Ontario L1G 2C3, Canada — support@carpoolwork.ca',
+    footer: 'CarpoolWork — carpoolwork.ca — North American Technologies and AI Solutions Inc., 151 Alma Street, Oshawa, Ontario L1G 2C3',
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   },
 } as const;
@@ -110,7 +123,9 @@ export async function buildInvoicePdf(inv: InvoiceData, locale: 'fr' | 'en'): Pr
   right(t.invoice.toUpperCase(), W - M, y + 2, 16, bold, MUTE);
   y -= 18;
   text(`${t.vendor} — ${t.vendorFull}`, M, y, 9, font, MUTE);
-  y -= 30;
+  y -= 12;
+  text(t.vendorAddr, M, y, 8, font, MUTE);
+  y -= 26;
 
   // Meta panel (number / issued / period / status)
   const panelH = 74;
@@ -151,7 +166,17 @@ export async function buildInvoicePdf(inv: InvoiceData, locale: 'fr' | 'en'): Pr
   text(`${periodLabel}`, M, y - 14, 9, font, MUTE);
   right(`${inv.activeParticipants}`, cQty + 20, y, 11, font, INK);
   right(`${money(inv.pricePerParticipantCents)} ${t.perMonth}`, cUnit + 40, y, 9, font, MUTE);
-  right(money(inv.amountCents), cAmt, y, 11, font, INK);
+  const perParticipantCents = inv.activeParticipants * inv.pricePerParticipantCents;
+  const floorApplied = inv.status !== 'TRIAL' && inv.amountCents > perParticipantCents;
+  right(money(floorApplied ? perParticipantCents : inv.amountCents), cAmt, y, 11, font, INK);
+  if (floorApplied) {
+    y -= 30;
+    text(t.floorLine, M, y, 11, font, INK);
+    const sites = inv.siteCount && inv.siteCount > 0 ? inv.siteCount : 1;
+    const floor = inv.monthlyFloorCents && inv.monthlyFloorCents > 0 ? inv.monthlyFloorCents : Math.round(inv.amountCents / sites);
+    text(t.floorNote(sites, money(floor)), M, y - 14, 9, font, MUTE);
+    right(money(inv.amountCents - perParticipantCents), cAmt, y, 11, font, INK);
+  }
   y -= 30;
   page.drawLine({ start: { x: M, y }, end: { x: W - M, y }, thickness: 1, color: LINE });
   y -= 26;
@@ -170,6 +195,13 @@ export async function buildInvoicePdf(inv: InvoiceData, locale: 'fr' | 'en'): Pr
     text(t.trialNote, M, y, 9, font, MUTE); y -= 16;
   }
   text(t.methodNote, M, y, 9, font, MUTE);
+  y -= 16;
+  text(t.taxNote, M, y, 9, font, MUTE);
+  if (inv.status === 'DUE') {
+    y -= 22;
+    text(t.payTerms.slice(0, 120), M, y, 9, font, INK);
+    if (t.payTerms.length > 120) { y -= 13; text(t.payTerms.slice(120).trim(), M, y, 9, font, INK); }
+  }
 
   // Footer
   text(t.footer, M, 40, 8, font, MUTE);

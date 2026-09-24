@@ -25,7 +25,7 @@ export function emailConfigured(): boolean {
 export async function sendEmail(opts: { to: string; subject: string; html: string; text?: string }): Promise<EmailResult> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
-    console.log(`[email] skipped (no RESEND_API_KEY) — would send "${opts.subject}" to ${opts.to}`);
+    console.log(`[email] skipped (no RESEND_API_KEY) — would send "${opts.subject}"`);
     return { ok: false, skipped: true };
   }
   try {
@@ -55,12 +55,22 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
 
 const BRAND = '#2577eb';
 
+/** Escape user-controlled text before interpolating it into e-mail HTML. */
+export function escapeHtml(input: string): string {
+  return String(input)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /** Wrap body content in a simple, email-client-safe branded template. */
 export function brandedEmail(opts: { lang: 'fr' | 'en'; heading: string; bodyHtml: string; ctaText?: string; ctaUrl?: string }): string {
   const footer =
     opts.lang === 'en'
-      ? 'CarpoolWork — a NATAIS Inc. solution. You received this email because you use CarpoolWork.'
-      : 'CarpoolWork — une solution de NATAIS Inc. Vous recevez ce courriel car vous utilisez CarpoolWork.';
+      ? 'CarpoolWork — North American Technologies and AI Solutions Inc., 151 Alma Street, Oshawa, Ontario L1G 2C3, Canada. You received this email because you use CarpoolWork. Questions or unsubscribe: support@carpoolwork.ca'
+      : 'CarpoolWork — North American Technologies and AI Solutions Inc., 151 Alma Street, Oshawa (Ontario) L1G 2C3, Canada. Vous recevez ce courriel car vous utilisez CarpoolWork. Questions ou désabonnement : support@carpoolwork.ca';
   const cta =
     opts.ctaText && opts.ctaUrl
       ? `<tr><td style="padding:8px 0 24px;">
@@ -83,7 +93,8 @@ export function brandedEmail(opts: { lang: 'fr' | 'en'; heading: string; bodyHtm
 
 // ---- Templates -------------------------------------------------------------
 
-export function verificationEmail(lang: 'fr' | 'en', firstName: string, url: string) {
+export function verificationEmail(lang: 'fr' | 'en', rawFirstName: string, url: string) {
+  const firstName = escapeHtml(rawFirstName);
   if (lang === 'en') {
     return {
       subject: 'Confirm your CarpoolWork email',
@@ -106,30 +117,32 @@ export function verificationEmail(lang: 'fr' | 'en', firstName: string, url: str
   };
 }
 
-export function inviteEmail(lang: 'fr' | 'en', companyName: string, url: string) {
+export function inviteEmail(lang: 'fr' | 'en', rawCompanyName: string, url: string) {
+  const companyName = escapeHtml(rawCompanyName);
   if (lang === 'en') {
     return {
-      subject: `Join ${companyName} on CarpoolWork`,
+      subject: `Join ${rawCompanyName} on CarpoolWork`,
       html: brandedEmail({
         lang, heading: `${companyName} invited you to carpool`,
         bodyHtml: `${companyName} uses CarpoolWork for commute carpooling. Accept the invitation to join and find colleagues near you.`,
         ctaText: 'Accept the invitation', ctaUrl: url,
       }),
-      text: `Join ${companyName} on CarpoolWork: ${url}`,
+      text: `Join ${rawCompanyName} on CarpoolWork: ${url}`,
     };
   }
   return {
-    subject: `Rejoignez ${companyName} sur CarpoolWork`,
+    subject: `Rejoignez ${rawCompanyName} sur CarpoolWork`,
     html: brandedEmail({
       lang, heading: `${companyName} vous invite à covoiturer`,
       bodyHtml: `${companyName} utilise CarpoolWork pour le covoiturage domicile-travail. Acceptez l'invitation pour rejoindre et trouver des collègues près de chez vous.`,
       ctaText: 'Accepter l\'invitation', ctaUrl: url,
     }),
-    text: `Rejoignez ${companyName} sur CarpoolWork : ${url}`,
+    text: `Rejoignez ${rawCompanyName} sur CarpoolWork : ${url}`,
   };
 }
 
-export function nudgeEmail(lang: 'fr' | 'en', firstName: string, url: string) {
+export function nudgeEmail(lang: 'fr' | 'en', rawFirstName: string, url: string) {
+  const firstName = escapeHtml(rawFirstName);
   if (lang === 'en') {
     return {
       subject: 'Did you carpool this week?',
@@ -142,7 +155,7 @@ export function nudgeEmail(lang: 'fr' | 'en', firstName: string, url: string) {
     };
   }
   return {
-    subject: 'Avez-vous covoituré cette semaine ?',
+    subject: 'Avez-vous covoituré cette semaine?',
     html: brandedEmail({
       lang, heading: `${firstName}, petit rappel`,
       bodyHtml: "Vous n'avez pas déclaré de covoiturage depuis un moment. Déclarer vos trajets compte dans l'impact de votre entreprise — et ça ne prend qu'un clic.",

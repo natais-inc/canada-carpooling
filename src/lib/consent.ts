@@ -22,8 +22,8 @@ import { NextRequest } from 'next/server';
 import { getClientIP } from './security';
 
 // Current versions of legal documents
-export const CURRENT_PRIVACY_POLICY_VERSION = '2026-05-01';
-export const CURRENT_TERMS_VERSION = '2026-05-01';
+export const CURRENT_PRIVACY_POLICY_VERSION = '2026-09-23';
+export const CURRENT_TERMS_VERSION = '2026-09-23';
 
 // ─── Consent Types ───
 
@@ -42,37 +42,37 @@ export interface ConsentPayload {
 export const DATA_CATEGORIES = {
   personal_info: {
     label: 'Personal Information',
-    description: 'Name, email, phone number, profile photo',
-    purpose: 'Account creation and identification',
-    retention: 'Duration of account + 30 days',
+    description: 'Name, email, preferred language, optional phone number',
+    purpose: 'Account creation, sign-in and support',
+    retention: 'Duration of account + 30 days, then anonymized',
     required: true,
   },
-  financial: {
-    label: 'Financial Information',
-    description: 'Payment method (processed by Stripe), transaction history',
-    purpose: 'Payment processing and refunds',
-    retention: '7 years (tax/legal requirements)',
+  employment: {
+    label: 'Employer Membership',
+    description: 'Employer, work site, membership status, invitation or join code used',
+    purpose: 'Linking you to your employer\'s carpool program',
+    retention: 'Duration of membership + 30 days',
     required: true,
   },
-  location: {
-    label: 'Location Data',
-    description: 'Trip origin/destination, GPS coordinates during trips',
-    purpose: 'Trip matching and safety features',
-    retention: 'Duration of account + 30 days',
+  commute: {
+    label: 'Commute Profile',
+    description: 'Home postal area (FSA), approximate home location, usual arrival and departure times, driver/passenger preference',
+    purpose: 'Suggesting colleagues who live nearby and arrive at the same time',
+    retention: 'Until you delete it or close your account',
     required: false,
   },
-  identity_docs: {
-    label: 'Identity Documents',
-    description: 'Government ID, driver license, biometric selfie',
-    purpose: 'Identity verification and fraud prevention',
-    retention: 'Processed by Veriff; reference IDs kept for account duration',
-    required: true, // for drivers
+  carpool_activity: {
+    label: 'Carpool Activity',
+    description: 'Carpool groups, trips logged (date, group, estimated distance)',
+    purpose: 'Measuring participation for your employer\'s report and monthly invoice (count of active participants only)',
+    retention: 'Duration of account; aggregated statistics kept anonymously',
+    required: true,
   },
-  communications: {
-    label: 'Communications',
-    description: 'Messages between users, support tickets',
-    purpose: 'Facilitating rides and dispute resolution',
-    retention: '1 year after last activity',
+  technical: {
+    label: 'Technical Data',
+    description: 'IP address at consent, session cookie, security logs',
+    purpose: 'Security, abuse prevention and legal accountability',
+    retention: 'Up to 12 months',
     required: true,
   },
 } as const;

@@ -101,25 +101,42 @@ async function purgeDeletedAccounts(): Promise<number> {
             firstName: anonymized.firstName as string,
             lastName: anonymized.lastName as string,
             email: anonymized.email as string,
-            phone: anonymized.phone as string,
+            phone: null,
             passwordHash: null,
             profileImage: null,
             consentIp: null,
-            stripeCustomerId: null,
-            stripeAccountId: null,
-            // Keep: createdAt, preferredLanguage, role, isVerified for analytics
+            isActive: false,
+            // Keep: createdAt, preferredLanguage, role for aggregate analytics
           },
         });
 
-        // Delete messages (non-financial)
-        await tx.message.deleteMany({ where: { senderId: account.id } });
-
-        // Delete notifications
-        await tx.notification.deleteMany({ where: { userId: account.id } });
-
-        // Keep bookings (financial records — 7 year retention) but already have anonymized userId
-        // Keep consent logs (7 year retention for PIPEDA accountability)
-        // Keep reviews (public content, already partially anonymized by UI)
+        // Employer memberships: strip the commute profile (home location, schedule) and close them.
+        await tx.companyMembership.updateMany({
+          where: { userId: account.id },
+          data: {
+            status: 'REMOVED',
+            department: null,
+            homeFsa: null,
+            homeCity: null,
+            workSite: null,
+            commuteDays: null,
+            arriveBy: null,
+            departAt: null,
+            commuteRole: null,
+            homeLat: null,
+            homeLng: null,
+          },
+        });
+        // Carpool logs stay (aggregate participation counts for the employer report) but lose free-text names.
+        await tx.carpoolLog.updateMany({
+          where: { membership: { userId: account.id } },
+          data: { partnerName: null },
+        });
+        await tx.carpoolGroupMember.deleteMany({ where: { membership: { userId: account.id } } });
+        await tx.emailVerifyToken.deleteMany({ where: { userId: account.id } });
+        await tx.session.deleteMany({ where: { userId: account.id } });
+        await tx.account.deleteMany({ where: { userId: account.id } });
+        // Keep consent logs (PIPEDA accountability).
       });
 
       purged++;
@@ -135,16 +152,8 @@ async function purgeDeletedAccounts(): Promise<number> {
  * Delete messages older than 1 year where the associated trip is completed.
  */
 async function purgeOldMessages(): Promise<number> {
-  const cutoff = getRetentionCutoff('messages');
-  if (!cutoff) return 0;
-
-  const result = await prisma.message.deleteMany({
-    where: {
-      createdAt: { lt: cutoff },
-    },
-  });
-
-  return result.count;
+  // Legacy B2C messaging was removed; nothing to purge.
+  return 0;
 }
 
 /**

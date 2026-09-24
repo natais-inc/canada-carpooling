@@ -24,7 +24,7 @@ export type BlogArticle = {
   en: BlogArticleLocale;
 };
 
-const AUTHOR = 'Magloire Pondi Simb, Founder / CEO, North American Technologies and AI solutions Inc.';
+const AUTHOR = 'Magloire Pondi Simb, Founder / CEO, North American Technologies and AI Solutions Inc.';
 
 export const articles: BlogArticle[] = [
   {

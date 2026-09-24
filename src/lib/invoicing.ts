@@ -136,6 +136,6 @@ export async function listCompanyInvoices(companyId: string) {
 export async function getInvoiceWithCompany(id: string) {
   return prisma.invoice.findUnique({
     where: { id },
-    include: { company: { select: { id: true, name: true, region: true } } },
+    include: { company: { select: { id: true, name: true, region: true, monthlyFloorCents: true } } },
   });
 }

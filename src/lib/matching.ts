@@ -120,6 +120,10 @@ export async function findMatches(userId: string, membershipId: string): Promise
     }
     if (rolesCompatible(me.commuteRole, c.commuteRole)) score += 15;
 
+    // Privacy: expose a coarse distance band only (never the 0.1 km value), so a colleague's home
+    // cannot be trilaterated from a few requests with self-declared coordinates.
+    const distanceBandKm = distanceKm == null ? null : distanceKm <= 2 ? 2 : distanceKm <= 5 ? 5 : distanceKm <= 10 ? 10 : 25;
+
     matches.push({
       membershipId: c.id,
       name: `${c.user.firstName} ${(c.user.lastName || '').charAt(0)}.`.trim(),
@@ -127,7 +131,7 @@ export async function findMatches(userId: string, membershipId: string): Promise
       sharedDays,
       sameFsa,
       sameCity,
-      distanceKm,
+      distanceKm: distanceBandKm,
       within2km,
       timeGapMin,
       role: c.commuteRole,

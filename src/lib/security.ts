@@ -40,11 +40,8 @@ export interface RateLimitConfig {
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
   auth: { maxRequests: 5, windowMs: 15 * 60 * 1000, keyPrefix: 'auth' },       // 5 per 15 min
   api: { maxRequests: 100, windowMs: 60 * 1000, keyPrefix: 'api' },             // 100 per min
-  search: { maxRequests: 30, windowMs: 60 * 1000, keyPrefix: 'search' },        // 30 per min
-  booking: { maxRequests: 10, windowMs: 60 * 1000, keyPrefix: 'booking' },      // 10 per min
-  message: { maxRequests: 50, windowMs: 60 * 1000, keyPrefix: 'message' },      // 50 per min
   upload: { maxRequests: 5, windowMs: 60 * 1000, keyPrefix: 'upload' },         // 5 per min
-  webhook: { maxRequests: 200, windowMs: 60 * 1000, keyPrefix: 'webhook' },     // 200 per min (Stripe/Veriff)
+  webhook: { maxRequests: 200, windowMs: 60 * 1000, keyPrefix: 'webhook' },     // 200 per min
 };
 
 export function getClientIP(request: NextRequest): string {
@@ -189,18 +186,18 @@ export function getSecurityHeaders(): Record<string, string> {
     // Referrer policy
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     // Permissions policy
-    'Permissions-Policy': 'camera=(self), microphone=(), geolocation=(self), payment=(self)',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self), payment=()',
     // Strict Transport Security (HSTS)
     'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
     // Content Security Policy
     'Content-Security-Policy': [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdn.veriff.me",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: blob: https://*.stripe.com https://*.googleusercontent.com",
+      "img-src 'self' data: blob: https://*.googleusercontent.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://api.stripe.com https://stationapi.veriff.com wss://*.veriff.me",
-      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://magic.veriff.me",
+      "connect-src 'self'",
+      "frame-src 'none'",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
