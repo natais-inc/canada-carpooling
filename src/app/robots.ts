@@ -10,7 +10,8 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/auth/', '/fr/auth/', '/en/auth/',
           '/admin', '/fr/admin', '/en/admin',
-          '/employer', '/fr/employer', '/en/employer',
+          // Employer portal only — `/employer$` and `/employer/` so the public `/employers` page stays indexable.
+          '/employer$', '/employer/', '/fr/employer$', '/fr/employer/', '/en/employer$', '/en/employer/',
           '/mon-covoiturage', '/fr/mon-covoiturage', '/en/mon-covoiturage',
           '/profile', '/fr/profile', '/en/profile',
           '/rejoindre', '/fr/rejoindre', '/en/rejoindre',
